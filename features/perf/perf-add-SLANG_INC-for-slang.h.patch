@@ -1,4 +1,4 @@
-From 4bd2d966aa5c3e630bdd3e7d965d28d3bd07e55b Mon Sep 17 00:00:00 2001
+From 6f2169e549b1147aefa90e16a91ea14c0535fe27 Mon Sep 17 00:00:00 2001
 From: Liang Li <liang.li@windriver.com>
 Date: Wed, 22 Aug 2012 16:04:50 +0800
 Subject: [PATCH] perf: add SLANG_INC for slang.h
@@ -27,19 +27,18 @@ compatibility with sysroot/cross compile cases.
 Signed-off-by: Liang Li <liang.li@windriver.com>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- tools/perf/Makefile.config | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.config | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 2980cfd26fb8..9fb52aee7f73 100644
+index e3de7e18aa57..fd9a9c84a10e 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -505,8 +505,9 @@ ifndef NO_SLANG
-     msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
-     NO_SLANG := 1
-   else
+@@ -652,7 +652,9 @@ ifndef NO_SLANG
+     endif
+   endif
+   ifndef NO_SLANG
 -    # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
--    CFLAGS += -I/usr/include/slang
 +    # Some releases like Fedora have /usr/include/slang/slang.h instead of /usr/include/slang.h
 +    SLANG_INC ?= -idirafter =/usr/include/slang
 +    CFLAGS += $(SLANG_INC)
@@ -47,5 +46,5 @@ index 2980cfd26fb8..9fb52aee7f73 100644
      EXTLIBS += -lslang
      $(call detected,CONFIG_SLANG)
 -- 
-2.5.0
+2.19.1
 

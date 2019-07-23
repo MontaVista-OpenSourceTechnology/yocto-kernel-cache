@@ -1,4 +1,4 @@
-From bf7165d6f5c62f839087e742b847980e63a6d2ce Mon Sep 17 00:00:00 2001
+From ae9f6294d685cda95203d5752bb1d0cd275bb59a Mon Sep 17 00:00:00 2001
 From: Jason Wessel <jason.wessel@windriver.com>
 Date: Wed, 7 Jan 2009 00:59:33 -0500
 Subject: [PATCH] NFS: allow nfs root mount to use alternate rpc ports
@@ -18,18 +18,18 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  6 files changed, 57 insertions(+), 9 deletions(-)
 
 diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 3d04cb0b839e..eea71487261b 100644
+index 30838304a0bf..a0389dc885ea 100644
 --- a/fs/nfs/client.c
 +++ b/fs/nfs/client.c
-@@ -9,7 +9,6 @@
-  * 2 of the License, or (at your option) any later version.
+@@ -5,7 +5,6 @@
+  * Written by David Howells (dhowells@redhat.com)
   */
  
 -
  #include <linux/module.h>
  #include <linux/init.h>
  #include <linux/sched.h>
-@@ -70,7 +69,7 @@ static const struct rpc_version *nfs_version[5] = {
+@@ -67,7 +66,7 @@ static const struct rpc_version *nfs_version[5] = {
  	[4] = NULL,
  };
  
@@ -38,7 +38,7 @@ index 3d04cb0b839e..eea71487261b 100644
  	.name			= "nfs",
  	.number			= NFS_PROGRAM,
  	.nrvers			= ARRAY_SIZE(nfs_version),
-@@ -161,6 +160,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+@@ -158,6 +157,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
  		goto error_dealloc;
  
  	clp->rpc_ops = clp->cl_nfs_mod->rpc_ops;
@@ -46,7 +46,7 @@ index 3d04cb0b839e..eea71487261b 100644
  
  	refcount_set(&clp->cl_count, 1);
  	clp->cl_cons_state = NFS_CS_INITING;
-@@ -314,6 +314,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+@@ -312,6 +312,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
  		/* Match nfsv4 minorversion */
  		if (clp->cl_minorversion != data->minorversion)
  			continue;
@@ -56,7 +56,7 @@ index 3d04cb0b839e..eea71487261b 100644
  		/* Match the full socket address */
  		if (!rpc_cmp_addr_port(sap, clap))
  			/* Match all xprt_switch full socket addresses */
-@@ -520,6 +523,10 @@ int nfs_create_rpc_client(struct nfs_client *clp,
+@@ -519,6 +522,10 @@ int nfs_create_rpc_client(struct nfs_client *clp,
  	if (!IS_ERR(clp->cl_rpcclient))
  		return 0;
  
@@ -68,15 +68,15 @@ index 3d04cb0b839e..eea71487261b 100644
  	if (IS_ERR(clnt)) {
  		dprintk("%s: cannot create RPC client. Error = %ld\n",
 @@ -662,6 +669,7 @@ static int nfs_init_server(struct nfs_server *server,
- 		.net = data->net,
  		.timeparms = &timeparms,
  		.cred = server->cred,
+ 		.nconnect = data->nfs_server.nconnect,
 +                .nfs_prog = data->nfs_prog,
  	};
  	struct nfs_client *clp;
  	int error;
 diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 498fab72f70b..b6768f836d87 100644
+index a2346a2f8361..85fa99dd8441 100644
 --- a/fs/nfs/internal.h
 +++ b/fs/nfs/internal.h
 @@ -85,6 +85,7 @@ struct nfs_client_initdata {
@@ -96,7 +96,7 @@ index 498fab72f70b..b6768f836d87 100644
  	unsigned int		namlen;
  	unsigned int		options;
  	unsigned int		bsize;
-@@ -152,11 +155,11 @@ struct nfs_mount_info {
+@@ -153,11 +156,11 @@ struct nfs_mount_info {
  	struct nfs_fh *mntfh;
  };
  
@@ -108,8 +108,8 @@ index 498fab72f70b..b6768f836d87 100644
 -extern const struct rpc_program nfs_program;
 +extern struct rpc_program nfs_program;
  extern void nfs_clients_init(struct net *net);
+ extern void nfs_clients_exit(struct net *net);
  extern struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *);
- int nfs_create_rpc_client(struct nfs_client *, const struct nfs_client_initdata *, rpc_authflavor_t);
 diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
 index cb7c10e9721e..266da4cac411 100644
 --- a/fs/nfs/mount_clnt.c
@@ -150,10 +150,10 @@ index cb7c10e9721e..266da4cac411 100644
  	.number		= NFS_MNT_PROGRAM,
  	.nrvers		= ARRAY_SIZE(mnt_version),
 diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index f88ddac2dcdf..f9d847d1748f 100644
+index 628631e2e34f..f05026a0c3da 100644
 --- a/fs/nfs/super.c
 +++ b/fs/nfs/super.c
-@@ -103,6 +103,8 @@ enum {
+@@ -105,6 +105,8 @@ enum {
  	Opt_mountport,
  	Opt_mountvers,
  	Opt_minorversion,
@@ -162,7 +162,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  
  	/* Mount options that take string arguments */
  	Opt_nfsvers,
-@@ -169,6 +171,8 @@ static const match_table_t nfs_mount_option_tokens = {
+@@ -172,6 +174,8 @@ static const match_table_t nfs_mount_option_tokens = {
  	{ Opt_mountport, "mountport=%s" },
  	{ Opt_mountvers, "mountvers=%s" },
  	{ Opt_minorversion, "minorversion=%s" },
@@ -171,7 +171,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  
  	{ Opt_nfsvers, "nfsvers=%s" },
  	{ Opt_nfsvers, "vers=%s" },
-@@ -927,6 +931,8 @@ static struct nfs_parsed_mount_data *nfs_alloc_parsed_mount_data(void)
+@@ -943,6 +947,8 @@ static struct nfs_parsed_mount_data *nfs_alloc_parsed_mount_data(void)
  		data->acregmax		= NFS_DEF_ACREGMAX;
  		data->acdirmin		= NFS_DEF_ACDIRMIN;
  		data->acdirmax		= NFS_DEF_ACDIRMAX;
@@ -180,7 +180,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  		data->mount_server.port	= NFS_UNSPEC_PORT;
  		data->nfs_server.port	= NFS_UNSPEC_PORT;
  		data->nfs_server.protocol = XPRT_TRANSPORT_TCP;
-@@ -1389,6 +1395,26 @@ static int nfs_parse_mount_options(char *raw,
+@@ -1405,6 +1411,26 @@ static int nfs_parse_mount_options(char *raw,
  				goto out_invalid_value;
  			mnt->acdirmax = option;
  			break;
@@ -207,7 +207,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  		case Opt_actimeo:
  			if (nfs_get_option_ul(args, &option))
  				goto out_invalid_value;
-@@ -1788,7 +1814,7 @@ static int nfs_request_mount(struct nfs_parsed_mount_data *args,
+@@ -1809,7 +1835,7 @@ static int nfs_request_mount(struct nfs_parsed_mount_data *args,
  	 * Now ask the mount server to map our export path
  	 * to a file handle.
  	 */
@@ -216,7 +216,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  	if (status != 0) {
  		dfprintk(MOUNT, "NFS: unable to mount server %s, error %d\n",
  				request.hostname, status);
-@@ -2096,6 +2122,9 @@ static int nfs23_validate_mount_data(void *options,
+@@ -2117,6 +2143,9 @@ static int nfs23_validate_mount_data(void *options,
  #endif
  		}
  
@@ -226,7 +226,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  		break;
  	default:
  		return NFS_TEXT_DATA;
-@@ -2159,6 +2188,7 @@ static int nfs_validate_text_mount_data(void *options,
+@@ -2180,6 +2209,7 @@ static int nfs_validate_text_mount_data(void *options,
  	int max_namelen = PAGE_SIZE;
  	int max_pathlen = NFS_MAXPATHLEN;
  	struct sockaddr *sap = (struct sockaddr *)&args->nfs_server.address;
@@ -234,7 +234,7 @@ index f88ddac2dcdf..f9d847d1748f 100644
  
  	if (nfs_parse_mount_options((char *)options, args) == 0)
  		return -EINVAL;
-@@ -2802,6 +2832,8 @@ static int nfs4_validate_mount_data(void *options,
+@@ -2823,6 +2853,8 @@ static int nfs4_validate_mount_data(void *options,
  
  	args->version = 4;
  
@@ -244,18 +244,18 @@ index f88ddac2dcdf..f9d847d1748f 100644
  	case 1:
  		if (data->host_addrlen > sizeof(args->nfs_server.address))
 diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 1e78032a174b..2484cf531e9b 100644
+index a87fe854f008..65749341e107 100644
 --- a/include/linux/nfs_fs_sb.h
 +++ b/include/linux/nfs_fs_sb.h
-@@ -59,6 +59,7 @@ struct nfs_client {
- 
+@@ -60,6 +60,7 @@ struct nfs_client {
  	u32			cl_minorversion;/* NFSv4 minorversion */
+ 	unsigned int		cl_nconnect;	/* Number of connections */
  	const char *		cl_principal;  /* used for machine cred */
 +	int			nfs_prog;
  
  #if IS_ENABLED(CONFIG_NFS_V4)
  	struct list_head	cl_ds_clients; /* auth flavor data servers */
-@@ -81,6 +82,7 @@ struct nfs_client {
+@@ -82,6 +83,7 @@ struct nfs_client {
  	const char *		cl_owner_id;
  
  	u32			cl_cb_ident;	/* v4.0 callback identifier */

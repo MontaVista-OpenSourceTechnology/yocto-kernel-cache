@@ -1,4 +1,4 @@
-From 728af2130628a0d89ca0577ab001bd28d3bdaea5 Mon Sep 17 00:00:00 2001
+From bbd565278d8849c836163c7ea55521c683bef188 Mon Sep 17 00:00:00 2001
 From: Jianchuan Wang <jianchuan.wang@windriver.com>
 Date: Wed, 26 Aug 2015 13:54:57 +0800
 Subject: [PATCH] Omit to optimize vsprintf.c/kasprintf.c
@@ -11,10 +11,10 @@ Signed-off-by: Jianchuan Wang <jianchuan.wang@windriver.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/lib/Makefile b/lib/Makefile
-index fb7697031a79..866bbdd218cd 100644
+index 095601ce371d..7f6a8a9ae031 100644
 --- a/lib/Makefile
 +++ b/lib/Makefile
-@@ -99,11 +99,15 @@ CFLAGS_kobject.o += -DDEBUG
+@@ -101,11 +101,15 @@ CFLAGS_kobject.o += -DDEBUG
  CFLAGS_kobject_uevent.o += -DDEBUG
  endif
  
@@ -22,7 +22,7 @@ index fb7697031a79..866bbdd218cd 100644
  obj-$(CONFIG_DEBUG_INFO_REDUCED) += debug_info.o
  CFLAGS_debug_info.o += $(call cc-option, -femit-struct-debug-detailed=any)
  
- obj-y += math/
+ obj-y += math/ crypto/
  
 +CFLAGS_vsprintf.o += -O0
 +CFLAGS_asprintf.o += -O0
