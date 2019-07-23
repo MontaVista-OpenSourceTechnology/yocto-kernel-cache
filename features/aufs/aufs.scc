@@ -3,3 +3,4 @@ patch aufs5-base-support.patch
 patch aufs5-mmap-support.patch
 patch aufs5-standalone-support.patch
 patch aufs5-core-support.patch
+patch aufs5-fix-build-on-v5.3.patch
