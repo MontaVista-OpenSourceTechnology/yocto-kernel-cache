@@ -1,0 +1,43 @@
+From eb303f5dab8100336ca7619d99591b5ed98d01cb Mon Sep 17 00:00:00 2001
+From: He Zhe <zhe.he@windriver.com>
+Date: Tue, 3 Sep 2019 15:28:04 +0800
+Subject: [PATCH 2/2] aufs: opts: Fix missing fallthrough
+
+commit 8d7b6374d5af2c31ce9501d3502808e3c7a9ea68 upstream
+
+A compilation -Wimplicit-fallthrough warning was enabled by commit
+a035d552a93b ("Makefile: Globally enable fall-through warning")
+and triggers the following warning.
+
+fs/aufs/opts.h:78:11:
+warning: this statement may fall through [-Wimplicit-fallthrough=]
+
+This patch adds comments according GNU manual.
+https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#Warning-Options
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+See-also: https://www.mail-archive.com/aufs-users@lists.sourceforge.net/msg05685.html
+(cherry picked from commit e7619996b014c5d8fd2f6ad89542c545a207667f)
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/opts.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/aufs/opts.c b/fs/aufs/opts.c
+index a825549c029a..77e17d7b3bdf 100644
+--- a/fs/aufs/opts.c
++++ b/fs/aufs/opts.c
+@@ -1512,8 +1512,10 @@ static int au_opt_br(struct super_block *sb, struct au_opt *opt,
+ 		if (opt->add.bindex < 0)
+ 			opt->add.bindex = 0;
+ 		goto add;
++		/* Always goto add, not fallthrough */
+ 	case Opt_prepend:
+ 		opt->add.bindex = 0;
++		/* fallthrough */
+ 	add: /* indented label */
+ 	case Opt_add:
+ 		err = au_br_add(sb, &opt->add,
+-- 
+2.19.1
+
