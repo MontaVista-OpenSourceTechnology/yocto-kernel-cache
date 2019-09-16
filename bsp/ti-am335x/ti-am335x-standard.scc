@@ -1,6 +1,6 @@
 define KMACHINE ti-am335x
 define KTYPE standard
-define KARCH arm64
+define KARCH arm
 
 include ktypes/standard/standard.scc
 branch ti-am335x
