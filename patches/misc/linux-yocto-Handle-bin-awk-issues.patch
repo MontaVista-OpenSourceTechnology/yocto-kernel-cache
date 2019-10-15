@@ -14,9 +14,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  arch/arm/tools/gen-mach-types                                   | 2 +-
  arch/sh/tools/gen-mach-types                                    | 2 +-
  arch/x86/tools/gen-insn-attr-x86.awk                            | 2 +-
- tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk              | 2 +-
  tools/perf/arch/x86/tests/gen-insn-x86-dat.awk                  | 2 +-
- tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk          | 2 +-
  .../selftests/rcutorture/formal/srcu-cbmc/modify_srcu.awk       | 2 +-
  7 files changed, 7 insertions(+), 7 deletions(-)
  mode change 100755 => 100644 tools/testing/selftests/rcutorture/formal/srcu-cbmc/modify_srcu.awk
@@ -51,16 +49,6 @@ index b02a36b2c14f..9166a071484c 100644
  # SPDX-License-Identifier: GPL-2.0
  # gen-insn-attr-x86.awk: Instruction attribute table generator
  # Written by Masami Hiramatsu <mhiramat@redhat.com>
-diff --git a/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk b/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b2c14f..9166a071484c 100644
---- a/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/objtool/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -1,4 +1,4 @@
--#!/bin/awk -f
-+#!/usr/bin/awk -f
- # SPDX-License-Identifier: GPL-2.0
- # gen-insn-attr-x86.awk: Instruction attribute table generator
- # Written by Masami Hiramatsu <mhiramat@redhat.com>
 diff --git a/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk b/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
 index 1a29f6379bde..6285ff7158a5 100644
 --- a/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
@@ -71,16 +59,6 @@ index 1a29f6379bde..6285ff7158a5 100644
  # SPDX-License-Identifier: GPL-2.0-only
  # gen-insn-x86-dat.awk: script to convert data for the insn-x86 test
  # Copyright (c) 2015, Intel Corporation.
-diff --git a/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk b/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
-index ddd5c4c21129..d236058fc4e2 100644
---- a/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
-+++ b/tools/perf/util/intel-pt-decoder/gen-insn-attr-x86.awk
-@@ -1,4 +1,4 @@
--#!/bin/awk -f
-+#!/usr/bin/awk -f
- # SPDX-License-Identifier: GPL-2.0
- # gen-insn-attr-x86.awk: Instruction attribute table generator
- # Written by Masami Hiramatsu <mhiramat@redhat.com>
 diff --git a/tools/testing/selftests/rcutorture/formal/srcu-cbmc/modify_srcu.awk b/tools/testing/selftests/rcutorture/formal/srcu-cbmc/modify_srcu.awk
 old mode 100755
 new mode 100644
