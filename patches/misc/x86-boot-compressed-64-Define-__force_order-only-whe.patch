@@ -1,0 +1,43 @@
+From ac6cf33b0484a6cedafb19fe999f5570e969cdbe Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 20 Dec 2019 17:42:02 -0800
+Subject: [PATCH] x86/boot/compressed/64: Define __force_order only when
+ CONFIG_RANDOMIZE_BASE is unset
+
+kaslr_64.c also defines the same variable, however when both files are
+included into final link, linker complains about multiple definition of
+`__force_order' which is coming from kaslr_64.o and pgtable_64.o, its
+possible that kaslr_64.o is disabled via CONFIG_RANDOMIZE_BASE config
+option, therefore define it conditionally only when
+CONFIG_RANDOMIZE_BASE is not set
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ arch/x86/boot/compressed/pgtable_64.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index c8862696a47b..077d19268b0b 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -12,7 +12,9 @@
+  * It is not referenced from the code, but GCC < 5 with -fPIE would fail
+  * due to an undefined symbol. Define it to make these ancient GCCs work.
+  */
++#ifndef CONFIG_RANDOMIZE_BASE
+ unsigned long __force_order;
++#endif
+ 
+ #define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
+ #define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
+-- 
+2.19.1
+
