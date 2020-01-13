@@ -1,4 +1,4 @@
-From 0025b0ecf618ee51832e98cd693a9d3c8234b3cd Mon Sep 17 00:00:00 2001
+From e2f0b574630c809ed8e961e838eb6b4591b61808 Mon Sep 17 00:00:00 2001
 From: Clark Williams <williams@redhat.com>
 Date: Mon, 15 Jul 2019 15:25:00 -0500
 Subject: [PATCH 057/251] thermal/x86_pkg_temp: Make pkg_temp_lock a

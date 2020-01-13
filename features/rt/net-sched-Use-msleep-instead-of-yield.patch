@@ -1,4 +1,4 @@
-From 55341b7f5ff4322b4c1334fe2e5b709da84809ac Mon Sep 17 00:00:00 2001
+From af139842a1748712eabdbdb55ecf81b97129bf5a Mon Sep 17 00:00:00 2001
 From: Marc Kleine-Budde <mkl@pengutronix.de>
 Date: Wed, 5 Mar 2014 00:49:47 +0100
 Subject: [PATCH 015/251] net: sched: Use msleep() instead of yield()

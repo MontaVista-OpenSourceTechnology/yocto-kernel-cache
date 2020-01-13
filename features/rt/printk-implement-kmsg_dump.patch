@@ -1,4 +1,4 @@
-From 5d23259937ce5e411bb57b1ecf4d07e0ece6ad79 Mon Sep 17 00:00:00 2001
+From 90fceb2e11276f09c3f49b84ca3fd545fdca32d0 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:30:02 +0100
 Subject: [PATCH 041/251] printk: implement kmsg_dump

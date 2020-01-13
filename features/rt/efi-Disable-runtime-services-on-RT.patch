@@ -1,4 +1,4 @@
-From fa5035e038472abcd1460fc0830f38a3f6dfce73 Mon Sep 17 00:00:00 2001
+From b59b6843bd864a0144d5fd625769dcb10a7e3882 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 26 Jul 2018 15:03:16 +0200
 Subject: [PATCH 094/251] efi: Disable runtime services on RT

@@ -1,4 +1,4 @@
-From e48607920579047ff5e217425c33c751b07e6513 Mon Sep 17 00:00:00 2001
+From 58a8edfdce290a439665e82939f785a18c46ac86 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 10 Jan 2020 16:45:32 +0106
 Subject: [PATCH 055/251] serial: 8250: fsl/ingenic/mtk: fix atomic console

@@ -1,4 +1,4 @@
-From 6925634eb7cfa046522ee53634be98ff884121b7 Mon Sep 17 00:00:00 2001
+From 627293c71f842ff3204e5a8f38c44e9040675a8b Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:30:03 +0100
 Subject: [PATCH 042/251] printk: remove unused code

@@ -1,4 +1,4 @@
-From ffbee749b5b80b8e6a4fce771fc5c062464842a3 Mon Sep 17 00:00:00 2001
+From 776895cf5c14a2944956cf08ac6a16f93bdc4084 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 22 Feb 2019 12:47:13 +0100
 Subject: [PATCH 049/251] printk: print "rate-limitted" message as info

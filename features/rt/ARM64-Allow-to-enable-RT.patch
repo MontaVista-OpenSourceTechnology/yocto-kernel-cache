@@ -1,4 +1,4 @@
-From 19a2c24960eda0c4231907fd646e43481b7a1015 Mon Sep 17 00:00:00 2001
+From 3fe0acf07b827033e18f51e43be527fb2f6f3cb8 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 11 Oct 2019 13:14:35 +0200
 Subject: [PATCH 236/251] ARM64: Allow to enable RT

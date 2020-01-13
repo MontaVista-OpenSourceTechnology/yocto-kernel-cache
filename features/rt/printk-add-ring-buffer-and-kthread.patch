@@ -1,4 +1,4 @@
-From 181f7958a97962b68d303061007af5177961a8b2 Mon Sep 17 00:00:00 2001
+From c257bf1098e043e898f608e448032127314615c1 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:46 +0100
 Subject: [PATCH 025/251] printk: add ring buffer and kthread

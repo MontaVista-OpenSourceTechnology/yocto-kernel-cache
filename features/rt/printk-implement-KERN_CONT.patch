@@ -1,4 +1,4 @@
-From c34baaa3ad7a5423cdc058003da76e715dc3ed5e Mon Sep 17 00:00:00 2001
+From c8330b90aa65b08534312874807bb3d2442d5aaa Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:59 +0100
 Subject: [PATCH 038/251] printk: implement KERN_CONT

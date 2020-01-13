@@ -1,4 +1,4 @@
-From df795dad569c414b718ee2b3eabf65fff67be8cc Mon Sep 17 00:00:00 2001
+From b0bf2d76c82a2f55d45e9cecf4308d0451a435a5 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 15 Nov 2019 18:04:07 +0100
 Subject: [PATCH 058/251] perf/core: Add SRCU annotation for pmus list walk

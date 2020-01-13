@@ -1,4 +1,4 @@
-From e3b5b9e32c033176a154a48575948b31383b56ca Mon Sep 17 00:00:00 2001
+From 920681d618023f54f4def2eeb0e0f588b2289a92 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 12 Aug 2019 11:20:44 +0200
 Subject: [PATCH 109/251] mm/swap: Enable use pvec lock on RT

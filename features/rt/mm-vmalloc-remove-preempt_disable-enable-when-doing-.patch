@@ -1,4 +1,4 @@
-From d5503504dd40ca1ef29cda31da54a5a2b47ef785 Mon Sep 17 00:00:00 2001
+From 27c4740c21b973b7fc81e56e7d0f10fbf75ec246 Mon Sep 17 00:00:00 2001
 From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 Date: Sat, 30 Nov 2019 17:54:33 -0800
 Subject: [PATCH 016/251] mm/vmalloc: remove preempt_disable/enable when doing

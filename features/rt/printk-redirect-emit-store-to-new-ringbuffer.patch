@@ -1,4 +1,4 @@
-From 8cc62413d86d23ad483f4975780f861bf7ec6b47 Mon Sep 17 00:00:00 2001
+From a9deaa42ccf4a494feaaa58d2375744ff9ba4073 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:48 +0100
 Subject: [PATCH 027/251] printk: redirect emit/store to new ringbuffer

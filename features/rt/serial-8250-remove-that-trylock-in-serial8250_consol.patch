@@ -1,4 +1,4 @@
-From 6529dfe4bbd8181b109db5af7a0a5895bccd2b21 Mon Sep 17 00:00:00 2001
+From 346492d8c5831f16732cf507d53ee1d3ae84f91f Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 14 Feb 2019 17:38:24 +0100
 Subject: [PATCH 044/251] serial: 8250: remove that trylock in

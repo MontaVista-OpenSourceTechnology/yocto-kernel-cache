@@ -1,4 +1,4 @@
-From 44fe2de8a04a9d0a74958617c49794fb23fce959 Mon Sep 17 00:00:00 2001
+From 98ff26f48e757f162b5a31aed46fcdb06eab8b2d Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 26 Jul 2018 15:06:10 +0200
 Subject: [PATCH 095/251] efi: Allow efi=runtime

@@ -1,4 +1,4 @@
-From 6a5873fdfd022f344743ce17dcf318e9d06e7a41 Mon Sep 17 00:00:00 2001
+From 298c8c991fc9f632241d7e7326f6a76348eaeba5 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 14 Sep 2016 17:36:35 +0200
 Subject: [PATCH 079/251] net/Qdisc: use a seqlock instead seqcount

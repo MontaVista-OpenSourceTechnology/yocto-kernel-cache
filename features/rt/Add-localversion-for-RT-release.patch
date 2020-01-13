@@ -1,4 +1,4 @@
-From 9d025c0ab86de21bd1509a79849698b358a176e2 Mon Sep 17 00:00:00 2001
+From 7c5682bcaa01f0581c8953e0e805a2b39557a3b2 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 8 Jul 2011 20:25:16 +0200
 Subject: [PATCH 251/251] Add localversion for -RT release

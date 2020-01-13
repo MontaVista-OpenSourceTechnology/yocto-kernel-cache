@@ -1,4 +1,4 @@
-From 6a68edd6128f1a9b2f7eade22e82aa49b20e7d95 Mon Sep 17 00:00:00 2001
+From b4a3faa213013eacb4176b072a3aa4cc44e956cf Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 11 Jun 2019 11:21:02 +0200
 Subject: [PATCH 062/251] workqueue: Don't assume that the callback has

@@ -1,4 +1,4 @@
-From 999ad82ffbdc81d7a6bb2bcbb6f77eb1db2bbe22 Mon Sep 17 00:00:00 2001
+From 34ddf43c46b65fc762a1146a979f26d9cf15afc1 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:41 +0100
 Subject: [PATCH 020/251] printk-rb: define ring buffer struct and initializer

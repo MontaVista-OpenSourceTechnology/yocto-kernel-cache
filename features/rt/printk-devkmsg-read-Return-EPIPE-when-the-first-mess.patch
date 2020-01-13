@@ -1,4 +1,4 @@
-From 3ba349851616cb29bf05156a64dc291bcc8b638c Mon Sep 17 00:00:00 2001
+From 1ddd7feedfc7338c49354267af00426375a6810a Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Tue, 24 Sep 2019 15:26:39 +0800
 Subject: [PATCH 051/251] printk: devkmsg: read: Return EPIPE when the first

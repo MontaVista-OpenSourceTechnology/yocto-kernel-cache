@@ -1,4 +1,4 @@
-From 17473328c04ad7c2f5c5695485cc56458a26ba31 Mon Sep 17 00:00:00 2001
+From 98e5d41105b308751a77b4054a8a63b205479687 Mon Sep 17 00:00:00 2001
 From: Kurt Kanzenbach <kurt@linutronix.de>
 Date: Mon, 24 Sep 2018 10:29:01 +0200
 Subject: [PATCH 226/251] tty: serial: pl011: explicitly initialize the flags

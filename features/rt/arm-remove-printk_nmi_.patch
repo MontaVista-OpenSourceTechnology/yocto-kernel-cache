@@ -1,4 +1,4 @@
-From 0dc9f39099b360f6accb6a19b8098eb8e3d34289 Mon Sep 17 00:00:00 2001
+From 450d7650315d2eead9c9a91c0f73e680dea6ce4b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 15 Feb 2019 14:34:20 +0100
 Subject: [PATCH 046/251] arm: remove printk_nmi_.*()

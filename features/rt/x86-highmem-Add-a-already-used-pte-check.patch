@@ -1,4 +1,4 @@
-From 4bac4fc54a12a9803da1b8d2071cc71a52666c11 Mon Sep 17 00:00:00 2001
+From 668f1d30c54458dc4237599a4fc512113e3fd6ae Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 11 Mar 2013 17:09:55 +0100
 Subject: [PATCH 213/251] x86/highmem: Add a "already used pte" check

@@ -1,4 +1,4 @@
-From 7f8bec9d5b493f6fff8a7b1628b2e139b2fc3e4d Mon Sep 17 00:00:00 2001
+From e8ac6cbaa696610d44b91921a724ef676c18fdfd Mon Sep 17 00:00:00 2001
 From: Waiman Long <longman@redhat.com>
 Date: Thu, 3 Oct 2019 16:36:08 -0400
 Subject: [PATCH 001/251] lib/smp_processor_id: Don't use cpumask_equal()

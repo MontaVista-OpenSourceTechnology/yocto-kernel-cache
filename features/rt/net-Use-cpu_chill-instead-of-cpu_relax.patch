@@ -1,4 +1,4 @@
-From 4d48d68c21de1ed8f6775cdf648648784e935c82 Mon Sep 17 00:00:00 2001
+From eda8b16f7d54bf9fb72574bd5d533e2fd11da2c6 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Wed, 7 Mar 2012 21:10:04 +0100
 Subject: [PATCH 186/251] net: Use cpu_chill() instead of cpu_relax()

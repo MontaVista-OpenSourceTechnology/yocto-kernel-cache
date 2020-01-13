@@ -1,4 +1,4 @@
-From 70817f82b256ee5a022b56b22f019333fe2e1301 Mon Sep 17 00:00:00 2001
+From 23eef786bea40db01fc6122db703ecf719b9710b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 19 Nov 2019 09:25:04 +0100
 Subject: [PATCH 170/251] locking: Make spinlock_t and rwlock_t a RCU section

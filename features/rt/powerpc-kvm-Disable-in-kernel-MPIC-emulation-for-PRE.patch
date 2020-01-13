@@ -1,4 +1,4 @@
-From 4a4a7d24387b56e3f55c35d8860f48a40ca986f7 Mon Sep 17 00:00:00 2001
+From 70255cc52f1e23b9f8559c7dc1bff66e06be708e Mon Sep 17 00:00:00 2001
 From: Bogdan Purcareata <bogdan.purcareata@freescale.com>
 Date: Fri, 24 Apr 2015 15:53:13 +0000
 Subject: [PATCH 238/251] powerpc/kvm: Disable in-kernel MPIC emulation for

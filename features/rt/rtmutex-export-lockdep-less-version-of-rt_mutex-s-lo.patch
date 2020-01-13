@@ -1,4 +1,4 @@
-From ce49eb73c04d94d9b045b2a3f641a37d258ea362 Mon Sep 17 00:00:00 2001
+From 37fb451f96e34d86e683265cecee527a64b6b948 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 12 Oct 2017 16:36:39 +0200
 Subject: [PATCH 149/251] rtmutex: export lockdep-less version of rt_mutex's

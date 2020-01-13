@@ -1,4 +1,4 @@
-From a4dcde2f1d89ae071b33e6a81d44b0ebd6fabb1b Mon Sep 17 00:00:00 2001
+From a86245e22ae5685868c1f38f1acddfc4589a9feb Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 2 Dec 2015 11:34:07 +0100
 Subject: [PATCH 153/251] rtmutex: trylock is okay on -RT

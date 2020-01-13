@@ -1,4 +1,4 @@
-From 96da09c2173a63c5b900a67b451e0255bd1f571e Mon Sep 17 00:00:00 2001
+From 10c8d0fd6404e7b243eb2076ef2e7ed3d6ef6eff Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 16 Aug 2019 12:20:42 +0200
 Subject: [PATCH 068/251] cgroup: Consolidate users of cgroup_rstat_lock.

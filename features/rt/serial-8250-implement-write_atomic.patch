@@ -1,4 +1,4 @@
-From 8449231e61648bfe48876a9c7a27a9743cb6a49f Mon Sep 17 00:00:00 2001
+From 7b483b609afe8995a47b77419c6dbdb09bc8a715 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:58 +0100
 Subject: [PATCH 037/251] serial: 8250: implement write_atomic

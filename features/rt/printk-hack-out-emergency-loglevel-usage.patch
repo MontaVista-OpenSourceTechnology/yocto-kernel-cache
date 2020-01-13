@@ -1,4 +1,4 @@
-From a7118f0894adc8f27033645c8180f4f6630b5292 Mon Sep 17 00:00:00 2001
+From 6ff67d04d5ec5ecd42ce5db474b9b7ff47f2dd1c Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 3 Dec 2019 09:14:57 +0100
 Subject: [PATCH 053/251] printk: hack out emergency loglevel usage

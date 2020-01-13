@@ -1,4 +1,4 @@
-From 1d7c87f73d6c3a01fae60bb9cee42343fe6ac3dc Mon Sep 17 00:00:00 2001
+From 5126d793d29cabe4bad0199b358bd040d27d6438 Mon Sep 17 00:00:00 2001
 From: Benedikt Spranger <b.spranger@linutronix.de>
 Date: Mon, 8 Mar 2010 18:57:04 +0100
 Subject: [PATCH 233/251] clocksource: TCLIB: Allow higher clock rates for

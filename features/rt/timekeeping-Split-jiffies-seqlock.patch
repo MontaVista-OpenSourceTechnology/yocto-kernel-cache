@@ -1,4 +1,4 @@
-From 9c960727a91b35386f7c435d4c1bb95cb1014064 Mon Sep 17 00:00:00 2001
+From b7211c5346ab3ac485ece98365582fbef9e8ad57 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Feb 2013 22:36:59 +0100
 Subject: [PATCH 074/251] timekeeping: Split jiffies seqlock

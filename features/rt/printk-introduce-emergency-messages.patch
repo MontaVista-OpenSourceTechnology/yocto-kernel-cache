@@ -1,4 +1,4 @@
-From 473b1f62dde023afd3abbef548a3e9937ef1ead4 Mon Sep 17 00:00:00 2001
+From e68c3f638a5faabe8f82ee2437b5ba47bf816436 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:57 +0100
 Subject: [PATCH 036/251] printk: introduce emergency messages

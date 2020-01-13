@@ -1,6 +1,6 @@
-From 61a03ccec6b5231ef6adf6de444c5064f941fea6 Mon Sep 17 00:00:00 2001
+From 58cf4e38cfca80b5645f7ddc45a72d60ebad86f1 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Date: Mon, 13 Jan 2020 11:23:28 -0500
+Date: Mon, 13 Jan 2020 12:11:23 -0500
 Subject: [PATCH 147/251] rbtree: don't include the rcu header
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

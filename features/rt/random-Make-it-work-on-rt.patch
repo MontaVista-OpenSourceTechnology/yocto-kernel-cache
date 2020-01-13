@@ -1,4 +1,4 @@
-From 7f16b703756c919abfc4ddd8707004fee695cc8f Mon Sep 17 00:00:00 2001
+From 9e3b3da08dd4e358641f7319565f5785cce4f57b Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Tue, 21 Aug 2012 20:38:50 +0200
 Subject: [PATCH 197/251] random: Make it work on rt

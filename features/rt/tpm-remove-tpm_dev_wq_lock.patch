@@ -1,4 +1,4 @@
-From 66f7e3f98082e593f5474eb791e9d7a621bbc33f Mon Sep 17 00:00:00 2001
+From d0ff75acbc779622b3ba0ec33b31569163e5ef84 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 11 Feb 2019 11:33:11 +0100
 Subject: [PATCH 072/251] tpm: remove tpm_dev_wq_lock

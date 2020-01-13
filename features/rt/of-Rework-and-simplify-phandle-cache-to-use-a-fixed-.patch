@@ -1,4 +1,4 @@
-From 63930479ec62ef41cb4210ef90f2ba32e391df7b Mon Sep 17 00:00:00 2001
+From d05d6e809c3ecd881dd98404f7a9d57c2617f03f Mon Sep 17 00:00:00 2001
 From: Rob Herring <robh@kernel.org>
 Date: Wed, 11 Dec 2019 17:23:45 -0600
 Subject: [PATCH 073/251] of: Rework and simplify phandle cache to use a fixed

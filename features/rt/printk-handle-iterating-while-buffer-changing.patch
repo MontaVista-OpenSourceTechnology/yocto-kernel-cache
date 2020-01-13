@@ -1,4 +1,4 @@
-From aee3a4c8b1fabbc73ee38b6bf9429d27bf66302f Mon Sep 17 00:00:00 2001
+From 08e76b61bb0754d6ea5a76c14e5afe6ebad0fb66 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 7 Oct 2019 16:20:39 +0200
 Subject: [PATCH 052/251] printk: handle iterating while buffer changing

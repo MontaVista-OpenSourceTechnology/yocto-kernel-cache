@@ -1,4 +1,4 @@
-From c8a797b555d9ecad04752396578317ff5d3b9162 Mon Sep 17 00:00:00 2001
+From 1a7a6d5fb8f6b87a53714b51f598f9cad28cb20c Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 14 Aug 2019 16:38:43 +0200
 Subject: [PATCH 076/251] dma-buf: Use seqlock_t instread disabling preemption

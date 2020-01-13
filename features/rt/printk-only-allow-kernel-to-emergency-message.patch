@@ -1,4 +1,4 @@
-From 6216134f24a0506f1e581321d6f85891e95f81de Mon Sep 17 00:00:00 2001
+From ec8e64e07599fda8fc26422822e4db6028ecd22b Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Sun, 17 Feb 2019 03:11:20 +0100
 Subject: [PATCH 047/251] printk: only allow kernel to emergency message

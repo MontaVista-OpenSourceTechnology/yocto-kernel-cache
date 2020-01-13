@@ -1,4 +1,4 @@
-From 3610b2d11baec2dc4d01350263ba4d7dadb82080 Mon Sep 17 00:00:00 2001
+From 0ad89399794761cc936ccf8de3f2f2a9b7802f24 Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Wed, 19 Dec 2018 16:30:57 +0100
 Subject: [PATCH 059/251] kmemleak: Turn kmemleak_lock and object->lock to

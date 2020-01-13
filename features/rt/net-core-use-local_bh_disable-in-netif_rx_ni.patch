@@ -1,4 +1,4 @@
-From bbedc4b9b156d9298b9f5734b441ae2f0562b639 Mon Sep 17 00:00:00 2001
+From 0abf5ac0820454ba2cfa35267278707a18568787 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 16 Jun 2017 19:03:16 +0200
 Subject: [PATCH 137/251] net/core: use local_bh_disable() in netif_rx_ni()

@@ -1,4 +1,4 @@
-From 31bbc46e46dc4828fda8a1636255e4c3dd48d679 Mon Sep 17 00:00:00 2001
+From 43ab7a9bfa105e14e2c0f460342c141da4664234 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 1 Jul 2019 17:39:28 +0200
 Subject: [PATCH 096/251] x86: Disable HAVE_ARCH_JUMP_LABEL

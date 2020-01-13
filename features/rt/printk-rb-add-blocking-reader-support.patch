@@ -1,4 +1,4 @@
-From d248cbe96a25d58dea7b69c95117e90613d24ada Mon Sep 17 00:00:00 2001
+From ea12517bc81c1bd3f770dd67470d9c11629486a8 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Feb 2019 15:29:44 +0100
 Subject: [PATCH 023/251] printk-rb: add blocking reader support

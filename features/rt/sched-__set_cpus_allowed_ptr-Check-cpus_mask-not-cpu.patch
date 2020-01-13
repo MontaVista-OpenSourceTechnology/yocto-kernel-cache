@@ -1,4 +1,4 @@
-From 42aefb672f3bf8b9fd7527d6ded6ea58a09eebfd Mon Sep 17 00:00:00 2001
+From f39a5883c90f4d52c2ec5b94fd366b3bf84e8e9a Mon Sep 17 00:00:00 2001
 From: Scott Wood <swood@redhat.com>
 Date: Sat, 27 Jul 2019 00:56:32 -0500
 Subject: [PATCH 163/251] sched: __set_cpus_allowed_ptr(): Check cpus_mask, not
