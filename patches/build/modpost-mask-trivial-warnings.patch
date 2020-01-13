@@ -1,4 +1,4 @@
-From bd48931bc142bdd104668f3a062a1f22600aae61 Mon Sep 17 00:00:00 2001
+From 1de72de61de403c164a6e0cf8e2b2fbe7379518b Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Sun, 25 Jan 2009 17:58:09 -0500
 Subject: [PATCH] modpost: mask trivial warnings
@@ -10,38 +10,41 @@ assign values so we aren't overwhelmed with these warnings
 once the kernel build kicks off.
 
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+ scripts/mod/modpost.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 48958d3cec9e..5911b2d18500 100644
+index 6e892c93d104..80e998155459 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -1929,7 +1929,7 @@ static void read_symbols(char *modname)
- 	char *version;
+@@ -2010,7 +2010,7 @@ static void read_symbols(const char *modname)
  	char *license;
+ 	char *namespace;
  	struct module *mod;
 -	struct elf_info info = { };
 +	struct elf_info info = { .hdr = NULL };
  	Elf_Sym *sym;
  
  	if (!parse_elf(&info, modname))
-@@ -2355,7 +2355,7 @@ static int dump_sym(struct symbol *sym)
+@@ -2502,7 +2502,7 @@ static int dump_sym(struct symbol *sym)
  
  static void write_dump(const char *fname)
  {
 -	struct buffer buf = { };
 +	struct buffer buf = { NULL, 0, 0 };
  	struct symbol *symbol;
+ 	const char *namespace;
  	int n;
- 
-@@ -2381,7 +2381,7 @@ struct ext_sym_list {
+@@ -2556,7 +2556,7 @@ struct ext_sym_list {
  int main(int argc, char **argv)
  {
  	struct module *mod;
 -	struct buffer buf = { };
 +	struct buffer buf = { NULL, 0, 0 };
- 	char *kernel_read = NULL, *module_read = NULL;
+ 	char *kernel_read = NULL;
+ 	char *missing_namespace_deps = NULL;
  	char *dump_write = NULL, *files_source = NULL;
- 	int opt;
 -- 
-2.10.1
+2.19.1
 

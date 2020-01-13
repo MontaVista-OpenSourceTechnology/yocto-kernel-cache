@@ -4,6 +4,6 @@ define KERNEL_VERSION 5.5
 # Force the base configuration
 
 # uncomment this branch line for shared kernel tree builds
-branch v5.5
+# branch v5.5
 
 force kconf non-hardware base.cfg
