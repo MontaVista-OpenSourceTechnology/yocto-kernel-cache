@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 patch lib-smp_processor_id-Don-t-use-cpumask_equal.patch
-patch lib-ubsan-Don-t-seralize-UBSAN-report.patch
 patch jbd2-Simplify-journal_unmap_buffer.patch
 patch jbd2-Remove-jbd_trylock_bh_state.patch
 patch jbd2-Move-dropping-of-jh-reference-out-of-un-re-fili.patch
@@ -9,11 +8,9 @@ patch jbd2-Don-t-call-__bforget-unnecessarily.patch
 patch jbd2-Make-state-lock-a-spinlock.patch
 patch jbd2-Free-journal-head-outside-of-locked-region.patch
 patch workqueue-Convert-for_each_wq-to-use-built-in-list-c.patch
-patch x86-ioapic-Prevent-inconsistent-state-when-moving-an.patch
 patch x86-ioapic-Rename-misnamed-functions.patch
 patch percpu-refcount-use-normal-instead-of-RCU-sched.patch
 patch drm-i915-Don-t-disable-interrupts-independently-of-t.patch
-patch watchdog-prevent-deferral-of-watchdogd-wakeup-on-RT.patch
 patch block-Don-t-disable-interrupts-in-trigger_softirq.patch
 patch arm64-KVM-Invoke-compute_layout-before-alternatives-.patch
 patch net-sched-Use-msleep-instead-of-yield.patch
@@ -55,6 +52,8 @@ patch printk-kmsg_dump-remove-mutex-usage.patch
 patch printk-devkmsg-read-Return-EPIPE-when-the-first-mess.patch
 patch printk-handle-iterating-while-buffer-changing.patch
 patch printk-hack-out-emergency-loglevel-usage.patch
+patch serial-8250-only-atomic-lock-for-console.patch
+patch serial-8250-fsl-ingenic-mtk-fix-atomic-console.patch
 patch fs-buffer-Make-BH_Uptodate_Lock-bit_spin_lock-a-regu.patch
 patch thermal-x86_pkg_temp-Make-pkg_temp_lock-a-raw_spinlo.patch
 patch perf-core-Add-SRCU-annotation-for-pmus-list-walk.patch
