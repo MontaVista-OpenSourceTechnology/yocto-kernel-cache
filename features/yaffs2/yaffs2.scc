@@ -2,3 +2,9 @@
 patch yaffs2-import-git-revision-b4ce1bb-jan-2020.patch
 patch yaffs2-adjust-to-proper-location-of-MS_RDONLY.patch
 patch fs-yaffs2-replace-CURRENT_TIME-by-other-appropriate-.patch
+patch Yaffs-check-oob-size-before-auto-selecting-Yaffs1.patch
+patch yaffs-Avoid-setting-any-ACL-releated-xattr.patch
+patch yaffs2-fix-memory-leak-in-mount-umount.patch
+patch yaffs-Fix-build-failure-by-handling-inode-i_version-.patch
+patch yaffs-repair-yaffs_get_mtd_device.patch
+patch yaffs-add-strict-check-when-call-yaffs_internal_read.patch
