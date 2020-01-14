@@ -1,2 +1,4 @@
 # SPDX-License-Identifier: MIT
 patch yaffs2-import-git-revision-b4ce1bb-jan-2020.patch
+patch yaffs2-adjust-to-proper-location-of-MS_RDONLY.patch
+patch fs-yaffs2-replace-CURRENT_TIME-by-other-appropriate-.patch
