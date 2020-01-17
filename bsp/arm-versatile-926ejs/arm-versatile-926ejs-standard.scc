@@ -12,4 +12,3 @@ branch arm-versatile-926ejs
 include arm-versatile-926ejs.scc
 
 patch arm_versatile_926ejs-kick-off-PrimeCell-RTC-PL031.patch
-patch Omit-to-optimize-vsprintf.c-kasprintf.c.patch
