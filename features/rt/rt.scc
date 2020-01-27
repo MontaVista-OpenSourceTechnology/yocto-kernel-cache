@@ -250,3 +250,9 @@ patch signals-Allow-rt-tasks-to-cache-one-sigqueue-struct.patch
 patch genirq-Disable-irqpoll-on-rt.patch
 patch sysfs-Add-sys-kernel-realtime-entry.patch
 patch Add-localversion-for-RT-release.patch
+patch v5.4.13-rt6.patch
+patch Revert-hrtimer-move-state-change-before-hrtimer_canc.patch
+patch smp-Use-smp_cond_func_t-as-type-for-the-conditional-.patch
+patch smp-Add-a-smp_cond_func_t-argument-to-smp_call_funct.patch
+patch smp-Remove-allocation-mask-from-on_each_cpu_cond.patch
+patch v5.4.13-rt7.patch

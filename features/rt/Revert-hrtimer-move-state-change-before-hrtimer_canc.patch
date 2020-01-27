@@ -1,0 +1,37 @@
+From 9c2be7c3dbf66643717767459fa3caafdf654ece Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Mon, 20 Jan 2020 10:55:01 +0100
+Subject: [PATCH 2/6] Revert "hrtimer: move state change before hrtimer_cancel
+ in do_nanosleep()"
+
+Since the rewrite of the hrtimer canceling code, the sleeping part
+acquries a sleeping lock which preserves the state and it no longer
+triggers a warning here.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ kernel/time/hrtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index f583000140c9..41cc1c8530d8 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1873,12 +1873,12 @@ static int __sched do_nanosleep(struct hrtimer_sleeper *t, enum hrtimer_mode mod
+ 		if (likely(t->task))
+ 			freezable_schedule();
+ 
+-		__set_current_state(TASK_RUNNING);
+ 		hrtimer_cancel(&t->timer);
+ 		mode = HRTIMER_MODE_ABS;
+ 
+ 	} while (t->task && !signal_pending(current));
+ 
++	__set_current_state(TASK_RUNNING);
+ 
+ 	if (!t->task)
+ 		return 0;
+-- 
+2.19.1
+

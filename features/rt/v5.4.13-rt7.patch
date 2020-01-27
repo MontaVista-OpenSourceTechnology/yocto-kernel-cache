@@ -1,0 +1,21 @@
+From 5d5d4070c5f8b10a4c6bda37e77071ce37f102d5 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Mon, 20 Jan 2020 11:48:34 +0100
+Subject: [PATCH 6/6] v5.4.13-rt7
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/localversion-rt b/localversion-rt
+index 8fc605d80667..045478966e9f 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt6
++-rt7
+-- 
+2.19.1
+
