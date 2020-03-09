@@ -7,6 +7,5 @@ fi
 
 patch malta-uhci-quirks-make-allowance-for-slow-4k-e-c.patch
 patch 4kc-cache-tlb-hazard-tlbp-cache-coherency.patch
-patch staging-octeon-Add-a-workaround-for-the-issue-of-GCC.patch
 patch mips-Kconfig-add-QEMUMIPS64-option.patch
 patch mips-vdso-fix-jalr-t9-crash-in-vdso-code.patch

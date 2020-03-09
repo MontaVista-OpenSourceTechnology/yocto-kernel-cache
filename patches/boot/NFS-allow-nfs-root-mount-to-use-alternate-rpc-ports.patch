@@ -12,7 +12,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  fs/nfs/client.c                | 12 ++++++++++--
  fs/nfs/internal.h              |  7 +++++--
  fs/nfs/mount_clnt.c            |  7 ++++---
- fs/nfs/super.c                 | 34 +++++++++++++++++++++++++++++++++-
+ fs/nfs/fs_context.c                 | 34 +++++++++++++++++++++++++++++++++-
  include/linux/nfs_fs_sb.h      |  2 ++
  include/uapi/linux/nfs_mount.h |  4 +++-
  6 files changed, 57 insertions(+), 9 deletions(-)
@@ -149,10 +149,10 @@ index cb7c10e9721e..266da4cac411 100644
  	.name		= "mount",
  	.number		= NFS_MNT_PROGRAM,
  	.nrvers		= ARRAY_SIZE(mnt_version),
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
 index 8d8d04bb9d64..e09f468bcf18 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
 @@ -105,6 +105,8 @@ enum {
  	Opt_mountport,
  	Opt_mountvers,
