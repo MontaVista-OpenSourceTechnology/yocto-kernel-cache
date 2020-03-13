@@ -5,3 +5,4 @@ patch aufs5-base.patch
 patch aufs5-mmap.patch
 patch aufs5-standalone.patch
 patch aufs5-core.patch
+patch aufs5-fix-avoid-to-access-rw_sem.owner-in-RT-kernel.patch
