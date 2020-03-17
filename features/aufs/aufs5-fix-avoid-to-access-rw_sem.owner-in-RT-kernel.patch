@@ -1,7 +1,7 @@
-From 2072dd3b19d1b137d4c64d6162b03e509173e1e5 Mon Sep 17 00:00:00 2001
+From df7b874159bde83689d4ac2df9e1be4a12b81118 Mon Sep 17 00:00:00 2001
 From: Yanfei Xu <yanfei.xu@windriver.com>
 Date: Thu, 12 Mar 2020 00:57:37 +0800
-Subject: [PATCH] aufs5:fix:avoid to access rw_sem.owner in RT kernel
+Subject: [PATCH 6/6] aufs5:fix:avoid to access rw_sem.owner in RT kernel
 
 Fix build failure.
 
@@ -33,15 +33,17 @@ fs/aufs/i_op.o] Error 1
 Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
  fs/aufs/i_op.c | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
-index ef1e08c7ca10..926795a0101c 100644
+index e982bbbc4196..1ebbaac22014 100644
 --- a/fs/aufs/i_op.c
 +++ b/fs/aufs/i_op.c
-@@ -640,7 +640,11 @@ int au_pin_hdir_relock(struct au_pin *p)
+@@ -633,7 +633,11 @@ int au_pin_hdir_relock(struct au_pin *p)
  
  static void au_pin_hdir_set_owner(struct au_pin *p, struct task_struct *task)
  {

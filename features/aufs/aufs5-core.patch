@@ -1,7 +1,7 @@
-From 86f59bbc023cb2c9f95b71eddc394f5d86bcf4d4 Mon Sep 17 00:00:00 2001
+From eedbd716b59eaedd46b2c38381a61c3f98bc7f92 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Mon, 13 Jan 2020 12:33:15 -0500
-Subject: [PATCH 5/5] aufs5: core
+Date: Mon, 16 Mar 2020 23:46:39 -0400
+Subject: [PATCH 5/6] aufs5: core
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
@@ -55,8 +55,8 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  fs/aufs/hbl.h                                 |   65 +
  fs/aufs/hfsnotify.c                           |  288 +++
  fs/aufs/hfsplus.c                             |   60 +
- fs/aufs/hnotify.c                             |  721 ++++++
- fs/aufs/i_op.c                                | 1505 +++++++++++++
+ fs/aufs/hnotify.c                             |  715 ++++++
+ fs/aufs/i_op.c                                | 1498 +++++++++++++
  fs/aufs/i_op_add.c                            |  936 ++++++++
  fs/aufs/i_op_del.c                            |  513 +++++
  fs/aufs/i_op_ren.c                            | 1250 +++++++++++
@@ -76,7 +76,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  fs/aufs/plink.c                               |  516 +++++
  fs/aufs/poll.c                                |   51 +
  fs/aufs/posix_acl.c                           |  105 +
- fs/aufs/procfs.c                              |  171 ++
+ fs/aufs/procfs.c                              |  170 ++
  fs/aufs/rdu.c                                 |  384 ++++
  fs/aufs/rwsem.h                               |   73 +
  fs/aufs/sbinfo.c                              |  314 +++
@@ -85,19 +85,19 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  fs/aufs/sysaufs.c                             |   93 +
  fs/aufs/sysaufs.h                             |  102 +
  fs/aufs/sysfs.c                               |  374 ++++
- fs/aufs/sysrq.c                               |  160 ++
+ fs/aufs/sysrq.c                               |  149 ++
  fs/aufs/vdir.c                                |  896 ++++++++
  fs/aufs/vfsub.c                               |  902 ++++++++
  fs/aufs/vfsub.h                               |  354 +++
  fs/aufs/wbr_policy.c                          |  830 +++++++
  fs/aufs/whout.c                               | 1062 +++++++++
  fs/aufs/whout.h                               |   86 +
- fs/aufs/wkq.c                                 |  392 ++++
+ fs/aufs/wkq.c                                 |  372 ++++
  fs/aufs/wkq.h                                 |   89 +
  fs/aufs/xattr.c                               |  356 +++
- fs/aufs/xino.c                                | 1965 +++++++++++++++++
+ fs/aufs/xino.c                                | 1966 +++++++++++++++++
  include/uapi/linux/aufs_type.h                |  452 ++++
- 92 files changed, 37853 insertions(+)
+ 92 files changed, 37809 insertions(+)
  create mode 100644 Documentation/ABI/testing/debugfs-aufs
  create mode 100644 Documentation/ABI/testing/sysfs-aufs
  create mode 100644 Documentation/filesystems/aufs/README
@@ -698,12 +698,12 @@ index 000000000000..3e655d357134
 +# End: ;
 diff --git a/Documentation/filesystems/aufs/design/01intro.txt b/Documentation/filesystems/aufs/design/01intro.txt
 new file mode 100644
-index 000000000000..609bf0e9b93a
+index 000000000000..47e0a01a8af2
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/01intro.txt
 @@ -0,0 +1,171 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -875,12 +875,12 @@ index 000000000000..609bf0e9b93a
 +about it. But currently I have implemented it in kernel space.
 diff --git a/Documentation/filesystems/aufs/design/02struct.txt b/Documentation/filesystems/aufs/design/02struct.txt
 new file mode 100644
-index 000000000000..2467788c7f10
+index 000000000000..0092b3dcfbe0
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/02struct.txt
 @@ -0,0 +1,258 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1139,12 +1139,12 @@ index 000000000000..2467788c7f10
 +For this purpose, use "aumvdown" command in aufs-util.git.
 diff --git a/Documentation/filesystems/aufs/design/03atomic_open.txt b/Documentation/filesystems/aufs/design/03atomic_open.txt
 new file mode 100644
-index 000000000000..9f16ac1e0173
+index 000000000000..fb8cf0bc8c72
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/03atomic_open.txt
 @@ -0,0 +1,85 @@
 +
-+# Copyright (C) 2015-2019 Junjiro R. Okajima
++# Copyright (C) 2015-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1230,12 +1230,12 @@ index 000000000000..9f16ac1e0173
 +       be implemented in aufs, but not all I am afraid.
 diff --git a/Documentation/filesystems/aufs/design/03lookup.txt b/Documentation/filesystems/aufs/design/03lookup.txt
 new file mode 100644
-index 000000000000..08b443d94dfa
+index 000000000000..5c3c97f11c57
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/03lookup.txt
 @@ -0,0 +1,113 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1349,12 +1349,12 @@ index 000000000000..08b443d94dfa
 +   by over-mounting something (or another method).
 diff --git a/Documentation/filesystems/aufs/design/04branch.txt b/Documentation/filesystems/aufs/design/04branch.txt
 new file mode 100644
-index 000000000000..3ab3682a42b4
+index 000000000000..da5200be41a9
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/04branch.txt
 @@ -0,0 +1,74 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1429,12 +1429,12 @@ index 000000000000..3ab3682a42b4
 +    same named entry on the upper branch.
 diff --git a/Documentation/filesystems/aufs/design/05wbr_policy.txt b/Documentation/filesystems/aufs/design/05wbr_policy.txt
 new file mode 100644
-index 000000000000..1f9b86bc6a3e
+index 000000000000..0262084bf634
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/05wbr_policy.txt
 @@ -0,0 +1,64 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1536,12 +1536,12 @@ index 000000000000..2d62bb6dd55f
 +}
 diff --git a/Documentation/filesystems/aufs/design/06dirren.txt b/Documentation/filesystems/aufs/design/06dirren.txt
 new file mode 100644
-index 000000000000..3b80f8659b3e
+index 000000000000..38ae77b2c842
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/06dirren.txt
 @@ -0,0 +1,102 @@
 +
-+# Copyright (C) 2017-2019 Junjiro R. Okajima
++# Copyright (C) 2017-2020 Junjiro R. Okajima
 +#
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1644,12 +1644,12 @@ index 000000000000..3b80f8659b3e
 +equivalen to udba=reval case.
 diff --git a/Documentation/filesystems/aufs/design/06fhsm.txt b/Documentation/filesystems/aufs/design/06fhsm.txt
 new file mode 100644
-index 000000000000..8b498d0af812
+index 000000000000..df985662befb
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/06fhsm.txt
 @@ -0,0 +1,120 @@
 +
-+# Copyright (C) 2011-2019 Junjiro R. Okajima
++# Copyright (C) 2011-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1770,12 +1770,12 @@ index 000000000000..8b498d0af812
 +should restore the original file state after an error happens.
 diff --git a/Documentation/filesystems/aufs/design/06mmap.txt b/Documentation/filesystems/aufs/design/06mmap.txt
 new file mode 100644
-index 000000000000..cdd84ea777fc
+index 000000000000..9184f6710437
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/06mmap.txt
 @@ -0,0 +1,72 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1848,12 +1848,12 @@ index 000000000000..cdd84ea777fc
 +I have to give up this "looks-smater" approach.
 diff --git a/Documentation/filesystems/aufs/design/06xattr.txt b/Documentation/filesystems/aufs/design/06xattr.txt
 new file mode 100644
-index 000000000000..edd7553f3289
+index 000000000000..d0f6aedfe2d0
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/06xattr.txt
 @@ -0,0 +1,96 @@
 +
-+# Copyright (C) 2014-2019 Junjiro R. Okajima
++# Copyright (C) 2014-2020 Junjiro R. Okajima
 +#
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -1950,12 +1950,12 @@ index 000000000000..edd7553f3289
 +now, aufs implements the branch attributes to ignore the error.
 diff --git a/Documentation/filesystems/aufs/design/07export.txt b/Documentation/filesystems/aufs/design/07export.txt
 new file mode 100644
-index 000000000000..9b983f3dd78a
+index 000000000000..6fcb00d7dbdb
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/07export.txt
 @@ -0,0 +1,58 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -2014,12 +2014,12 @@ index 000000000000..9b983f3dd78a
 +  lookup_one_len(), vfs_getattr(), encode_fh() and others.
 diff --git a/Documentation/filesystems/aufs/design/08shwh.txt b/Documentation/filesystems/aufs/design/08shwh.txt
 new file mode 100644
-index 000000000000..647a86a65db7
+index 000000000000..d7e58319086b
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/08shwh.txt
 @@ -0,0 +1,52 @@
 +
-+# Copyright (C) 2005-2019 Junjiro R. Okajima
++# Copyright (C) 2005-2020 Junjiro R. Okajima
 +# 
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -2072,12 +2072,12 @@ index 000000000000..647a86a65db7
 +initramfs will use it to replace the old one at the next boot.
 diff --git a/Documentation/filesystems/aufs/design/10dynop.txt b/Documentation/filesystems/aufs/design/10dynop.txt
 new file mode 100644
-index 000000000000..13e8583f2b91
+index 000000000000..d55cae285dff
 --- /dev/null
 +++ b/Documentation/filesystems/aufs/design/10dynop.txt
 @@ -0,0 +1,47 @@
 +
-+# Copyright (C) 2010-2019 Junjiro R. Okajima
++# Copyright (C) 2010-2020 Junjiro R. Okajima
 +#
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -2382,13 +2382,13 @@ index 000000000000..2c819a64935e
 +aufs-$(CONFIG_AUFS_MAGIC_SYSRQ) += sysrq.o
 diff --git a/fs/aufs/aufs.h b/fs/aufs/aufs.h
 new file mode 100644
-index 000000000000..a62a85211b88
+index 000000000000..9a573445876f
 --- /dev/null
 +++ b/fs/aufs/aufs.h
 @@ -0,0 +1,62 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -2450,13 +2450,13 @@ index 000000000000..a62a85211b88
 +#endif /* __AUFS_H__ */
 diff --git a/fs/aufs/branch.c b/fs/aufs/branch.c
 new file mode 100644
-index 000000000000..608bf76f8f21
+index 000000000000..1f141fc8ffed
 --- /dev/null
 +++ b/fs/aufs/branch.c
 @@ -0,0 +1,1428 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -3884,13 +3884,13 @@ index 000000000000..608bf76f8f21
 +}
 diff --git a/fs/aufs/branch.h b/fs/aufs/branch.h
 new file mode 100644
-index 000000000000..012459ad57f3
+index 000000000000..594c8bd674b2
 --- /dev/null
 +++ b/fs/aufs/branch.h
 @@ -0,0 +1,366 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -4302,13 +4302,13 @@ index 000000000000..12782f8e0f38
 +-include ${srctree}/${src}/conf_priv.mk
 diff --git a/fs/aufs/cpup.c b/fs/aufs/cpup.c
 new file mode 100644
-index 000000000000..21134b448967
+index 000000000000..492442339b6c
 --- /dev/null
 +++ b/fs/aufs/cpup.c
 @@ -0,0 +1,1458 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -5766,13 +5766,13 @@ index 000000000000..21134b448967
 +}
 diff --git a/fs/aufs/cpup.h b/fs/aufs/cpup.h
 new file mode 100644
-index 000000000000..abcbfbc55a5c
+index 000000000000..d02f8150fa05
 --- /dev/null
 +++ b/fs/aufs/cpup.h
 @@ -0,0 +1,100 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -5872,13 +5872,13 @@ index 000000000000..abcbfbc55a5c
 +#endif /* __AUFS_CPUP_H__ */
 diff --git a/fs/aufs/dbgaufs.c b/fs/aufs/dbgaufs.c
 new file mode 100644
-index 000000000000..e32d91d1f638
+index 000000000000..80266f4fcf7d
 --- /dev/null
 +++ b/fs/aufs/dbgaufs.c
 @@ -0,0 +1,526 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -6404,13 +6404,13 @@ index 000000000000..e32d91d1f638
 +}
 diff --git a/fs/aufs/dbgaufs.h b/fs/aufs/dbgaufs.h
 new file mode 100644
-index 000000000000..1ea241bf0234
+index 000000000000..7b4ccdebb678
 --- /dev/null
 +++ b/fs/aufs/dbgaufs.h
 @@ -0,0 +1,53 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -6463,13 +6463,13 @@ index 000000000000..1ea241bf0234
 +#endif /* __DBGAUFS_H__ */
 diff --git a/fs/aufs/dcsub.c b/fs/aufs/dcsub.c
 new file mode 100644
-index 000000000000..0b9122307667
+index 000000000000..0b9b1862b563
 --- /dev/null
 +++ b/fs/aufs/dcsub.c
 @@ -0,0 +1,225 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -6694,13 +6694,13 @@ index 000000000000..0b9122307667
 +}
 diff --git a/fs/aufs/dcsub.h b/fs/aufs/dcsub.h
 new file mode 100644
-index 000000000000..5e578995c256
+index 000000000000..36f7fcdd7f23
 --- /dev/null
 +++ b/fs/aufs/dcsub.h
 @@ -0,0 +1,137 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -6837,13 +6837,13 @@ index 000000000000..5e578995c256
 +#endif /* __AUFS_DCSUB_H__ */
 diff --git a/fs/aufs/debug.c b/fs/aufs/debug.c
 new file mode 100644
-index 000000000000..b93bb4f565bf
+index 000000000000..f0c076c61252
 --- /dev/null
 +++ b/fs/aufs/debug.c
 @@ -0,0 +1,441 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -7284,13 +7284,13 @@ index 000000000000..b93bb4f565bf
 +}
 diff --git a/fs/aufs/debug.h b/fs/aufs/debug.h
 new file mode 100644
-index 000000000000..9c52470a61fb
+index 000000000000..7e46953513f2
 --- /dev/null
 +++ b/fs/aufs/debug.h
 @@ -0,0 +1,226 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -7516,13 +7516,13 @@ index 000000000000..9c52470a61fb
 +#endif /* __AUFS_DEBUG_H__ */
 diff --git a/fs/aufs/dentry.c b/fs/aufs/dentry.c
 new file mode 100644
-index 000000000000..faf664508e64
+index 000000000000..50aaaa21d089
 --- /dev/null
 +++ b/fs/aufs/dentry.c
 @@ -0,0 +1,1154 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -8676,13 +8676,13 @@ index 000000000000..faf664508e64
 +};
 diff --git a/fs/aufs/dentry.h b/fs/aufs/dentry.h
 new file mode 100644
-index 000000000000..3b443fc7eef0
+index 000000000000..c9f9c704da0a
 --- /dev/null
 +++ b/fs/aufs/dentry.h
 @@ -0,0 +1,268 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -8950,13 +8950,13 @@ index 000000000000..3b443fc7eef0
 +#endif /* __AUFS_DENTRY_H__ */
 diff --git a/fs/aufs/dinfo.c b/fs/aufs/dinfo.c
 new file mode 100644
-index 000000000000..86140548f046
+index 000000000000..be959106d980
 --- /dev/null
 +++ b/fs/aufs/dinfo.c
 @@ -0,0 +1,554 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -9510,13 +9510,13 @@ index 000000000000..86140548f046
 +}
 diff --git a/fs/aufs/dir.c b/fs/aufs/dir.c
 new file mode 100644
-index 000000000000..68e87d6f287e
+index 000000000000..0bcb39ee7255
 --- /dev/null
 +++ b/fs/aufs/dir.c
 @@ -0,0 +1,763 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -10279,13 +10279,13 @@ index 000000000000..68e87d6f287e
 +};
 diff --git a/fs/aufs/dir.h b/fs/aufs/dir.h
 new file mode 100644
-index 000000000000..5c8065d258bf
+index 000000000000..ef4d1addf168
 --- /dev/null
 +++ b/fs/aufs/dir.h
 @@ -0,0 +1,134 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -10419,13 +10419,13 @@ index 000000000000..5c8065d258bf
 +#endif /* __AUFS_DIR_H__ */
 diff --git a/fs/aufs/dirren.c b/fs/aufs/dirren.c
 new file mode 100644
-index 000000000000..df8a89c970e9
+index 000000000000..354997f3e9f7
 --- /dev/null
 +++ b/fs/aufs/dirren.c
 @@ -0,0 +1,1316 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2017-2019 Junjiro R. Okajima
++ * Copyright (C) 2017-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -10506,7 +10506,7 @@ index 000000000000..df8a89c970e9
 +	found = 0;
 +	idx = au_dr_ihash(ino);
 +	hbl = dr->dr_h_ino + idx;
-+#if 0
++#if 0 /* debug print */
 +	{
 +		struct hlist_bl_node *tmp;
 +
@@ -11741,13 +11741,13 @@ index 000000000000..df8a89c970e9
 +}
 diff --git a/fs/aufs/dirren.h b/fs/aufs/dirren.h
 new file mode 100644
-index 000000000000..a986736462c3
+index 000000000000..1fbc8fb20def
 --- /dev/null
 +++ b/fs/aufs/dirren.h
 @@ -0,0 +1,140 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2017-2019 Junjiro R. Okajima
++ * Copyright (C) 2017-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -11887,13 +11887,13 @@ index 000000000000..a986736462c3
 +#endif /* __AUFS_DIRREN_H__ */
 diff --git a/fs/aufs/dynop.c b/fs/aufs/dynop.c
 new file mode 100644
-index 000000000000..ed79f8255a8f
+index 000000000000..837f94d49f74
 --- /dev/null
 +++ b/fs/aufs/dynop.c
 @@ -0,0 +1,367 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2010-2019 Junjiro R. Okajima
++ * Copyright (C) 2010-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -12260,13 +12260,13 @@ index 000000000000..ed79f8255a8f
 +}
 diff --git a/fs/aufs/dynop.h b/fs/aufs/dynop.h
 new file mode 100644
-index 000000000000..5d0b36559425
+index 000000000000..c0c7a5485ad7
 --- /dev/null
 +++ b/fs/aufs/dynop.h
 @@ -0,0 +1,77 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2010-2019 Junjiro R. Okajima
++ * Copyright (C) 2010-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -12343,13 +12343,13 @@ index 000000000000..5d0b36559425
 +#endif /* __AUFS_DYNOP_H__ */
 diff --git a/fs/aufs/export.c b/fs/aufs/export.c
 new file mode 100644
-index 000000000000..1da2ca0a969b
+index 000000000000..842df6f05517
 --- /dev/null
 +++ b/fs/aufs/export.c
 @@ -0,0 +1,838 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -13187,13 +13187,13 @@ index 000000000000..1da2ca0a969b
 +}
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
 new file mode 100644
-index 000000000000..5254b5cd3942
+index 000000000000..9894e2124bd5
 --- /dev/null
 +++ b/fs/aufs/f_op.c
 @@ -0,0 +1,819 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -13523,7 +13523,7 @@ index 000000000000..5254b5cd3942
 +	if (unlikely(err))
 +		goto out;
 +
-+	err = -ENOSYS;
++	err = -ENOSYS;	/* the branch doesn't have its ->(read|write)_iter() */
 +	iter = NULL;
 +	if (rw == MAY_READ)
 +		iter = h_file->f_op->read_iter;
@@ -13967,7 +13967,7 @@ index 000000000000..5254b5cd3942
 +/* ---------------------------------------------------------------------- */
 +
 +/* no one supports this operation, currently */
-+#if 0
++#if 0 /* reserved for future use */
 +static ssize_t aufs_sendpage(struct file *file, struct page *page, int offset,
 +			     size_t len, loff_t *pos, int more)
 +{
@@ -14003,7 +14003,7 @@ index 000000000000..5254b5cd3942
 +	.setfl		= aufs_setfl,
 +	.splice_write	= aufs_splice_write,
 +	.splice_read	= aufs_splice_read,
-+#if 0
++#if 0 /* reserved for future use */
 +	.aio_splice_write = aufs_aio_splice_write,
 +	.aio_splice_read  = aufs_aio_splice_read,
 +#endif
@@ -14012,13 +14012,13 @@ index 000000000000..5254b5cd3942
 +};
 diff --git a/fs/aufs/fhsm.c b/fs/aufs/fhsm.c
 new file mode 100644
-index 000000000000..f86a4c24fb26
+index 000000000000..9cef93b42993
 --- /dev/null
 +++ b/fs/aufs/fhsm.c
 @@ -0,0 +1,427 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2011-2019 Junjiro R. Okajima
++ * Copyright (C) 2011-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -14445,13 +14445,13 @@ index 000000000000..f86a4c24fb26
 +}
 diff --git a/fs/aufs/file.c b/fs/aufs/file.c
 new file mode 100644
-index 000000000000..dbb33855d226
+index 000000000000..b0075b57d8bc
 --- /dev/null
 +++ b/fs/aufs/file.c
 @@ -0,0 +1,863 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -15314,13 +15314,13 @@ index 000000000000..dbb33855d226
 +};
 diff --git a/fs/aufs/file.h b/fs/aufs/file.h
 new file mode 100644
-index 000000000000..c679a19df528
+index 000000000000..d124d9c8216d
 --- /dev/null
 +++ b/fs/aufs/file.h
 @@ -0,0 +1,342 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -15662,13 +15662,13 @@ index 000000000000..c679a19df528
 +#endif /* __AUFS_FILE_H__ */
 diff --git a/fs/aufs/finfo.c b/fs/aufs/finfo.c
 new file mode 100644
-index 000000000000..448c5e9cd85d
+index 000000000000..25077670a507
 --- /dev/null
 +++ b/fs/aufs/finfo.c
 @@ -0,0 +1,149 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -15817,13 +15817,13 @@ index 000000000000..448c5e9cd85d
 +}
 diff --git a/fs/aufs/fstype.h b/fs/aufs/fstype.h
 new file mode 100644
-index 000000000000..510bd87e9404
+index 000000000000..af4bc6c0dd42
 --- /dev/null
 +++ b/fs/aufs/fstype.h
 @@ -0,0 +1,401 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -16224,13 +16224,13 @@ index 000000000000..510bd87e9404
 +#endif /* __AUFS_FSTYPE_H__ */
 diff --git a/fs/aufs/hbl.h b/fs/aufs/hbl.h
 new file mode 100644
-index 000000000000..6db65b16b08a
+index 000000000000..4d5016bccc51
 --- /dev/null
 +++ b/fs/aufs/hbl.h
 @@ -0,0 +1,65 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2017-2019 Junjiro R. Okajima
++ * Copyright (C) 2017-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -16295,13 +16295,13 @@ index 000000000000..6db65b16b08a
 +#endif /* __AUFS_HBL_H__ */
 diff --git a/fs/aufs/hfsnotify.c b/fs/aufs/hfsnotify.c
 new file mode 100644
-index 000000000000..7945ae3ca073
+index 000000000000..cb4eeb1e6069
 --- /dev/null
 +++ b/fs/aufs/hfsnotify.c
 @@ -0,0 +1,288 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -16589,13 +16589,13 @@ index 000000000000..7945ae3ca073
 +};
 diff --git a/fs/aufs/hfsplus.c b/fs/aufs/hfsplus.c
 new file mode 100644
-index 000000000000..3bd869a69c8f
+index 000000000000..d250f019bedf
 --- /dev/null
 +++ b/fs/aufs/hfsplus.c
 @@ -0,0 +1,60 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2010-2019 Junjiro R. Okajima
++ * Copyright (C) 2010-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -16655,13 +16655,13 @@ index 000000000000..3bd869a69c8f
 +}
 diff --git a/fs/aufs/hnotify.c b/fs/aufs/hnotify.c
 new file mode 100644
-index 000000000000..2e7c2cdb8202
+index 000000000000..231edd1b4753
 --- /dev/null
 +++ b/fs/aufs/hnotify.c
-@@ -0,0 +1,721 @@
+@@ -0,0 +1,715 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -16843,12 +16843,6 @@ index 000000000000..2e7c2cdb8202
 +
 +out_dpages:
 +	au_dpages_free(&dpages);
-+
-+#if 0
-+	/* discard children */
-+	dentry_unhash(dentry);
-+	dput(dentry);
-+#endif
 +out:
 +	return err;
 +}
@@ -17382,13 +17376,13 @@ index 000000000000..2e7c2cdb8202
 +}
 diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
 new file mode 100644
-index 000000000000..ef1e08c7ca10
+index 000000000000..e982bbbc4196
 --- /dev/null
 +++ b/fs/aufs/i_op.c
-@@ -0,0 +1,1505 @@
+@@ -0,0 +1,1498 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -17460,19 +17454,6 @@ index 000000000000..ef1e08c7ca10
 +	if (!err)
 +		err = security_inode_permission(h_inode, mask);
 +
-+#if 0
-+	if (!err) {
-+		/* todo: do we need to call ima_path_check()? */
-+		struct path h_path = {
-+			.dentry	=
-+			.mnt	= h_mnt
-+		};
-+		err = ima_path_check(&h_path,
-+				     mask & (MAY_READ | MAY_WRITE | MAY_EXEC),
-+				     IMA_COUNT_LEAVE);
-+	}
-+#endif
-+
 +out:
 +	return err;
 +}
@@ -17494,7 +17475,13 @@ index 000000000000..ef1e08c7ca10
 +	sb = inode->i_sb;
 +	si_read_lock(sb, AuLock_FLUSH);
 +	ii_read_lock_child(inode);
-+#if 0
++#if 0 /* reserved for future use */
++	/*
++	 * This test may be rather 'too much' since the test is essentially done
++	 * in the aufs_lookup().  Theoretically it is possible that the inode
++	 * generation doesn't match to the superblock's here.  But it isn't a
++	 * big deal I suppose.
++	 */
 +	err = au_iigen_test(inode, au_sigen(sb));
 +	if (unlikely(err))
 +		goto out;
@@ -17612,7 +17599,7 @@ index 000000000000..ef1e08c7ca10
 +	if (inode)
 +		atomic_inc(&inode->i_count);
 +	ret = d_splice_alias(inode, dentry);
-+#if 0
++#if 0 /* reserved for future use */
 +	if (unlikely(d_need_lookup(dentry))) {
 +		spin_lock(&dentry->d_lock);
 +		dentry->d_flags &= ~DCACHE_NEED_LOOKUP;
@@ -18044,7 +18031,7 @@ index 000000000000..ef1e08c7ca10
 +{
 +	if (p->hdir) {
 +		au_pin_hdir_set_owner(p, p->task);
-+		rwsem_release(&p->hdir->hi_inode->i_rwsem.dep_map, 1, _RET_IP_);
++		rwsem_release(&p->hdir->hi_inode->i_rwsem.dep_map, _RET_IP_);
 +	}
 +}
 +
@@ -18893,13 +18880,13 @@ index 000000000000..ef1e08c7ca10
 +};
 diff --git a/fs/aufs/i_op_add.c b/fs/aufs/i_op_add.c
 new file mode 100644
-index 000000000000..af6893e61066
+index 000000000000..80f2cfeeaaa0
 --- /dev/null
 +++ b/fs/aufs/i_op_add.c
 @@ -0,0 +1,936 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -19835,13 +19822,13 @@ index 000000000000..af6893e61066
 +}
 diff --git a/fs/aufs/i_op_del.c b/fs/aufs/i_op_del.c
 new file mode 100644
-index 000000000000..1c459dbea5db
+index 000000000000..9beba2ba8db0
 --- /dev/null
 +++ b/fs/aufs/i_op_del.c
 @@ -0,0 +1,513 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -20354,13 +20341,13 @@ index 000000000000..1c459dbea5db
 +}
 diff --git a/fs/aufs/i_op_ren.c b/fs/aufs/i_op_ren.c
 new file mode 100644
-index 000000000000..91aa66594a42
+index 000000000000..435fa50811ff
 --- /dev/null
 +++ b/fs/aufs/i_op_ren.c
 @@ -0,0 +1,1250 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -20775,7 +20762,7 @@ index 000000000000..91aa66594a42
 +	}
 +
 +	BUG_ON(d_is_positive(a->dst_h_dentry) && a->src_btop != a->btgt);
-+#if 0
++#if 0 /* debugging */
 +	BUG_ON(!au_ftest_ren(a->auren_flags, DIRREN)
 +	       && d_is_positive(a->dst_h_dentry)
 +	       && a->src_btop != a->btgt);
@@ -21610,13 +21597,13 @@ index 000000000000..91aa66594a42
 +}
 diff --git a/fs/aufs/iinfo.c b/fs/aufs/iinfo.c
 new file mode 100644
-index 000000000000..098fd115052a
+index 000000000000..016db39451cd
 --- /dev/null
 +++ b/fs/aufs/iinfo.c
 @@ -0,0 +1,286 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -21902,13 +21889,13 @@ index 000000000000..098fd115052a
 +}
 diff --git a/fs/aufs/inode.c b/fs/aufs/inode.c
 new file mode 100644
-index 000000000000..985377d9bf66
+index 000000000000..4de1b7507c5b
 --- /dev/null
 +++ b/fs/aufs/inode.c
 @@ -0,0 +1,529 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -22120,7 +22107,7 @@ index 000000000000..985377d9bf66
 +	struct dentry *h_dentry;
 +	struct inode *h_inode;
 +	struct au_iinfo *iinfo;
-+	struct inode_operations *iop;
++	const struct inode_operations *iop;
 +
 +	IiMustWriteLock(inode);
 +
@@ -22437,13 +22424,13 @@ index 000000000000..985377d9bf66
 +}
 diff --git a/fs/aufs/inode.h b/fs/aufs/inode.h
 new file mode 100644
-index 000000000000..e387ef16e999
+index 000000000000..f34ea8739427
 --- /dev/null
 +++ b/fs/aufs/inode.h
 @@ -0,0 +1,698 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -22600,7 +22587,7 @@ index 000000000000..e387ef16e999
 +	AuIop_OTHER,
 +	AuIop_Last
 +};
-+extern struct inode_operations aufs_iop[AuIop_Last],
++extern struct inode_operations aufs_iop[AuIop_Last], /* not const */
 +	aufs_iop_nogetattr[AuIop_Last];
 +
 +/* au_wr_dir flags */
@@ -23141,13 +23128,13 @@ index 000000000000..e387ef16e999
 +#endif /* __AUFS_INODE_H__ */
 diff --git a/fs/aufs/ioctl.c b/fs/aufs/ioctl.c
 new file mode 100644
-index 000000000000..fb2fb758283e
+index 000000000000..ae4f73386b90
 --- /dev/null
 +++ b/fs/aufs/ioctl.c
 @@ -0,0 +1,220 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -23367,13 +23354,13 @@ index 000000000000..fb2fb758283e
 +#endif
 diff --git a/fs/aufs/lcnt.h b/fs/aufs/lcnt.h
 new file mode 100644
-index 000000000000..d8508f875f28
+index 000000000000..8afcabe55826
 --- /dev/null
 +++ b/fs/aufs/lcnt.h
 @@ -0,0 +1,186 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2018-2019 Junjiro R. Okajima
++ * Copyright (C) 2018-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -23559,13 +23546,13 @@ index 000000000000..d8508f875f28
 +#endif /* __AUFS_LCNT_H__ */
 diff --git a/fs/aufs/loop.c b/fs/aufs/loop.c
 new file mode 100644
-index 000000000000..bfcb9f994c2d
+index 000000000000..63732e938684
 --- /dev/null
 +++ b/fs/aufs/loop.c
 @@ -0,0 +1,148 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -23713,13 +23700,13 @@ index 000000000000..bfcb9f994c2d
 +}
 diff --git a/fs/aufs/loop.h b/fs/aufs/loop.h
 new file mode 100644
-index 000000000000..7fc394e72d75
+index 000000000000..65c38bbb5d56
 --- /dev/null
 +++ b/fs/aufs/loop.h
 @@ -0,0 +1,55 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -23811,13 +23798,13 @@ index 000000000000..7bc9eef3ffec
 +endif
 diff --git a/fs/aufs/module.c b/fs/aufs/module.c
 new file mode 100644
-index 000000000000..295736adfc3c
+index 000000000000..7245197a6cbf
 --- /dev/null
 +++ b/fs/aufs/module.c
 @@ -0,0 +1,273 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -24090,13 +24077,13 @@ index 000000000000..295736adfc3c
 +module_exit(aufs_exit);
 diff --git a/fs/aufs/module.h b/fs/aufs/module.h
 new file mode 100644
-index 000000000000..3036754b90d0
+index 000000000000..d6a76788d2ff
 --- /dev/null
 +++ b/fs/aufs/module.h
 @@ -0,0 +1,166 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -24262,13 +24249,13 @@ index 000000000000..3036754b90d0
 +#endif /* __AUFS_MODULE_H__ */
 diff --git a/fs/aufs/mvdown.c b/fs/aufs/mvdown.c
 new file mode 100644
-index 000000000000..cbac849ead31
+index 000000000000..c39a39e52ebc
 --- /dev/null
 +++ b/fs/aufs/mvdown.c
 @@ -0,0 +1,706 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2011-2019 Junjiro R. Okajima
++ * Copyright (C) 2011-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -24974,13 +24961,13 @@ index 000000000000..cbac849ead31
 +}
 diff --git a/fs/aufs/opts.c b/fs/aufs/opts.c
 new file mode 100644
-index 000000000000..77e17d7b3bdf
+index 000000000000..16e785facf9b
 --- /dev/null
 +++ b/fs/aufs/opts.c
 @@ -0,0 +1,1880 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -26607,7 +26594,7 @@ index 000000000000..77e17d7b3bdf
 +		if ((br->br_perm & AuBrAttr_ICEX)
 +		    && !h_dir->i_op->listxattr)
 +			br->br_perm &= ~AuBrAttr_ICEX;
-+#if 0
++#if 0 /* untested */
 +		if ((br->br_perm & AuBrAttr_ICEX_SEC)
 +		    && (au_br_sb(br)->s_flags & SB_NOSEC))
 +			br->br_perm &= ~AuBrAttr_ICEX_SEC;
@@ -26860,13 +26847,13 @@ index 000000000000..77e17d7b3bdf
 +}
 diff --git a/fs/aufs/opts.h b/fs/aufs/opts.h
 new file mode 100644
-index 000000000000..6326b54340c7
+index 000000000000..79f3ea56f8bb
 --- /dev/null
 +++ b/fs/aufs/opts.h
 @@ -0,0 +1,225 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -27091,13 +27078,13 @@ index 000000000000..6326b54340c7
 +#endif /* __AUFS_OPTS_H__ */
 diff --git a/fs/aufs/plink.c b/fs/aufs/plink.c
 new file mode 100644
-index 000000000000..718edb8827a3
+index 000000000000..850829b21888
 --- /dev/null
 +++ b/fs/aufs/plink.c
 @@ -0,0 +1,516 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -27613,13 +27600,13 @@ index 000000000000..718edb8827a3
 +}
 diff --git a/fs/aufs/poll.c b/fs/aufs/poll.c
 new file mode 100644
-index 000000000000..c48c6cb6491f
+index 000000000000..6975d3ab2d29
 --- /dev/null
 +++ b/fs/aufs/poll.c
 @@ -0,0 +1,51 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -27670,13 +27657,13 @@ index 000000000000..c48c6cb6491f
 +}
 diff --git a/fs/aufs/posix_acl.c b/fs/aufs/posix_acl.c
 new file mode 100644
-index 000000000000..3c8f9a222ed8
+index 000000000000..0789335650de
 --- /dev/null
 +++ b/fs/aufs/posix_acl.c
 @@ -0,0 +1,105 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2014-2019 Junjiro R. Okajima
++ * Copyright (C) 2014-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -27781,13 +27768,13 @@ index 000000000000..3c8f9a222ed8
 +}
 diff --git a/fs/aufs/procfs.c b/fs/aufs/procfs.c
 new file mode 100644
-index 000000000000..582dd486fcd3
+index 000000000000..50ee0a9c1bcb
 --- /dev/null
 +++ b/fs/aufs/procfs.c
-@@ -0,0 +1,171 @@
+@@ -0,0 +1,170 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2010-2019 Junjiro R. Okajima
++ * Copyright (C) 2010-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -27916,10 +27903,9 @@ index 000000000000..582dd486fcd3
 +	return err;
 +}
 +
-+static const struct file_operations au_procfs_plm_fop = {
-+	.write		= au_procfs_plm_write,
-+	.release	= au_procfs_plm_release,
-+	.owner		= THIS_MODULE
++static const struct proc_ops au_procfs_plm_op = {
++	.proc_write	= au_procfs_plm_write,
++	.proc_release	= au_procfs_plm_release
 +};
 +
 +/* ---------------------------------------------------------------------- */
@@ -27943,7 +27929,7 @@ index 000000000000..582dd486fcd3
 +		goto out;
 +
 +	entry = proc_create(AUFS_PLINK_MAINT_NAME, S_IFREG | 0200,
-+			    au_procfs_dir, &au_procfs_plm_fop);
++			    au_procfs_dir, &au_procfs_plm_op);
 +	if (unlikely(!entry))
 +		goto out_dir;
 +
@@ -27958,13 +27944,13 @@ index 000000000000..582dd486fcd3
 +}
 diff --git a/fs/aufs/rdu.c b/fs/aufs/rdu.c
 new file mode 100644
-index 000000000000..3805e79627eb
+index 000000000000..afd77564f3dc
 --- /dev/null
 +++ b/fs/aufs/rdu.c
 @@ -0,0 +1,384 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -28348,13 +28334,13 @@ index 000000000000..3805e79627eb
 +#endif
 diff --git a/fs/aufs/rwsem.h b/fs/aufs/rwsem.h
 new file mode 100644
-index 000000000000..2f8988fa1bda
+index 000000000000..370eae159348
 --- /dev/null
 +++ b/fs/aufs/rwsem.h
 @@ -0,0 +1,73 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -28427,13 +28413,13 @@ index 000000000000..2f8988fa1bda
 +#endif /* __AUFS_RWSEM_H__ */
 diff --git a/fs/aufs/sbinfo.c b/fs/aufs/sbinfo.c
 new file mode 100644
-index 000000000000..500a920b4ea1
+index 000000000000..3835be61d978
 --- /dev/null
 +++ b/fs/aufs/sbinfo.c
 @@ -0,0 +1,314 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -28747,13 +28733,13 @@ index 000000000000..500a920b4ea1
 +}
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
 new file mode 100644
-index 000000000000..44ee4685b218
+index 000000000000..aa7f210e5493
 --- /dev/null
 +++ b/fs/aufs/super.c
 @@ -0,0 +1,1047 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -28999,7 +28985,7 @@ index 000000000000..44ee4685b218
 +	sb = dentry->d_sb;
 +	if (sb->s_flags & SB_POSIXACL)
 +		seq_puts(m, ",acl");
-+#if 0
++#if 0 /* reserved for future use */
 +	if (sb->s_flags & SB_I_VERSION)
 +		seq_puts(m, ",i_version");
 +#endif
@@ -29800,13 +29786,13 @@ index 000000000000..44ee4685b218
 +};
 diff --git a/fs/aufs/super.h b/fs/aufs/super.h
 new file mode 100644
-index 000000000000..37f02bb21324
+index 000000000000..c0cb0051242c
 --- /dev/null
 +++ b/fs/aufs/super.h
 @@ -0,0 +1,589 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -29985,7 +29971,7 @@ index 000000000000..37f02bb21324
 +	struct hlist_bl_head	si_files;
 +
 +	/* with/without getattr, brother of sb->s_d_op */
-+	struct inode_operations *si_iop_array;
++	const struct inode_operations *si_iop_array;
 +
 +	/*
 +	 * sysfs and lifetime management.
@@ -30395,13 +30381,13 @@ index 000000000000..37f02bb21324
 +#endif /* __AUFS_SUPER_H__ */
 diff --git a/fs/aufs/sysaufs.c b/fs/aufs/sysaufs.c
 new file mode 100644
-index 000000000000..32a0811c54de
+index 000000000000..f615471231b5
 --- /dev/null
 +++ b/fs/aufs/sysaufs.c
 @@ -0,0 +1,93 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -30494,13 +30480,13 @@ index 000000000000..32a0811c54de
 +}
 diff --git a/fs/aufs/sysaufs.h b/fs/aufs/sysaufs.h
 new file mode 100644
-index 000000000000..195fe279b820
+index 000000000000..55c5c9868f3b
 --- /dev/null
 +++ b/fs/aufs/sysaufs.h
 @@ -0,0 +1,102 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -30602,13 +30588,13 @@ index 000000000000..195fe279b820
 +#endif /* __SYSAUFS_H__ */
 diff --git a/fs/aufs/sysfs.c b/fs/aufs/sysfs.c
 new file mode 100644
-index 000000000000..eda987628dbb
+index 000000000000..46638d88ef21
 --- /dev/null
 +++ b/fs/aufs/sysfs.c
 @@ -0,0 +1,374 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -30982,13 +30968,13 @@ index 000000000000..eda987628dbb
 +}
 diff --git a/fs/aufs/sysrq.c b/fs/aufs/sysrq.c
 new file mode 100644
-index 000000000000..db10ec528f5d
+index 000000000000..fc8aa4a2839f
 --- /dev/null
 +++ b/fs/aufs/sysrq.c
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,149 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -31022,6 +31008,7 @@ index 000000000000..db10ec528f5d
 +	struct hlist_bl_head *files;
 +	struct hlist_bl_node *pos;
 +	struct au_finfo *finfo;
++	struct inode *i;
 +
 +	plevel = au_plevel;
 +	au_plevel = KERN_WARNING;
@@ -31034,14 +31021,7 @@ index 000000000000..db10ec528f5d
 +	pr("superblock\n");
 +	au_dpri_sb(sb);
 +
-+#if 0
-+	pr("root dentry\n");
-+	au_dpri_dentry(sb->s_root);
-+	pr("root inode\n");
-+	au_dpri_inode(d_inode(sb->s_root));
-+#endif
-+
-+#if 0
++#if 0 /* reserved */
 +	do {
 +		int err, i, j, ndentry;
 +		struct au_dcsub_pages dpages;
@@ -31062,21 +31042,16 @@ index 000000000000..db10ec528f5d
 +	} while (0);
 +#endif
 +
-+#if 1
-+	{
-+		struct inode *i;
-+
-+		pr("isolated inode\n");
-+		spin_lock(&sb->s_inode_list_lock);
-+		list_for_each_entry(i, &sb->s_inodes, i_sb_list) {
-+			spin_lock(&i->i_lock);
-+			if (1 || hlist_empty(&i->i_dentry))
-+				au_dpri_inode(i);
-+			spin_unlock(&i->i_lock);
-+		}
-+		spin_unlock(&sb->s_inode_list_lock);
++	pr("isolated inode\n");
++	spin_lock(&sb->s_inode_list_lock);
++	list_for_each_entry(i, &sb->s_inodes, i_sb_list) {
++		spin_lock(&i->i_lock);
++		if (hlist_empty(&i->i_dentry))
++			au_dpri_inode(i);
++		spin_unlock(&i->i_lock);
 +	}
-+#endif
++	spin_unlock(&sb->s_inode_list_lock);
++
 +	pr("files\n");
 +	files = &au_sbi(sb)->si_files;
 +	hlist_bl_lock(files);
@@ -31148,13 +31123,13 @@ index 000000000000..db10ec528f5d
 +}
 diff --git a/fs/aufs/vdir.c b/fs/aufs/vdir.c
 new file mode 100644
-index 000000000000..dc768f5d90c6
+index 000000000000..5ba006b80724
 --- /dev/null
 +++ b/fs/aufs/vdir.c
 @@ -0,0 +1,896 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -31249,7 +31224,7 @@ index 000000000000..dc768f5d90c6
 +
 +static void nhash_count(struct hlist_head *head)
 +{
-+#if 0
++#if 0 /* debugging */
 +	unsigned long n;
 +	struct hlist_node *pos;
 +
@@ -32050,13 +32025,13 @@ index 000000000000..dc768f5d90c6
 +}
 diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
 new file mode 100644
-index 000000000000..d6945e22593e
+index 000000000000..e954cd7d0110
 --- /dev/null
 +++ b/fs/aufs/vfsub.c
 @@ -0,0 +1,902 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -32958,13 +32933,13 @@ index 000000000000..d6945e22593e
 +}
 diff --git a/fs/aufs/vfsub.h b/fs/aufs/vfsub.h
 new file mode 100644
-index 000000000000..51e677c7f6b7
+index 000000000000..705f033ba2c3
 --- /dev/null
 +++ b/fs/aufs/vfsub.h
 @@ -0,0 +1,354 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -33318,13 +33293,13 @@ index 000000000000..51e677c7f6b7
 +#endif /* __AUFS_VFSUB_H__ */
 diff --git a/fs/aufs/wbr_policy.c b/fs/aufs/wbr_policy.c
 new file mode 100644
-index 000000000000..64954145c0ec
+index 000000000000..a7cc1109f69d
 --- /dev/null
 +++ b/fs/aufs/wbr_policy.c
 @@ -0,0 +1,830 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -34154,13 +34129,13 @@ index 000000000000..64954145c0ec
 +};
 diff --git a/fs/aufs/whout.c b/fs/aufs/whout.c
 new file mode 100644
-index 000000000000..6c9c8501562a
+index 000000000000..efe0c16508db
 --- /dev/null
 +++ b/fs/aufs/whout.c
 @@ -0,0 +1,1062 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -34465,7 +34440,7 @@ index 000000000000..6c9c8501562a
 +
 +	pr_err("%pd (%s) doesn't support link(2), use noplink and rw+nolwh\n",
 +	       h_root, au_sbtype(h_root->d_sb));
-+	return -ENOSYS;
++	return -ENOSYS;	/* the branch doesn't have its ->link() */
 +}
 +
 +/* todo: should this mkdir be done in /sbin/mount.aufs helper? */
@@ -35222,13 +35197,13 @@ index 000000000000..6c9c8501562a
 +}
 diff --git a/fs/aufs/whout.h b/fs/aufs/whout.h
 new file mode 100644
-index 000000000000..06f69b24e5c1
+index 000000000000..65459ba0e790
 --- /dev/null
 +++ b/fs/aufs/whout.h
 @@ -0,0 +1,86 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -35314,13 +35289,13 @@ index 000000000000..06f69b24e5c1
 +#endif /* __AUFS_WHOUT_H__ */
 diff --git a/fs/aufs/wkq.c b/fs/aufs/wkq.c
 new file mode 100644
-index 000000000000..b0dd8df4e414
+index 000000000000..4d66bb2dc657
 --- /dev/null
 +++ b/fs/aufs/wkq.c
-@@ -0,0 +1,392 @@
+@@ -0,0 +1,372 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -35473,8 +35448,8 @@ index 000000000000..b0dd8df4e414
 +		goto out;
 +
 +	err = 0;
-+#if 0
-+	if (0 && au_debug_test()) /* left for debugging */
++#if 0 /* left for debugging */
++	if (0 && au_debug_test())
 +		lockdep_print_held_locks(curr);
 +#endif
 +	held_locks = curr->held_locks;
@@ -35525,7 +35500,7 @@ index 000000000000..b0dd8df4e414
 +	if (!hl)
 +		return;
 +	while ((p = *hl++)) /* assignment */
-+		rwsem_release(p->instance, 0, /*p->acquire_ip*/_RET_IP_);
++		rwsem_release(p->instance, /*p->acquire_ip*/_RET_IP_);
 +}
 +#endif
 +
@@ -35551,7 +35526,6 @@ index 000000000000..b0dd8df4e414
 +/*
 + * Since struct completion is large, try allocating it dynamically.
 + */
-+#if 1 /* defined(CONFIG_4KSTACKS) || defined(AuTest4KSTACKS) */
 +#define AuWkqCompDeclare(name)	struct completion *comp = NULL
 +
 +static int au_wkq_comp_alloc(struct au_wkinfo *wkinfo, struct completion **comp)
@@ -35569,25 +35543,6 @@ index 000000000000..b0dd8df4e414
 +{
 +	au_kfree_rcu(comp);
 +}
-+
-+#else
-+
-+/* no braces */
-+#define AuWkqCompDeclare(name) \
-+	DECLARE_COMPLETION_ONSTACK(_ ## name); \
-+	struct completion *comp = &_ ## name
-+
-+static int au_wkq_comp_alloc(struct au_wkinfo *wkinfo, struct completion **comp)
-+{
-+	wkinfo->comp = *comp;
-+	return 0;
-+}
-+
-+static void au_wkq_comp_free(struct completion *comp __maybe_unused)
-+{
-+	/* empty */
-+}
-+#endif /* 4KSTACKS */
 +
 +static void au_wkq_run(struct au_wkinfo *wkinfo)
 +{
@@ -35712,13 +35667,13 @@ index 000000000000..b0dd8df4e414
 +}
 diff --git a/fs/aufs/wkq.h b/fs/aufs/wkq.h
 new file mode 100644
-index 000000000000..235370d91693
+index 000000000000..5be76b69d8ff
 --- /dev/null
 +++ b/fs/aufs/wkq.h
 @@ -0,0 +1,89 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -35807,13 +35762,13 @@ index 000000000000..235370d91693
 +#endif /* __AUFS_WKQ_H__ */
 diff --git a/fs/aufs/xattr.c b/fs/aufs/xattr.c
 new file mode 100644
-index 000000000000..8e56b15c53b5
+index 000000000000..b5ba7e32c574
 --- /dev/null
 +++ b/fs/aufs/xattr.c
 @@ -0,0 +1,356 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2014-2019 Junjiro R. Okajima
++ * Copyright (C) 2014-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -36169,13 +36124,13 @@ index 000000000000..8e56b15c53b5
 +}
 diff --git a/fs/aufs/xino.c b/fs/aufs/xino.c
 new file mode 100644
-index 000000000000..35ea33469d36
+index 000000000000..b3152c0ce0b5
 --- /dev/null
 +++ b/fs/aufs/xino.c
-@@ -0,0 +1,1965 @@
+@@ -0,0 +1,1966 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -37530,9 +37485,10 @@ index 000000000000..35ea33469d36
 +	if (unlikely(ul)) {
 +		pr_warn("xi_writing %lu\n", ul);
 +		hlist_bl_lock(hbl);
-+		hlist_bl_for_each_entry_safe (p, pos, n, hbl, node) {
++		hlist_bl_for_each_entry_safe(p, pos, n, hbl, node) {
 +			hlist_bl_del(&p->node);
-+			au_kfree_rcu(p);
++			/* kmemleak reported au_kfree_rcu() doesn't free it */
++			kfree(p);
 +		}
 +		hlist_bl_unlock(hbl);
 +	}
@@ -38140,13 +38096,13 @@ index 000000000000..35ea33469d36
 +}
 diff --git a/include/uapi/linux/aufs_type.h b/include/uapi/linux/aufs_type.h
 new file mode 100644
-index 000000000000..14841899ea18
+index 000000000000..28ef4bb88f21
 --- /dev/null
 +++ b/include/uapi/linux/aufs_type.h
 @@ -0,0 +1,452 @@
 +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 +/*
-+ * Copyright (C) 2005-2019 Junjiro R. Okajima
++ * Copyright (C) 2005-2020 Junjiro R. Okajima
 + *
 + * This program, aufs is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -38179,14 +38135,14 @@ index 000000000000..14841899ea18
 +#define pr_fmt(fmt) \
 +		AUFS_NAME " %s:%d:%.*s[%d]: " fmt, __func__, __LINE__, \
 +		(int)sizeof(current->comm), current->comm, current->pid
++#include <linux/limits.h>
 +#else
 +#include <stdint.h>
 +#include <sys/types.h>
++#include <limits.h>
 +#endif /* __KERNEL__ */
 +
-+#include <linux/limits.h>
-+
-+#define AUFS_VERSION	"5.4.3-20200113"
++#define AUFS_VERSION	"5.x-rcN-20200302"
 +
 +/* todo? move this to linux-2.6.19/include/magic.h */
 +#define AUFS_SUPER_MAGIC	('a' << 24 | 'u' << 16 | 'f' << 8 | 's')
