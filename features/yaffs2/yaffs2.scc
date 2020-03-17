@@ -8,3 +8,4 @@ patch yaffs2-fix-memory-leak-in-mount-umount.patch
 patch yaffs-Fix-build-failure-by-handling-inode-i_version-.patch
 patch yaffs-repair-yaffs_get_mtd_device.patch
 patch yaffs-add-strict-check-when-call-yaffs_internal_read.patch
+patch yaffs2-fix-memory-leak-when-proc-yaffs-is-read.patch
