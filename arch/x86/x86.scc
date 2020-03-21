@@ -1,1 +1,2 @@
 # SPDX-License-Identifier: MIT
+patch Revert-platform-x86-wmi-Destroy-on-cleanup-rather-th.patch
