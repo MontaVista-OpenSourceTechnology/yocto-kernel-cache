@@ -1,4 +1,4 @@
-From ce7d0fb9680e32c86883a2689b394d57b5f3b7cd Mon Sep 17 00:00:00 2001
+From e4a8151a5225a9a547c70066e1c11f6b8206f73a Mon Sep 17 00:00:00 2001
 From: Jack Tan <jack.tan@windriver.com>
 Date: Wed, 10 Mar 2010 15:05:39 +0800
 Subject: [PATCH] mti_malta32: fix the pci resource conflicts
@@ -40,22 +40,48 @@ pcnet32: No access methods
 ......
 ......
 
+And a fixup to the original change:
+
+[
+   mips: malta PCI fixup, fix __init annotation warning
+
+   Currently we see the following link warning:
+
+     WARNING: vmlinux.o(.pci_fixup_final+0xefc): Section mismatch in
+     reference from the variable __pci_fixup_malta_pcnet32_ioports_fixup164
+     to the function .init.text:malta_pcnet32_ioports_fixup()
+     The variable __pci_fixup_malta_pcnet32_ioports_fixup164 references
+     a function __init malta_pcnet32_ioports_fixup().
+     This is often seen when error handling in the init function
+     uses functionality in the exit path.
+     The fix is often to remove the __init annotation of
+     malta_pcnet32_ioports_fixup() so it may be used outside an exit section.
+
+   This is from the addition of "mti_malta32: fix the pci resource conflicts"
+   (5c19c1c31c77 on v5.2/standard/mti-malta32) - which is a relatively old
+   commit, but w/o a malta+PCnet32, I can't speak to whether this commit is
+   still needed, or if the PCI resource overlap was solved another way.
+
+   Hence here, we take the safe path and just remove the __init annotation.
+]
+
 Signed-off-by: Jack Tan <jack.tan@windriver.com>
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- arch/mips/pci/fixup-malta.c |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+ arch/mips/pci/fixup-malta.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/mips/pci/fixup-malta.c b/arch/mips/pci/fixup-malta.c
-index 0f48498..d4075bb 100644
+index 8131e0ffe735..df1cae42ff9e 100644
 --- a/arch/mips/pci/fixup-malta.c
 +++ b/arch/mips/pci/fixup-malta.c
-@@ -101,3 +101,24 @@ static void __init malta_piix_func1_fixup(struct pci_dev *pdev)
- 
+@@ -142,6 +142,27 @@ static void malta_piix_func1_fixup(struct pci_dev *pdev)
  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82371AB,
  	 malta_piix_func1_fixup);
-+
+ 
 +/* Use the io resource allocated by YAMON */
-+static void __init malta_pcnet32_ioports_fixup(struct pci_dev *pdev)
++static void malta_pcnet32_ioports_fixup(struct pci_dev *pdev)
 +{
 +	u32 check = 0, new = 0x1060;
 +
@@ -74,6 +100,10 @@ index 0f48498..d4075bb 100644
 +
 +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_LANCE,
 +	malta_pcnet32_ioports_fixup);
++
+ /* Enable PCI 2.1 compatibility in PIIX4 */
+ static void quirk_dlcsetup(struct pci_dev *dev)
+ {
 -- 
-1.6.5.2
+2.19.1
 
