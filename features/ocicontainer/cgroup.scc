@@ -1,0 +1,4 @@
+define KFEATURE_DESCRIPTION "Enable cgroups needed to run containerd"
+define KFEATURE_COMPATIBILITY board
+
+kconf non-hardware features/cgroups/cgroups.cfg
