@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "A System Trace Module support"
+
+kconf hardware stm.cfg
