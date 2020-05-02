@@ -5,4 +5,3 @@
 patch mount_root-clarify-error-messages-for-when-no-rootfs.patch
 patch check-console-device-file-on-fs-when-booting.patch
 patch nfs-Allow-default-io-size-to-be-configured.patch
-patch nfsroot-set-tcp-as-the-defalut-transport-protocol.patch

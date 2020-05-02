@@ -1,7 +1,7 @@
-From 8632f470f02c70d9501ae21f57740ea23c14773f Mon Sep 17 00:00:00 2001
+From f394300b4bbeb66370ca730d070769d84caece4a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 4 May 2018 09:50:05 -0700
-Subject: [PATCH 2/2] powerpc/ptrace: Disable array-bounds warning with gcc8
+Subject: [PATCH] powerpc/ptrace: Disable array-bounds warning with gcc8
 
 This masks the new gcc8 warning
 include/linux/regset.h:270:4: error: 'memcpy' offset [-527, -529] is out of the bounds [0, 16] of object 'vrsave' with type 'union <anonymous>'
@@ -13,17 +13,17 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 7fab5ab9edc2..601118b43545 100644
+index 7c1ad95b1859..b3f73e686662 100644
 --- a/arch/powerpc/kernel/Makefile
 +++ b/arch/powerpc/kernel/Makefile
-@@ -4,6 +4,7 @@
- #
+@@ -5,6 +5,7 @@
  
- CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"' $(call cc-disable-warning, attribute-alias)
+ ifdef CONFIG_PPC64
+ CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC) $(call cc-disable-warning, attribute-alias)
 +CFLAGS_ptrace.o		+= $(call cc-disable-warning, array-bounds)
  CFLAGS_syscalls.o	+= $(call cc-disable-warning, attribute-alias)
- 
- subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
+ endif
+ ifdef CONFIG_PPC32
 -- 
-2.5.0
+2.19.1
 
