@@ -10,3 +10,4 @@ patch yaffs-repair-yaffs_get_mtd_device.patch
 patch yaffs-add-strict-check-when-call-yaffs_internal_read.patch
 patch yaffs2-fix-memory-leak-when-proc-yaffs-is-read.patch
 patch yaffs2-v5.6-build-fixups.patch
+patch yaffs-fix-misplaced-variable-declaration.patch
