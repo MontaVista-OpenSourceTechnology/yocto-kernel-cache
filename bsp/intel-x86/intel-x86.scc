@@ -42,6 +42,7 @@ include features/mmc/mmc-realtek.scc
 include features/intel-pinctrl/intel-pinctrl.scc
 include features/mgag200/mgag200.scc
 include features/thunderbolt/thunderbolt.scc
+include features/media/media-usb-webcams.scc
 
 kconf hardware intel-x86.cfg
 kconf hardware intel-x86-mga.cfg
