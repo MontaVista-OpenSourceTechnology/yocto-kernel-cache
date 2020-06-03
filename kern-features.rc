@@ -59,6 +59,7 @@
 	config = features/vrf/vrf.scc
 	config = features/firmware/firmware.scc
 	config = features/intel-tco/intel-tco.scc
+	config = features/intel-sst/intel-sst.scc
 	config = features/rpmb/rpmb-sim.scc
 	config = features/rpmb/rpmb-base.scc
 	config = features/rpmb/rpmb-uapi.scc
