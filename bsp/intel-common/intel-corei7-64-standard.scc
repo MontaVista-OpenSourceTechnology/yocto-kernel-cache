@@ -14,3 +14,4 @@ include ktypes/standard/standard.scc
 
 include intel-common-drivers.scc
 include intel-corei7-64.scc
+include features/intel-sst/intel-sst.scc
