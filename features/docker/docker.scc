@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 define KFEATURE_DESCRIPTION "Enable Features needed by docker in addition to LXC features"
 define KFEATURE_COMPATIBILITY board
 
