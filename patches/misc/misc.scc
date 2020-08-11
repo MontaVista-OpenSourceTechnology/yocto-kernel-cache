@@ -9,3 +9,4 @@ patch linux-yocto-Handle-bin-awk-issues.patch
 patch modpost-srcversion-sometimes-incorrect.patch
 patch x86-boot-compressed-64-Define-__force_order-only-whe.patch
 patch arm64-perf-fix-backtrace-for-AAPCS-with-FP-enabled.patch
+patch defconfigs-drop-obselete-options.patch
