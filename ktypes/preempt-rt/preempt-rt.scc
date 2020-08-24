@@ -9,6 +9,7 @@ include features/hrt/hrt.scc
 include features/ftrace/ftrace.scc
 include features/cgroups/cgroups.scc
 include features/net_sched/net_sched.scc
+include features/kprobes/kprobes.scc
 
 include features/fuse/fuse.scc
 include features/serial/8250.scc
