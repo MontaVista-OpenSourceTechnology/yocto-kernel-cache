@@ -1,7 +1,7 @@
-From 4511842e0c220fe26eda7a6b7732fa6672d238f0 Mon Sep 17 00:00:00 2001
+From 7048f76b4ef2c952bc53ef9a16ac5a0ba0a89397 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 7 Aug 2020 09:53:21 -0400
-Subject: [PATCH 2/5] aufs5: aufs5-base
+Subject: [PATCH] aufs5: aufs5-base
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
@@ -22,10 +22,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  14 files changed, 94 insertions(+), 10 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4e2698cc7e23..491f32f3b072 100644
+index f0068bceeb61..bf6b57d8c724 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2984,6 +2984,19 @@ F:	include/linux/audit.h
+@@ -3023,6 +3023,19 @@ F:	include/linux/audit.h
  F:	include/uapi/linux/audit.h
  F:	kernel/audit*
  
@@ -46,10 +46,10 @@ index 4e2698cc7e23..491f32f3b072 100644
  M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
  S:	Maintained
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 475e1a738560..8d77e68aa52b 100644
+index 2f137d6ce169..aaa832147a3e 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -763,6 +763,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -764,6 +764,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	return error;
  }
  
@@ -75,7 +75,7 @@ index 475e1a738560..8d77e68aa52b 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 361ea7ab30ea..3cd36474f302 100644
+index ea0485861d93..ddca6240e0db 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
 @@ -1285,7 +1285,7 @@ enum d_walk_ret {
@@ -123,7 +123,7 @@ index 72c4c347afb7..a7ff2099c2ef 100644
  	if (inode->i_op->update_time)
  		return inode->i_op->update_time(inode, time, flags);
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 4a0f600a3328..12edf29ab2ba 100644
+index bae0e95b3713..0bb0839c419b 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -792,6 +792,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -140,7 +140,7 @@ index 4a0f600a3328..12edf29ab2ba 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 4fb797822567..744831cd0094 100644
+index 5db58b8c78d0..fc61566093d8 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -507,6 +507,28 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t
@@ -214,10 +214,10 @@ index 1373a610dc78..b7b5a0a0df6f 100644
  	if (wait)
  		sync_inodes_sb(sb);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f5abba86107d..0b008da5678d 100644
+index e019ea2f1347..1449233df0e9 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1360,6 +1360,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1337,6 +1337,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -225,7 +225,7 @@ index f5abba86107d..0b008da5678d 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, unsigned long arg, int force);
  extern void f_delown(struct file *filp);
-@@ -1848,6 +1849,7 @@ struct file_operations {
+@@ -1822,6 +1823,7 @@ struct file_operations {
  	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -233,7 +233,7 @@ index f5abba86107d..0b008da5678d 100644
  	int (*flock) (struct file *, int, struct file_lock *);
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
-@@ -1918,6 +1920,12 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+@@ -1892,6 +1894,12 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
  			      struct iovec *fast_pointer,
  			      struct iovec **ret_pointer);
  
@@ -246,7 +246,7 @@ index f5abba86107d..0b008da5678d 100644
  extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
  extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
  extern ssize_t vfs_readv(struct file *, const struct iovec __user *,
-@@ -2352,6 +2360,7 @@ extern int current_umask(void);
+@@ -2310,6 +2318,7 @@ extern int current_umask(void);
  extern void ihold(struct inode * inode);
  extern void iput(struct inode *);
  extern int generic_update_time(struct inode *, struct timespec64 *, int);
@@ -254,19 +254,19 @@ index f5abba86107d..0b008da5678d 100644
  
  /* /sys/fs */
  extern struct kobject *fs_kobj;
-@@ -2633,6 +2642,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
- 	return false;
+@@ -2546,6 +2555,7 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
  }
- #endif
+ 
+ void emergency_thaw_all(void);
 +extern int __sync_filesystem(struct super_block *, int);
  extern int sync_filesystem(struct super_block *);
  extern const struct file_operations def_blk_fops;
  extern const struct file_operations def_chr_fops;
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 8fce5c98a4b0..c1a3f172e97a 100644
+index 62a382d1845b..f9e0a7faa541 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
-@@ -395,6 +395,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
+@@ -237,6 +237,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
  	return lock->key == key;
  }
  
@@ -275,7 +275,7 @@ index 8fce5c98a4b0..c1a3f172e97a 100644
  /*
   * Acquire a lock.
   *
-@@ -540,6 +542,7 @@ struct lockdep_map { };
+@@ -371,6 +373,7 @@ static inline void lockdep_unregister_key(struct lock_class_key *key)
  
  #define lockdep_depth(tsk)	(0)
  
@@ -319,7 +319,7 @@ index 5c47013f708e..fef6c59ed92a 100644
 +			 unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 29a8de4c50b9..6cfff5e18c84 100644
+index 2fad21d345b0..014191e55d26 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -169,7 +169,7 @@ static

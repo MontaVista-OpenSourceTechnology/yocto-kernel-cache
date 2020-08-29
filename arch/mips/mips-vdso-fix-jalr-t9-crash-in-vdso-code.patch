@@ -1,4 +1,4 @@
-From 96f71c147809df7880100edeecb197d5d5095206 Mon Sep 17 00:00:00 2001
+From e8f6bebe11eb365466cfde324f99698dc8f7f4f8 Mon Sep 17 00:00:00 2001
 From: Victor Kamensky <kamensky@cisco.com>
 Date: Fri, 31 Jan 2020 09:39:44 -0800
 Subject: [PATCH] mips: vdso: fix 'jalr $t9' crash in vdso code
@@ -31,15 +31,15 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index 996a934ece7d..25b5adee5ade 100644
+index 57fe83235281..374e1eca2791 100644
 --- a/arch/mips/vdso/Makefile
 +++ b/arch/mips/vdso/Makefile
-@@ -31,7 +31,9 @@ cflags-vdso := $(ccflags-vdso) \
+@@ -35,7 +35,9 @@ cflags-vdso := $(ccflags-vdso) \
  	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+ 	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
  	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
- 	$(call cc-option, -fno-asynchronous-unwind-tables) \
--	$(call cc-option, -fno-stack-protector)
-+	$(call cc-option, -fno-stack-protector) \
+-	$(call cc-option, -fno-asynchronous-unwind-tables)
++	$(call cc-option, -fno-asynchronous-unwind-tables) \
 +	$(call cc-option, -mrelax-pic-calls) \
 +	$(call cc-option, -mexplicit-relocs)
  aflags-vdso := $(ccflags-vdso) \

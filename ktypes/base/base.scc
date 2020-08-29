@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-define KERNEL_VERSION 5.6
+define KERNEL_VERSION 5.9
 
 # Force the base configuration
 
