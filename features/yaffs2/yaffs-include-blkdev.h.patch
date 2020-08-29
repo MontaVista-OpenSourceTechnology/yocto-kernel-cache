@@ -1,0 +1,28 @@
+From a07a378f2bbfc640c6b76abfa3ef2a32a86cbfa2 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Sat, 29 Aug 2020 10:25:04 -0400
+Subject: [PATCH] yaffs: include blkdev.h
+
+The definition of BDEVNAME_SIZE has moved, so we add the new .h
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 3ffdc0129637..a9cf8edc2245 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -74,6 +74,8 @@
+ #include <linux/config.h>
+ #endif
+ 
++#include <linux/blkdev.h>
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+-- 
+2.19.1
+
