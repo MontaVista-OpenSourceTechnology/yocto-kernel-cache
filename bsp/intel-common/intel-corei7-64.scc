@@ -19,6 +19,9 @@ include features/dca/dca.scc
 # INTEL_TELEMETRY is currently 64 bit only
 include features/telemetry/intel-telemetry.scc
 
+# CONFIG_X86_X2APIC is 64-bit
+include features/x2apic/x2apic.scc
+
 # This line comes last as it has the final word on
 # CONFIG values.
 kconf hardware intel-corei7-64.cfg
