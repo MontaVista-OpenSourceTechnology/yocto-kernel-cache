@@ -6,7 +6,6 @@ patch compiler.h-Undef-before-redefining-__attribute_const.patch
 patch uvesafb-print-error-message-when-task-timeout-occurs.patch
 patch uvesafb-provide-option-to-specify-timeout-for-task-c.patch
 patch linux-yocto-Handle-bin-awk-issues.patch
-patch x86-boot-compressed-64-Define-__force_order-only-whe.patch
 patch arm64-perf-fix-backtrace-for-AAPCS-with-FP-enabled.patch
 patch defconfigs-drop-obselete-options.patch
 patch arm64-perf-Fix-wrong-cast-that-may-cause-wrong-trunc.patch
