@@ -1,0 +1,136 @@
+From e32329ee50b0fd09bde9f6fdb3456797b2400347 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 30 Oct 2020 16:39:57 -0400
+Subject: [PATCH] aufs: initial port to v5.10
+
+get_fs/set_fs are only around for nommu systems, we need to
+replace them with:
+
+    mm_segment_t old_fs = force_uaccess_begin();
+    force_uaccess_end(old_fs);
+
+Pairs. This may or may not be the last porting effort.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/cpup.c  |  6 +++---
+ fs/aufs/vfsub.c | 12 ++++++------
+ fs/aufs/xino.c  | 24 ++++++++++++------------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/fs/aufs/cpup.c b/fs/aufs/cpup.c
+index 492442339b6c..15f7d8a5ab76 100644
+--- a/fs/aufs/cpup.c
++++ b/fs/aufs/cpup.c
+@@ -582,11 +582,11 @@ static int au_do_cpup_symlink(struct path *h_path, struct dentry *h_src,
+ 		goto out;
+ 
+ 	/* unnecessary to support mmap_sem since symlink is not mmap-able */
+-	old_fs = get_fs();
+-	set_fs(KERNEL_DS);
++	old_fs = force_uaccess_begin();
++	force_uaccess_end(old_fs);
+ 	symlen = vfs_readlink(h_src, sym.u, PATH_MAX);
+ 	err = symlen;
+-	set_fs(old_fs);
++	force_uaccess_end(old_fs);
+ 
+ 	if (symlen > 0) {
+ 		sym.k[symlen] = 0;
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index a5e10c5c004f..bc886354ab9a 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -525,10 +525,10 @@ ssize_t vfsub_read_k(struct file *file, void *kbuf, size_t count,
+ 	} buf;
+ 
+ 	buf.k = kbuf;
+-	oldfs = get_fs();
+-	set_fs(KERNEL_DS);
++	oldfs = force_uaccess_begin();
++	force_uaccess_end(oldfs);
+ 	err = vfsub_read_u(file, buf.u, count, ppos);
+-	set_fs(oldfs);
++	force_uaccess_end(oldfs);
+ 	return err;
+ }
+ 
+@@ -555,10 +555,10 @@ ssize_t vfsub_write_k(struct file *file, void *kbuf, size_t count, loff_t *ppos)
+ 	} buf;
+ 
+ 	buf.k = kbuf;
+-	oldfs = get_fs();
+-	set_fs(KERNEL_DS);
++	oldfs = force_uaccess_begin();
++	force_uaccess_end(oldfs);
+ 	err = vfsub_write_u(file, buf.u, count, ppos);
+-	set_fs(oldfs);
++	force_uaccess_end(oldfs);
+ 	return err;
+ }
+ 
+diff --git a/fs/aufs/xino.c b/fs/aufs/xino.c
+index b3152c0ce0b5..9b39661c424e 100644
+--- a/fs/aufs/xino.c
++++ b/fs/aufs/xino.c
+@@ -890,22 +890,22 @@ ssize_t xino_fread(vfs_readf_t func, struct file *file, void *kbuf, size_t size,
+ 
+ 	i = 0;
+ 	buf.k = kbuf;
+-	oldfs = get_fs();
+-	set_fs(KERNEL_DS);
++	oldfs = force_uaccess_begin();
++	force_uaccess_end(oldfs);
+ 	do {
+ 		err = func(file, buf.u, size, pos);
+ 		if (err == -EINTR
+ 		    && !au_wkq_test()
+ 		    && fatal_signal_pending(current)) {
+-			set_fs(oldfs);
++			force_uaccess_end(oldfs);
+ 			err = xino_fread_wkq(func, file, kbuf, size, pos);
+ 			BUG_ON(err == -EINTR);
+-			oldfs = get_fs();
+-			set_fs(KERNEL_DS);
++			oldfs = force_uaccess_begin();
++			force_uaccess_end(oldfs);
+ 		}
+ 	} while (i++ < prevent_endless
+ 		 && (err == -EAGAIN || err == -EINTR));
+-	set_fs(oldfs);
++	force_uaccess_end(oldfs);
+ 
+ #if 0 /* reserved for future use */
+ 	if (err > 0)
+@@ -968,22 +968,22 @@ static ssize_t do_xino_fwrite(vfs_writef_t func, struct file *file, void *kbuf,
+ 
+ 	i = 0;
+ 	buf.k = kbuf;
+-	oldfs = get_fs();
+-	set_fs(KERNEL_DS);
++	oldfs = force_uaccess_begin();
++	force_uaccess_end(oldfs);
+ 	do {
+ 		err = func(file, buf.u, size, pos);
+ 		if (err == -EINTR
+ 		    && !au_wkq_test()
+ 		    && fatal_signal_pending(current)) {
+-			set_fs(oldfs);
++			force_uaccess_end(oldfs);
+ 			err = xino_fwrite_wkq(func, file, kbuf, size, pos);
+ 			BUG_ON(err == -EINTR);
+-			oldfs = get_fs();
+-			set_fs(KERNEL_DS);
++			oldfs = force_uaccess_begin();
++			force_uaccess_end(oldfs);
+ 		}
+ 	} while (i++ < prevent_endless
+ 		 && (err == -EAGAIN || err == -EINTR));
+-	set_fs(oldfs);
++	force_uaccess_end(oldfs);
+ 
+ #if 0 /* reserved for future use */
+ 	if (err > 0)
+-- 
+2.19.1
+

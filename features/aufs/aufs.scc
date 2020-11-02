@@ -5,3 +5,6 @@ patch aufs5-aufs5-base.patch
 patch aufs5-aufs5-mmap.patch
 patch aufs5-aufs5-standalone.patch
 patch aufs5-core.patch
+
+patch 0001-aufs-initial-port-to-v5.10.patch
+
