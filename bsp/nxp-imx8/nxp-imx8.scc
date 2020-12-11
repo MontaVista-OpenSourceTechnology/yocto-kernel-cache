@@ -1,4 +1,6 @@
 # Core arm configuation settings
+kconf hardware nxp-imx8.cfg
+
 include features/profiling/profiling.scc
 include features/usb/ehci-hcd.scc
 include cfg/usb-mass-storage.scc
