@@ -1,0 +1,51 @@
+From 9c38d193b41fcc65c1a1f0baf3ff68b82436ae9e Mon Sep 17 00:00:00 2001
+From: John Ogness <john.ogness@linutronix.de>
+Date: Mon, 30 Nov 2020 01:42:11 +0106
+Subject: [PATCH] printk: kmsg_dump,do_mounts wait for printers
+
+Use pr_flush() to give console printers a chance to finish if no
+atomic console is available. This should probably be implemented
+inside panic(), giving panic() an additional @may_sleep argument.
+But that would require evaluating every panic() caller. For now
+just call pr_flush() for kmsg_dump and when failing to mount the
+root filesystem, since these are both common error paths.
+
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ init/do_mounts.c       | 1 +
+ kernel/printk/printk.c | 6 ++++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/init/do_mounts.c b/init/do_mounts.c
+index 25197e5cf944..316db642c13a 100644
+--- a/init/do_mounts.c
++++ b/init/do_mounts.c
+@@ -457,6 +457,7 @@ void __init mount_block_root(char *name, int flags)
+ 		printk("DEBUG_BLOCK_EXT_DEVT is enabled, you need to specify "
+ 		       "explicit textual name for \"root=\" boot option.\n");
+ #endif
++		pr_flush(true, 1000, true);
+ 		printk(KERN_EMERG "VFS: Unable to mount root fs on %s\n", b);
+ 		printk(KERN_EMERG "User configuration error - no valid root filesystem found\n");
+ 		panic("Invalid configuration from end user prevents continuing");
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 6c460566822f..dc5da374a005 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3105,6 +3105,12 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ 			sync_mode = true;
+ 			pr_info("enabled sync mode\n");
+ 		}
++
++		/*
++		 * Give the printing threads time to flush, allowing up to 1
++		 * second of no printing forward progress before giving up.
++		 */
++		pr_flush(false, 100, true);
+ 	}
+ 
+ 	rcu_read_lock();
+-- 
+2.19.1
+
