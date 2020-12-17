@@ -57,6 +57,7 @@
 	config = features/mmc/mmc-realtek.scc
 	config = features/reproducibility/reproducibility.scc
 	config = features/tpm/tpm.scc
+	config = features/igc/igc.scc
 	config = features/misc/bosch-pressure-sensor-i2c.scc
 	config = features/numa/numa.scc
 	config = features/i2c/i2cdbg.scc
@@ -155,6 +156,7 @@
 	config = features/systemtap/systemtap.scc
 	config = features/firewire/firewire.scc
 	config = features/security/security.scc
+	config = features/inline/inline.scc
 	config = features/uio/uio.scc
 	config = features/leds/leds.scc
 	config = features/profiling/profiling.scc
