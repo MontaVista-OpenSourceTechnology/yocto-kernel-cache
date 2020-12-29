@@ -48,6 +48,7 @@ include features/intel-th/intel-th.scc
 include features/stm/stm.scc
 include features/media/media-usb-webcams.scc
 include features/intel-idxd/intel-idxd.scc
+include features/intel-uncore-frequency/intel-uncore-frequency.scc
 
 kconf hardware intel-x86.cfg
 kconf hardware intel-x86-mga.cfg
