@@ -1,0 +1,4 @@
+patch cpumask-Un-inline-cpulist_parse-for-SMP-prepare-for-.patch
+patch cpumask-Make-all-alias-global-and-not-just-RCU.patch
+patch cpumask-Add-a-none-alias-to-complement-all.patch
+patch cpumask-Add-last-alias-for-cpu-list-specifications.patch

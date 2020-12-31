@@ -1,0 +1,54 @@
+From c10e9481810b4f45c588aaa1b696d2317ddb013f Mon Sep 17 00:00:00 2001
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Date: Fri, 18 Dec 2020 13:37:48 -0500
+Subject: [PATCH 3/4] cpumask: Add a "none" alias to complement "all"
+
+commit 1270d1d31e1674ed7012c3b4090bedf88add898f in paulmck/linux-rcu
+
+With global support for a CPU list alias of "all", it seems to just make
+sense to also trivially extend support for an opposite "none" specifier.
+
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ Documentation/admin-guide/kernel-parameters.rst | 6 ++++++
+ lib/cpumask.c                                   | 5 +++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.rst b/Documentation/admin-guide/kernel-parameters.rst
+index ef98ca700946..9e1c4522e1f0 100644
+--- a/Documentation/admin-guide/kernel-parameters.rst
++++ b/Documentation/admin-guide/kernel-parameters.rst
+@@ -76,6 +76,12 @@ is equivalent to "foo_cpus=0-N" -- where "N" is the numerically last CPU on
+ the system, thus avoiding looking up the value in "/sys/devices/system/cpu"
+ in advance on each deployed system.
+ 
++        foo_cpus=none
++
++will provide an empty/cleared cpu mask for the associated boot argument.
++
++Note that "all" and "none" are not necessarily valid/sensible input values
++for each available parameter expecting a CPU list.
+ 
+ This document may not be entirely up to date and comprehensive. The command
+ "modinfo -p ${modulename}" shows a current list of all parameters of a loadable
+diff --git a/lib/cpumask.c b/lib/cpumask.c
+index 15599cdf5db6..eb8b1c92501e 100644
+--- a/lib/cpumask.c
++++ b/lib/cpumask.c
+@@ -110,6 +110,11 @@ int cpulist_parse(const char *buf, struct cpumask *dstp)
+ 		return 0;
+ 	}
+ 
++	if (!strcmp(buf, "none")) {
++		cpumask_clear(dstp);
++		return 0;
++	}
++
+ 	return bitmap_parselist(buf, cpumask_bits(dstp), nr_cpumask_bits);
+ }
+ EXPORT_SYMBOL(cpulist_parse);
+-- 
+2.19.1
+
