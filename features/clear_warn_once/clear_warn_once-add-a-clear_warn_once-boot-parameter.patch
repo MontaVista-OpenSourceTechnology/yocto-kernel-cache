@@ -1,0 +1,75 @@
+From 9ad5defd90591efb015c9a6c59b47108fe68e961 Mon Sep 17 00:00:00 2001
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Date: Wed, 16 Dec 2020 12:22:58 -0500
+Subject: [PATCH 3/3] clear_warn_once: add a clear_warn_once= boot parameter
+
+In the event debugfs is not mounted, or if built with the .config
+setting DEBUG_FS_ALLOW_NONE chosen, this gives the sysadmin access
+to reset the WARN_ONCE() state on a periodic basis.
+
+Link: https://lore.kernel.org/r/20201126063029.2030-1-paul.gortmaker@windriver.com
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  8 +++++++
+ kernel/panic.c                                | 21 +++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 74ba077e99e5..b0c5a7458c03 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5352,6 +5352,14 @@
+ 	vt.underline=	[VT] Default color for underlined text; 0-15.
+ 			Default: 3 = cyan.
+ 
++	clear_warn_once=
++			[KNL]
++			Set the WARN_ONCE reset period in minutes.  Normally
++			a WARN_ONCE() will only ever emit a message once per
++			boot, but for example, setting this to 60 would
++			effectively rate-limit WARN_ONCE to once per hour.
++			Default: 0 = never.
++
+ 	watchdog timers	[HW,WDT] For information on watchdog timers,
+ 			see Documentation/watchdog/watchdog-parameters.rst
+ 			or other driver-specific files in the
+diff --git a/kernel/panic.c b/kernel/panic.c
+index e3a462e39062..f4f3633f4f69 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -697,10 +697,31 @@ static __init int register_warn_debugfs(void)
+ 	/* Don't care about failure */
+ 	debugfs_create_file_unsafe("clear_warn_once", 0600, NULL,
+ 				   &clear_warn_once, &clear_warn_once_fops);
++
++	/* if a bootarg was used, set the initial timer */
++	if (clear_warn_once)
++		warn_once_set(NULL, clear_warn_once);
++
+ 	return 0;
+ }
+ 
+ device_initcall(register_warn_debugfs);
++
++static int __init warn_once_setup(char *s)
++{
++	int r;
++
++	if (!s)
++		return -EINVAL;
++
++	r = kstrtoull(s, 0, &clear_warn_once);
++	if (r)
++		return r;
++
++	return 1;
++}
++__setup("clear_warn_once=", warn_once_setup);
++
+ #endif
+ 
+ #ifdef CONFIG_STACKPROTECTOR
+-- 
+2.19.1
+
