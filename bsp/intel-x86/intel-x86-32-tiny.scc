@@ -4,6 +4,6 @@ define KTYPE tiny
 define KARCH x86
 
 include ktypes/tiny/tiny.scc
-branch intel-x86
+branch x86
 
 include bsp/intel-x86/intel-x86-32.scc

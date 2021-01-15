@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-branch intel-x86
+branch x86
 
 # Core configuration settings for x86_64
 include cfg/x86_64.scc nopatch
