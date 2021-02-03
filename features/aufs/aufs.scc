@@ -8,3 +8,4 @@ patch aufs5-core.patch
 
 patch 0001-aufs-initial-port-to-v5.10.patch
 
+patch aufs-remove-the-redundant-fput-function-invoking.patch
