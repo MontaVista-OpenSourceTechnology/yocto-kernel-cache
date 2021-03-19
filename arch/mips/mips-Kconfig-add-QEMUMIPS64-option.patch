@@ -1,4 +1,4 @@
-From 8b05f6af70cc61956a8563a3bc79789dcffecfc5 Mon Sep 17 00:00:00 2001
+From 63911f5a1a7753ef0fb2a1b82fa268d7e13c3935 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 7 Jan 2020 03:34:12 +0000
 Subject: [PATCH] mips: Kconfig: add QEMUMIPS64 option
@@ -39,12 +39,12 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797d7f1ad5fe..9337527d778f 100644
+index d89efba3d8a4..bc0d3e1cf297 100644
 --- a/arch/mips/Kconfig
 +++ b/arch/mips/Kconfig
-@@ -92,6 +92,10 @@ config MIPS
- 	select SYSCTL_EXCEPTION_TRACE
- 	select VIRT_TO_BUS
+@@ -118,6 +118,10 @@ config MACH_INGENIC
+ 	select CPU_SUPPORTS_CPUFREQ
+ 	select MIPS_EXTERNAL_TIMER
  
 +config QEMUMIPS64
 +	bool "Enable for qemumips64 specific configurations"
@@ -53,7 +53,7 @@ index 797d7f1ad5fe..9337527d778f 100644
  menu "Machine selection"
  
  choice
-@@ -103,17 +107,17 @@ config MIPS_GENERIC
+@@ -131,17 +135,17 @@ config MIPS_GENERIC_KERNEL
  	select BOOT_RAW
  	select BUILTIN_DTB
  	select CEVT_R4K
@@ -62,7 +62,7 @@ index 797d7f1ad5fe..9337527d778f 100644
  	select CPU_MIPSR2_IRQ_EI
  	select CPU_MIPSR2_IRQ_VI
 -	select CSRC_R4K
- 	select DMA_PERDEV_COHERENT
+ 	select DMA_NONCOHERENT
  	select HAVE_PCI
  	select IRQ_MIPS_CPU
  	select MIPS_AUTO_PFN_OFFSET
@@ -73,7 +73,7 @@ index 797d7f1ad5fe..9337527d778f 100644
  	select MIPS_L1_CACHE_SHIFT_7
  	select NO_EXCEPT_FILL
  	select PCI_DRIVERS_GENERIC
-@@ -535,9 +539,9 @@ config MIPS_MALTA
+@@ -546,9 +550,9 @@ config MIPS_MALTA
  	select BOOT_RAW
  	select BUILTIN_DTB
  	select CEVT_R4K
@@ -82,7 +82,7 @@ index 797d7f1ad5fe..9337527d778f 100644
 +	select CSRC_R4K if !QEMUMIPS64
  	select COMMON_CLK
 -	select CSRC_R4K
- 	select DMA_MAYBE_COHERENT
+ 	select DMA_NONCOHERENT
  	select GENERIC_ISA_DMA
  	select HAVE_PCSPKR_PLATFORM
 -- 
