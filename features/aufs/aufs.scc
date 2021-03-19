@@ -1,11 +1,7 @@
 # SPDX-License-Identifier: MIT
 #
-patch aufs5-aufs5-kbuild.patch
-patch aufs5-aufs5-base.patch
-patch aufs5-aufs5-mmap.patch
-patch aufs5-aufs5-standalone.patch
+patch aufs5-aufs-base.patch
+patch aufs5-aufs-mmap.patch
+patch aufs5-aufs-standalone.patch
+patch aufs5-aufs-kbuild.patch
 patch aufs5-core.patch
-
-patch 0001-aufs-initial-port-to-v5.10.patch
-
-patch aufs-remove-the-redundant-fput-function-invoking.patch
