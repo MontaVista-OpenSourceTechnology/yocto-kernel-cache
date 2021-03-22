@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE mti-malta64-be
+define KMACHINE qemumips-64
+define KMACHINE qemumips64
+define KTYPE developer
+define KARCH mips
+
+include ktypes/standard/standard.scc
+branch mti-malta64
+
+include mti-malta64.scc
+kconf hardware mti-malta64-be.cfg
+
+include features/profiling/profiling.scc
+include features/latencytop/latencytop.scc
+include cfg/tracing.scc
+
