@@ -23,6 +23,7 @@ include features/igc/igc.scc
 include features/iwlwifi/iwlwifi.scc
 include features/i40e/i40e.scc
 include features/ice/ice.scc
+include features/net/stmicro/stmmac.scc
 
 include features/usb/uhci-hcd.scc
 include features/usb/ehci-hcd.scc
