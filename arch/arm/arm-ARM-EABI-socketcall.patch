@@ -1,4 +1,4 @@
-From 1f05ef36493eb57d2b7bc4201b6bc105869ea702 Mon Sep 17 00:00:00 2001
+From 3502bc5ce0d25aae81727455869af362099c15bf Mon Sep 17 00:00:00 2001
 From: Mark Asselstine <mark.asselstine@windriver.com>
 Date: Tue, 15 Jul 2008 15:49:27 -0400
 Subject: [PATCH] arm: ARM EABI socketcall
@@ -14,13 +14,13 @@ Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index eb5cd77bf1d8..41021ceedca4 100644
+index 7f0b7aba1498..49719a7d721c 100644
 --- a/arch/arm/kernel/entry-common.S
 +++ b/arch/arm/kernel/entry-common.S
-@@ -316,7 +316,8 @@ ENTRY(\sym)
+@@ -352,7 +352,8 @@ ENTRY(\sym)
+  * With EABI a couple syscalls are obsolete and defined as sys_ni_syscall.
   */
  	syscall_table_start sys_call_table
- #define COMPAT(nr, native, compat) syscall nr, native
 -#ifdef CONFIG_AEABI
 +
 +#if defined(CONFIG_AEABI) && !defined(CONFIG_OABI_COMPAT)
@@ -28,5 +28,5 @@ index eb5cd77bf1d8..41021ceedca4 100644
  #else
  #include <calls-oabi.S>
 -- 
-2.5.0
+2.19.1
 
