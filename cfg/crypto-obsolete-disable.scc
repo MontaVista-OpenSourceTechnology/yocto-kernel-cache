@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Disable obselete crypto options"
+define KFEATURE_COMPATIBILITY all
+
+kconf non-hardware crypto-obsolete-disable.cfg
+
