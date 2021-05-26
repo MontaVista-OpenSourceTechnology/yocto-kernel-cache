@@ -1,2 +1,2 @@
 # SPDX-License-Identifier: MIT
-kconf hardware hostapd.cfg
+kconf non-hardware hostapd.cfg
