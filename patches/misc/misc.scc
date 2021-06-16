@@ -9,3 +9,4 @@ patch linux-yocto-Handle-bin-awk-issues.patch
 patch arm64-perf-fix-backtrace-for-AAPCS-with-FP-enabled.patch
 patch defconfigs-drop-obselete-options.patch
 patch arm64-perf-Fix-wrong-cast-that-may-cause-wrong-trunc.patch
+patch cgroup1-fix-leaked-context-root-causing-sporadic-NUL.patch
