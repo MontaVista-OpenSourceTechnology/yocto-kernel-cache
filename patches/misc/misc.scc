@@ -10,3 +10,4 @@ patch arm64-perf-fix-backtrace-for-AAPCS-with-FP-enabled.patch
 patch defconfigs-drop-obselete-options.patch
 patch arm64-perf-Fix-wrong-cast-that-may-cause-wrong-trunc.patch
 patch net-dccp-make-it-depend-on-CONFIG_BROKEN-CVE-2020-16.patch
+patch cgroup1-fix-leaked-context-root-causing-sporadic-NUL.patch
