@@ -1,4 +1,4 @@
-From 4a8d1cb76c2a95efbc75659a43ac643f22e8a155 Mon Sep 17 00:00:00 2001
+From c3057f43635cace204de3b1530ca658a47033ae1 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Thu, 8 Apr 2010 23:44:21 -0700
 Subject: [PATCH] check console device file on fs when booting
@@ -11,14 +11,14 @@ for the condition and let the user know.
 Signed-off-by: Richard Laroque <rlarocqu@windriver.com>
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 ---
- init/main.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ init/main.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/init/main.c b/init/main.c
-index ae78fb68d231..69bc15d35dd0 100644
+index 32b2a8affafd..854762dc31bf 100644
 --- a/init/main.c
 +++ b/init/main.c
-@@ -1463,6 +1463,18 @@ static int __ref kernel_init(void *unused)
+@@ -1477,6 +1477,19 @@ static int __ref kernel_init(void *unused)
  /* Open /dev/console, for stdin/stdout/stderr, this should never fail */
  void __init console_on_rootfs(void)
  {
@@ -28,6 +28,7 @@ index ae78fb68d231..69bc15d35dd0 100644
 +        * In case of initrd or initramfs /dev/console might be instantiated
 +        * later by /init so don't do this check for CONFIG_BLK_DEV_INITRD
 +        */
++	struct kstat console_stat;
 +	if (vfs_lstat((char __user *) "/dev/console", (struct kstat __user *) &console_stat)
 +			|| !S_ISCHR(console_stat.mode)) {
 +		panic("/dev/console is missing or not a character device!\nPlease ensure your rootfs is properly configured\n");
@@ -37,16 +38,6 @@ index ae78fb68d231..69bc15d35dd0 100644
  	struct file *file = filp_open("/dev/console", O_RDWR, 0);
  
  	if (IS_ERR(file)) {
-@@ -1477,6 +1489,9 @@ void __init console_on_rootfs(void)
- 
- static noinline void __init kernel_init_freeable(void)
- {
-+#ifndef CONFIG_BLK_DEV_INITRD
-+	struct kstat console_stat;
-+#endif
- 	/*
- 	 * Wait until kthreadd is all set-up.
- 	 */
 -- 
 2.19.1
 
