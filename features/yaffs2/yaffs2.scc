@@ -13,3 +13,4 @@ patch yaffs2-v5.6-build-fixups.patch
 patch yaffs-fix-misplaced-variable-declaration.patch
 patch yaffs-include-blkdev.h.patch
 patch 0001-yaffs2-v5.12-build-fixups-not-runtime-tested.patch
+patch yaffs-fix-Wstringop-overread-compile-warning-in-yaff.patch

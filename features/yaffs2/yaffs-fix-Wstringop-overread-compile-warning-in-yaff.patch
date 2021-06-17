@@ -1,0 +1,44 @@
+From ea777841e8ea883bfa160693e650882f86e75167 Mon Sep 17 00:00:00 2001
+From: Quanyang Wang <quanyang.wang@windriver.com>
+Date: Sun, 13 Jun 2021 12:08:21 +0800
+Subject: [PATCH] yaffs: fix -Wstringop-overread compile warning in
+ yaffs_fix_null_name
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+In yaffs_fix_null_name, "if (strnlen(name, YAFFS_MAX_NAME_LENGTH) == 0)"
+is used to judge if the "name" string is zero length. But this is wrong
+when the "name" char array size is less than YAFFS_MAX_NAME_LENGTH and
+this will trigger compile warnig as below:
+
+fs/yaffs2/yaffs_guts.c:4501:13: warning: ‘strnlen’ specified bound 255 exceeds source size 16 [-Wstringop-overread]
+ 4501 |         if (strnlen(name, YAFFS_MAX_NAME_LENGTH) == 0) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's use buffer_size to do this instead of YAFFS_MAX_NAME_LENGTH
+because buffer_size is passed to yaffs_fix_null_name by caller with
+appropriate value which is fixed to the size of "name" char array.
+
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_guts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_guts.c b/fs/yaffs2/yaffs_guts.c
+index 40a5b46cf6ca..0cc794ebc347 100644
+--- a/fs/yaffs2/yaffs_guts.c
++++ b/fs/yaffs2/yaffs_guts.c
+@@ -4498,7 +4498,7 @@ static void yaffs_fix_null_name(struct yaffs_obj *obj, YCHAR *name,
+ 				int buffer_size)
+ {
+ 	/* Create an object name if we could not find one. */
+-	if (strnlen(name, YAFFS_MAX_NAME_LENGTH) == 0) {
++	if (strnlen(name, buffer_size) == 0) {
+ 		YCHAR local_name[20];
+ 		YCHAR num_string[20];
+ 		YCHAR *x = &num_string[19];
+-- 
+2.19.1
+
