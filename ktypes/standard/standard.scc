@@ -104,4 +104,6 @@ include features/rfkill/rfkill.scc
 
 include features/bpf/bpf.scc
 
+include features/kfence/kfence.scc
+
 include cfg/crypto-obsolete-disable.scc
