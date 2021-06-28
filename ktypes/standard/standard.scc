@@ -103,5 +103,6 @@ include cfg/systemd.scc
 include features/rfkill/rfkill.scc
 
 include features/bpf/bpf.scc
+include features/landlock/landlock.scc
 
 include cfg/crypto-obsolete-disable.scc
