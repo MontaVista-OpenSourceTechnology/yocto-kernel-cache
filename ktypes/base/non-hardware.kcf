@@ -25,21 +25,16 @@ drivers/md/persistent-data/Kconfig
 drivers/mtd/ubi/Kconfig
 drivers/remoteproc/Kconfig
 drivers/rpmsg/Kconfig
-drivers/staging/android/ion/Kconfig
 drivers/staging/android/Kconfig
 drivers/staging/axis-fifo/Kconfig
 drivers/staging/board/Kconfig
 drivers/staging/clocking-wizard/Kconfig
-drivers/staging/comedi/Kconfig
 drivers/staging/emxx_udc/Kconfig
 drivers/staging/fbtft/Kconfig
 drivers/staging/fieldbus/anybuss/Kconfig
 drivers/staging/fieldbus/Kconfig
-drivers/staging/fsl-dpaa2/Kconfig
 drivers/staging/fwserial/Kconfig
-drivers/staging/gasket/Kconfig
 drivers/staging/gdm724x/Kconfig
-drivers/staging/goldfish/Kconfig
 drivers/staging/greybus/Kconfig
 drivers/staging/gs_fpgaboot/Kconfig
 drivers/staging/hikey9xx/Kconfig
@@ -55,7 +50,6 @@ drivers/staging/iio/resolver/Kconfig
 drivers/staging/Kconfig
 drivers/staging/kpc2000/Kconfig
 drivers/staging/ks7010/Kconfig
-drivers/staging/media/allegro-dvt/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
 drivers/staging/media/hantro/Kconfig
@@ -64,7 +58,6 @@ drivers/staging/media/ipu3/Kconfig
 drivers/staging/media/Kconfig
 drivers/staging/media/meson/vdec/Kconfig
 drivers/staging/media/omap4iss/Kconfig
-drivers/staging/media/rkisp1/Kconfig
 drivers/staging/media/rkvdec/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
@@ -75,13 +68,10 @@ drivers/staging/most/dim2/Kconfig
 drivers/staging/most/i2c/Kconfig
 drivers/staging/most/Kconfig
 drivers/staging/most/net/Kconfig
-drivers/staging/most/sound/Kconfig
 drivers/staging/most/video/Kconfig
 drivers/staging/mt7621-dma/Kconfig
 drivers/staging/mt7621-dts/Kconfig
 drivers/staging/mt7621-pci/Kconfig
-drivers/staging/mt7621-pci-phy/Kconfig
-drivers/staging/mt7621-pinctrl/Kconfig
 drivers/staging/netlogic/Kconfig
 drivers/staging/nvec/Kconfig
 drivers/staging/octeon/Kconfig
@@ -112,6 +102,7 @@ drivers/staging/vt6656/Kconfig
 drivers/staging/wfx/Kconfig
 drivers/staging/wlan-ng/Kconfig
 drivers/vhost/Kconfig
+drivers/virt/acrn/Kconfig
 drivers/virtio/Kconfig
 drivers/virt/Kconfig
 drivers/virt/nitro_enclaves/Kconfig
@@ -158,6 +149,7 @@ fs/Kconfig
 fs/Kconfig.binfmt
 fs/kernfs/Kconfig
 fs/minix/Kconfig
+fs/netfs/Kconfig
 fs/nfsd/Kconfig
 fs/nfs/Kconfig
 fs/nfs/.Kconfig.swp
@@ -192,6 +184,7 @@ fs/xfs/Kconfig
 fs/yaffs2/Kconfig
 fs/zonefs/Kconfig
 init/Kconfig
+kernel/bpf/Kconfig
 kernel/bpf/preload/Kconfig
 kernel/dma/Kconfig
 kernel/gcov/Kconfig
@@ -212,6 +205,7 @@ lib/Kconfig
 lib/Kconfig.debug
 lib/Kconfig.kasan
 lib/Kconfig.kcsan
+lib/Kconfig.kfence
 lib/Kconfig.kgdb
 lib/Kconfig.ubsan
 lib/kunit/Kconfig
@@ -291,7 +285,6 @@ net/tipc/Kconfig
 net/tls/Kconfig
 net/unix/Kconfig
 net/vmw_vsock/Kconfig
-net/wimax/Kconfig
 net/wireless/Kconfig
 net/x25/Kconfig
 net/xdp/Kconfig
@@ -304,6 +297,7 @@ security/integrity/Kconfig
 security/Kconfig
 security/Kconfig.hardening
 security/keys/Kconfig
+security/landlock/Kconfig
 security/loadpin/Kconfig
 security/lockdown/Kconfig
 security/safesetid/Kconfig
