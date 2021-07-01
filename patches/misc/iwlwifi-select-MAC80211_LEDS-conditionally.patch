@@ -1,0 +1,36 @@
+From 4e50d844ef9f358236e3c711b5a669ca721623e8 Mon Sep 17 00:00:00 2001
+From: Liwei Song <liwei.song@windriver.com>
+Date: Mon, 28 Jun 2021 17:04:40 +0800
+Subject: [PATCH] iwlwifi: select MAC80211_LEDS conditionally
+
+MAC80211_LEDS depends on LEDS_CLASS=y or LEDS_CLASS=MAC80211,
+add condition to enable it in iwlwifi/Kconfig to avoid below
+compile warning when LEDS_CLASS was set to m:
+
+WARNING: unmet direct dependencies detected for MAC80211_LEDS
+  Depends on [n]: NET [=y] && WIRELESS [=y] && MAC80211 [=y] && (LEDS_CLASS [=m]=y || LEDS_CLASS [=m]=MAC80211 [=y])
+  Selected by [m]:
+  - IWLWIFI_LEDS [=y] && NETDEVICES [=y] && WLAN [=y] && WLAN_VENDOR_INTEL [=y] && IWLWIFI [=m] && (LEDS_CLASS [=m]=y || LEDS_CLASS [=m]=IWLWIFI [=m]) && (IWLMVM [=m] || IWLDVM [=m])
+
+Signed-off-by: Liwei Song <liwei.song@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ drivers/net/wireless/intel/iwlwifi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/Kconfig b/drivers/net/wireless/intel/iwlwifi/Kconfig
+index 1085afbefba8..0e1de69c259f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/Kconfig
++++ b/drivers/net/wireless/intel/iwlwifi/Kconfig
+@@ -50,7 +50,7 @@ config IWLWIFI_LEDS
+ 	depends on LEDS_CLASS=y || LEDS_CLASS=IWLWIFI
+ 	depends on IWLMVM || IWLDVM
+ 	select LEDS_TRIGGERS
+-	select MAC80211_LEDS
++	select MAC80211_LEDS if (LEDS_CLASS=y || LEDS_CLASS=MAC80211)
+ 	default y
+ 
+ config IWLDVM
+-- 
+2.19.1
+
