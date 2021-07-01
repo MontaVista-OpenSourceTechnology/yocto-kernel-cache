@@ -108,3 +108,5 @@ include features/landlock/landlock.scc
 include features/kfence/kfence.scc
 
 include cfg/crypto-obsolete-disable.scc
+
+patch 0001-qemux86-add-configuration-symbol-to-select-values.patch
