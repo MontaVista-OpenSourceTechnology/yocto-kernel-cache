@@ -34,7 +34,6 @@ include features/drm-gma500/drm-gma500.scc
 # generic Bluetooth support
 include features/bluetooth/bluetooth.scc
 
-patch 0001-qemux86-add-configuration-symbol-to-select-values.patch
 if [ "$KMACHINE" = "qemux86" ]; then
 kconf hardware qemux86.cfg
 fi
