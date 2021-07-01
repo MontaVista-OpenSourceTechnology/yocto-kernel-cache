@@ -106,3 +106,5 @@ include features/bpf/bpf.scc
 include features/landlock/landlock.scc
 
 include cfg/crypto-obsolete-disable.scc
+
+patch 0001-qemux86-add-configuration-symbol-to-select-values.patch
