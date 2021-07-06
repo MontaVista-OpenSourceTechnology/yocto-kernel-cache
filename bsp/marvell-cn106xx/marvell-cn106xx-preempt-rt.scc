@@ -1,7 +1,7 @@
-define KMACHINE marvell-cn96xx
+define KMACHINE marvell-cn106xx
 define KTYPE preempt-rt
 define KARCH arm64
 
 include ktypes/preempt-rt
 
-include marvell-cn96xx.scc
+include marvell-cn106xx.scc
