@@ -1,0 +1,34 @@
+From 67619640b6986cab4980df8a758e3a1e237d098b Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Fri, 2 Jul 2021 15:34:24 +0200
+Subject: [PATCH 154/222] mm, slub: Duct tape lockdep_assert_held(local_lock_t)
+ on RT
+
+The local_lock_t needs to be changed to make lockdep_assert_held()
+magically work.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ mm/slub.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 02011a177f9d..76e21fa76b13 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2846,7 +2846,11 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
+ 
+ load_freelist:
+ 
++#ifdef CONFIG_PREEMPT_RT
++	lockdep_assert_held(this_cpu_ptr(&s->cpu_slab->lock.lock));
++#else
+ 	lockdep_assert_held(this_cpu_ptr(&s->cpu_slab->lock));
++#endif
+ 
+ 	/*
+ 	 * freelist is pointing to the list of objects to be used.
+-- 
+2.19.1
+

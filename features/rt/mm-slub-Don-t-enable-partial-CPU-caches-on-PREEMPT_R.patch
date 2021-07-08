@@ -1,0 +1,33 @@
+From cfb517ac4bac9310d787a71266fa02cdede8e9c7 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Tue, 2 Mar 2021 18:58:04 +0100
+Subject: [PATCH 156/222] mm: slub: Don't enable partial CPU caches on
+ PREEMPT_RT by default
+
+SLUB's partial CPU caches lead to higher latencies in a hackbench
+benchmark.
+
+Don't enable partial CPU caches by default on PREEMPT_RT.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ init/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index a83a4429906c..6ca28e2268ba 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1958,7 +1958,7 @@ config SHUFFLE_PAGE_ALLOCATOR
+ 	  Say Y if unsure.
+ 
+ config SLUB_CPU_PARTIAL
+-	default y
++	default y if !PREEMPT_RT
+ 	depends on SLUB && SMP
+ 	bool "SLUB per cpu partial cache"
+ 	help
+-- 
+2.19.1
+

@@ -1,0 +1,35 @@
+From fcf0bb1a96c58229863f2c464223f02eac1e9cef Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Tue, 6 Jul 2021 16:36:48 +0200
+Subject: [PATCH 107/222] locking/rtmutex: Include only rbtree types
+
+rtmutex.h needs the definition of struct rb_root_cached. rbtree.h includes
+kernel.h which includes spinlock.h. That works nicely for non-RT enabled
+kernels, but on RT enabled kernels spinlocks are based on rtmutexes which
+creates another circular header dependency as spinlocks.h will require
+rtmutex.h.
+
+Include rbtree_types.h instead.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/rtmutex.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/rtmutex.h b/include/linux/rtmutex.h
+index 9c1c67f2d810..7bbee67720dc 100644
+--- a/include/linux/rtmutex.h
++++ b/include/linux/rtmutex.h
+@@ -14,7 +14,7 @@
+ #define __LINUX_RT_MUTEX_H
+ 
+ #include <linux/linkage.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/spinlock_types_raw.h>
+ 
+ extern int max_lock_depth; /* for sysctl */
+-- 
+2.19.1
+

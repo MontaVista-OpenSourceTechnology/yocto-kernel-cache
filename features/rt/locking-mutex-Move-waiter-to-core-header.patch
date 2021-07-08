@@ -1,0 +1,65 @@
+From d21b0f5bd4953e7919b3ad26eccea1d2743e4ccc Mon Sep 17 00:00:00 2001
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Tue, 6 Jul 2021 16:36:50 +0200
+Subject: [PATCH 114/222] locking/mutex: Move waiter to core header
+
+Move the mutex waiter declaration from the global to the core local
+header. There is no reason to expose it outside of the core code.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/mutex.h  | 13 -------------
+ kernel/locking/mutex.h | 13 +++++++++++++
+ 2 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index e19323521f9c..62bafee747e9 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -74,19 +74,6 @@ struct ww_mutex {
+ #endif
+ };
+ 
+-/*
+- * This is the control structure for tasks blocked on mutex,
+- * which resides on the blocked task's kernel stack:
+- */
+-struct mutex_waiter {
+-	struct list_head	list;
+-	struct task_struct	*task;
+-	struct ww_acquire_ctx	*ww_ctx;
+-#ifdef CONFIG_DEBUG_MUTEXES
+-	void			*magic;
+-#endif
+-};
+-
+ #ifdef CONFIG_DEBUG_MUTEXES
+ 
+ #define __DEBUG_MUTEX_INITIALIZER(lockname)				\
+diff --git a/kernel/locking/mutex.h b/kernel/locking/mutex.h
+index 183965942cde..8d1b0ee49062 100644
+--- a/kernel/locking/mutex.h
++++ b/kernel/locking/mutex.h
+@@ -7,6 +7,19 @@
+  *  Copyright (C) 2004, 2005, 2006 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
+  */
+ 
++/*
++ * This is the control structure for tasks blocked on mutex, which resides
++ * on the blocked task's kernel stack:
++ */
++struct mutex_waiter {
++	struct list_head	list;
++	struct task_struct	*task;
++	struct ww_acquire_ctx	*ww_ctx;
++#ifdef CONFIG_DEBUG_MUTEXES
++	void			*magic;
++#endif
++};
++
+ #ifdef CONFIG_DEBUG_MUTEXES
+ extern void debug_mutex_lock_common(struct mutex *lock,
+ 				    struct mutex_waiter *waiter);
+-- 
+2.19.1
+
