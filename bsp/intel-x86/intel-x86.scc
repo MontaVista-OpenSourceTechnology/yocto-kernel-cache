@@ -32,6 +32,7 @@ include features/hostapd/hostapd.scc
 include features/latencytop/latencytop.scc
 include features/uio/uio.scc
 include features/spi/spi.scc
+include features/mtd/mtd.scc
 include features/spi/spidev.scc
 include features/bluetooth/bluetooth.scc
 include features/input/input.scc
