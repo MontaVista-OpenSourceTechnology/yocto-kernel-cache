@@ -5,3 +5,4 @@ patch aufs5-aufs-mmap.patch
 patch aufs5-aufs-standalone.patch
 patch aufs5-aufs-kbuild.patch
 patch aufs5-core.patch
+patch aufs-update-kmalloc_index-to-v5.14-restrictions.patch
