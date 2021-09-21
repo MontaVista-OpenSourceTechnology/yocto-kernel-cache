@@ -48,10 +48,10 @@ drivers/staging/iio/Kconfig
 drivers/staging/iio/meter/Kconfig
 drivers/staging/iio/resolver/Kconfig
 drivers/staging/Kconfig
-drivers/staging/kpc2000/Kconfig
 drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
+drivers/staging/media/av7110/Kconfig
 drivers/staging/media/hantro/Kconfig
 drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig

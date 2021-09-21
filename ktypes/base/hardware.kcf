@@ -155,12 +155,14 @@ arch/powerpc/platforms/85xx/Kconfig
 arch/powerpc/platforms/86xx/Kconfig
 arch/powerpc/platforms/8xx/Kconfig
 arch/powerpc/platforms/amigaone/Kconfig
+arch/powerpc/platforms/book3s/Kconfig
 arch/powerpc/platforms/cell/Kconfig
 arch/powerpc/platforms/chrp/Kconfig
 arch/powerpc/platforms/embedded6xx/Kconfig
 arch/powerpc/platforms/Kconfig
 arch/powerpc/platforms/Kconfig.cputype
 arch/powerpc/platforms/maple/Kconfig
+arch/powerpc/platforms/microwatt/Kconfig
 arch/powerpc/platforms/pasemi/Kconfig
 arch/powerpc/platforms/powermac/Kconfig
 arch/powerpc/platforms/powernv/Kconfig
@@ -327,6 +329,7 @@ drivers/edac/Kconfig
 drivers/eisa/Kconfig
 drivers/extcon/Kconfig
 drivers/firewire/Kconfig
+drivers/firmware/arm_ffa/Kconfig
 drivers/firmware/broadcom/Kconfig
 drivers/firmware/efi/Kconfig
 drivers/firmware/google/Kconfig
@@ -438,7 +441,6 @@ drivers/i2c/Kconfig
 drivers/i2c/muxes/Kconfig
 drivers/i3c/Kconfig
 drivers/i3c/master/Kconfig
-drivers/ide/Kconfig
 drivers/idle/Kconfig
 drivers/iio/accel/Kconfig
 drivers/iio/adc/Kconfig
@@ -465,6 +467,7 @@ drivers/iio/imu/inv_icm42600/Kconfig
 drivers/iio/imu/inv_mpu6050/Kconfig
 drivers/iio/imu/Kconfig
 drivers/iio/imu/st_lsm6dsx/Kconfig
+drivers/iio/imu/st_lsm9ds0/Kconfig
 drivers/iio/Kconfig
 drivers/iio/light/Kconfig
 drivers/iio/magnetometer/Kconfig
@@ -484,7 +487,7 @@ drivers/infiniband/hw/cxgb4/Kconfig
 drivers/infiniband/hw/efa/Kconfig
 drivers/infiniband/hw/hfi1/Kconfig
 drivers/infiniband/hw/hns/Kconfig
-drivers/infiniband/hw/i40iw/Kconfig
+drivers/infiniband/hw/irdma/Kconfig
 drivers/infiniband/hw/mlx4/Kconfig
 drivers/infiniband/hw/mlx5/Kconfig
 drivers/infiniband/hw/mthca/Kconfig
@@ -792,10 +795,12 @@ drivers/net/ethernet/mediatek/Kconfig
 drivers/net/ethernet/mellanox/Kconfig
 drivers/net/ethernet/mellanox/mlx4/Kconfig
 drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+drivers/net/ethernet/mellanox/mlxbf_gige/Kconfig
 drivers/net/ethernet/mellanox/mlxfw/Kconfig
 drivers/net/ethernet/mellanox/mlxsw/Kconfig
 drivers/net/ethernet/micrel/Kconfig
 drivers/net/ethernet/microchip/Kconfig
+drivers/net/ethernet/microchip/sparx5/Kconfig
 drivers/net/ethernet/microsoft/Kconfig
 drivers/net/ethernet/moxa/Kconfig
 drivers/net/ethernet/mscc/Kconfig
@@ -1021,6 +1026,9 @@ drivers/platform/olpc/Kconfig
 drivers/platform/surface/aggregator/Kconfig
 drivers/platform/surface/Kconfig
 drivers/platform/x86/dell/Kconfig
+drivers/platform/x86/intel/int33fe/Kconfig
+drivers/platform/x86/intel/int3472/Kconfig
+drivers/platform/x86/intel/Kconfig
 drivers/platform/x86/intel_speed_select_if/Kconfig
 drivers/platform/x86/Kconfig
 drivers/pnp/isapnp/Kconfig
@@ -1065,11 +1073,13 @@ drivers/scsi/cxgbi/cxgb4i/Kconfig
 drivers/scsi/cxgbi/Kconfig
 drivers/scsi/cxlflash/Kconfig
 drivers/scsi/device_handler/Kconfig
+drivers/scsi/elx/Kconfig
 drivers/scsi/esas2r/Kconfig
 drivers/scsi/hisi_sas/Kconfig
 drivers/scsi/Kconfig
 drivers/scsi/libsas/Kconfig
 drivers/scsi/megaraid/Kconfig.megaraid
+drivers/scsi/mpi3mr/Kconfig
 drivers/scsi/mpt3sas/Kconfig
 drivers/scsi/mvsas/Kconfig
 drivers/scsi/pcmcia/Kconfig
@@ -1137,10 +1147,10 @@ drivers/staging/iio/Kconfig
 drivers/staging/iio/meter/Kconfig
 drivers/staging/iio/resolver/Kconfig
 drivers/staging/Kconfig
-drivers/staging/kpc2000/Kconfig
 drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
+drivers/staging/media/av7110/Kconfig
 drivers/staging/media/hantro/Kconfig
 drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig
