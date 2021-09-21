@@ -1,0 +1,45 @@
+From aa2c6f88e225caad6c0969ea25c8b4ef29f7c07f Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Thu, 20 May 2021 14:18:12 +0200
+Subject: [PATCH 047/265] mm, slub: detach whole partial list at once in
+ unfreeze_partials()
+
+Instead of iterating through the live percpu partial list, detach it from the
+kmem_cache_cpu at once. This is simpler and will allow further optimization.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/slub.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 0a1e048d0db7..b31e00eb9561 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2358,16 +2358,20 @@ static void unfreeze_partials(struct kmem_cache *s,
+ {
+ #ifdef CONFIG_SLUB_CPU_PARTIAL
+ 	struct kmem_cache_node *n = NULL, *n2 = NULL;
+-	struct page *page, *discard_page = NULL;
++	struct page *page, *partial_page, *discard_page = NULL;
+ 	unsigned long flags;
+ 
+ 	local_irq_save(flags);
+ 
+-	while ((page = slub_percpu_partial(c))) {
++	partial_page = slub_percpu_partial(c);
++	c->partial = NULL;
++
++	while (partial_page) {
+ 		struct page new;
+ 		struct page old;
+ 
+-		slub_set_percpu_partial(c, page);
++		page = partial_page;
++		partial_page = page->next;
+ 
+ 		n2 = get_node(s, page_to_nid(page));
+ 		if (n != n2) {
+-- 
+2.19.1
+

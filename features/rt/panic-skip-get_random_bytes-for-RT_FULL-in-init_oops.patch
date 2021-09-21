@@ -1,0 +1,33 @@
+From 77a159b45e90a2de67b8ea9ecc9281555f5f6cb6 Mon Sep 17 00:00:00 2001
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Tue, 14 Jul 2015 14:26:34 +0200
+Subject: [PATCH 228/265] panic: skip get_random_bytes for RT_FULL in
+ init_oops_id
+
+Disable on -RT. If this is invoked from irq-context we will have problems
+to acquire the sleeping lock.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ kernel/panic.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/panic.c b/kernel/panic.c
+index eafecd79fd75..73c794d8d204 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -545,9 +545,11 @@ static u64 oops_id;
+ 
+ static int init_oops_id(void)
+ {
++#ifndef CONFIG_PREEMPT_RT
+ 	if (!oops_id)
+ 		get_random_bytes(&oops_id, sizeof(oops_id));
+ 	else
++#endif
+ 		oops_id++;
+ 
+ 	return 0;
+-- 
+2.19.1
+

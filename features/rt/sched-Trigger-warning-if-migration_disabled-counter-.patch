@@ -1,0 +1,33 @@
+From a7453a45ea5c72445251a344f9da641799f40eb4 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Thu, 12 Aug 2021 14:40:05 +0200
+Subject: [PATCH 176/265] sched: Trigger warning if ->migration_disabled
+ counter underflows.
+
+If migrate_enable() is used more often than its counter part then it
+remains undetected and rq::nr_pinned will underflow, too.
+
+Add a warning if migrate_enable() is attempted if without a matching a
+migrate_disable().
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e93128050e83..f8dafe976492 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2146,6 +2146,8 @@ void migrate_enable(void)
+ 	if (p->migration_disabled > 1) {
+ 		p->migration_disabled--;
+ 		return;
++	} else if (WARN_ON_ONCE(p->migration_disabled == 0)) {
++		return;
+ 	}
+ 
+ 	/*
+-- 
+2.19.1
+

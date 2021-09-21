@@ -1,0 +1,49 @@
+From f34b73dd4631847bdc4774bfd7d23a316bd5426f Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Wed, 4 Aug 2021 17:58:03 +0200
+Subject: [PATCH 080/265] io-wq: Don't mix raw_spinlock_irq() &
+ spin_lock_irq().
+
+https://lkml.kernel.org/r/7c946918-ae0d-6195-6a78-b019f9bc1fd3@kernel.dk
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ fs/io-wq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index cb5d84f6b769..e70300b71eae 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -405,7 +405,7 @@ static void io_wait_on_hash(struct io_wqe *wqe, unsigned int hash)
+ {
+ 	struct io_wq *wq = wqe->wq;
+ 
+-	spin_lock(&wq->hash->wait.lock);
++	spin_lock_irq(&wq->hash->wait.lock);
+ 	if (list_empty(&wqe->wait.entry)) {
+ 		__add_wait_queue(&wq->hash->wait, &wqe->wait);
+ 		if (!test_bit(hash, &wq->hash->map)) {
+@@ -413,7 +413,7 @@ static void io_wait_on_hash(struct io_wqe *wqe, unsigned int hash)
+ 			list_del_init(&wqe->wait.entry);
+ 		}
+ 	}
+-	spin_unlock(&wq->hash->wait.lock);
++	spin_unlock_irq(&wq->hash->wait.lock);
+ }
+ 
+ /*
+@@ -475,9 +475,9 @@ static struct io_wq_work *io_get_next_work(struct io_wqe *wqe,
+ 	}
+ 
+ 	if (stall_hash != -1U) {
+-		raw_spin_unlock(&wqe->lock);
++		raw_spin_unlock_irq(&wqe->lock);
+ 		io_wait_on_hash(wqe, stall_hash);
+-		raw_spin_lock(&wqe->lock);
++		raw_spin_lock_irq(&wqe->lock);
+ 		*stalled = true;
+ 	}
+ 
+-- 
+2.19.1
+

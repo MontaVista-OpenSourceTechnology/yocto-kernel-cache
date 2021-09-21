@@ -1,0 +1,57 @@
+From 7630ebb9fd510cf7aa31b6f1dd472f3b0442afb3 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 21 Sep 2021 00:28:57 -0400
+Subject: [PATCH 265/265] cpuset: fixup missing raw spinlock conversions
+
+Some callsites for the callback lock were missed during the
+raw spinlock conversion. These result in compilation errors.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ kernel/cgroup/cpuset.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 8bf4d67a69de..c7f82b3f5ec5 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -2020,9 +2020,9 @@ static int update_prstate(struct cpuset *cs, int new_prs)
+ 	rebuild_sched_domains_locked();
+ out:
+ 	if (!err) {
+-		spin_lock_irq(&callback_lock);
++		raw_spin_lock_irq(&callback_lock);
+ 		cs->partition_root_state = new_prs;
+-		spin_unlock_irq(&callback_lock);
++		raw_spin_unlock_irq(&callback_lock);
+ 	}
+ 
+ 	free_cpumasks(NULL, &tmpmask);
+@@ -3088,10 +3088,10 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 	if (is_partition_root(cs) && (cpumask_empty(&new_cpus) ||
+ 	   (parent->partition_root_state == PRS_ERROR))) {
+ 		if (cs->nr_subparts_cpus) {
+-			spin_lock_irq(&callback_lock);
++			raw_spin_lock_irq(&callback_lock);
+ 			cs->nr_subparts_cpus = 0;
+ 			cpumask_clear(cs->subparts_cpus);
+-			spin_unlock_irq(&callback_lock);
++			raw_spin_unlock_irq(&callback_lock);
+ 			compute_effective_cpumask(&new_cpus, cs, parent);
+ 		}
+ 
+@@ -3105,9 +3105,9 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 		     cpumask_empty(&new_cpus)) {
+ 			update_parent_subparts_cpumask(cs, partcmd_disable,
+ 						       NULL, tmp);
+-			spin_lock_irq(&callback_lock);
++			raw_spin_lock_irq(&callback_lock);
+ 			cs->partition_root_state = PRS_ERROR;
+-			spin_unlock_irq(&callback_lock);
++			raw_spin_unlock_irq(&callback_lock);
+ 		}
+ 		cpuset_force_rebuild();
+ 	}
+-- 
+2.19.1
+
