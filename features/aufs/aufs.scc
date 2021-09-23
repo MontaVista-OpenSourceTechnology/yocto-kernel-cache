@@ -1,2 +1,3 @@
 # SPDX-License-Identifier: MIT
 #
+patch aufs-adjust-to-v5.15-fs-changes.patch

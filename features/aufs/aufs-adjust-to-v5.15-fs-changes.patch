@@ -1,0 +1,66 @@
+From d5bc67187bf6a378e0d8900e910a5a78bc12ecc1 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 23 Sep 2021 16:43:13 -0400
+Subject: [PATCH] aufs: adjust to v5.15 fs changes
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/inode.h     | 2 +-
+ fs/aufs/posix_acl.c | 5 ++++-
+ fs/aufs/vfsub.c     | 4 +---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/fs/aufs/inode.h b/fs/aufs/inode.h
+index e092a1a03145..9d923fd3d77c 100644
+--- a/fs/aufs/inode.h
++++ b/fs/aufs/inode.h
+@@ -324,7 +324,7 @@ AuStubVoid(au_xattr_init, struct super_block *sb);
+ #endif
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+-struct posix_acl *aufs_get_acl(struct inode *inode, int type);
++struct posix_acl *aufs_get_acl(struct inode *inode, int type, bool rcu);
+ int aufs_set_acl(struct user_namespace *userns, struct inode *inode,
+ 		 struct posix_acl *acl, int type);
+ #endif
+diff --git a/fs/aufs/posix_acl.c b/fs/aufs/posix_acl.c
+index 2fa8e6dee637..93a7ef86b588 100644
+--- a/fs/aufs/posix_acl.c
++++ b/fs/aufs/posix_acl.c
+@@ -23,7 +23,7 @@
+ #include <linux/fs.h>
+ #include "aufs.h"
+ 
+-struct posix_acl *aufs_get_acl(struct inode *inode, int type)
++struct posix_acl *aufs_get_acl(struct inode *inode, int type, bool rcu)
+ {
+ 	struct posix_acl *acl;
+ 	int err;
+@@ -31,6 +31,9 @@ struct posix_acl *aufs_get_acl(struct inode *inode, int type)
+ 	struct inode *h_inode;
+ 	struct super_block *sb;
+ 
++	if (rcu)
++		return ERR_PTR(-ECHILD);
++
+ 	acl = NULL;
+ 	sb = inode->i_sb;
+ 	si_read_lock(sb, AuLock_FLUSH);
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index f905aa22ac3b..f07554901ec0 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -672,9 +672,7 @@ int vfsub_trunc(struct path *h_path, loff_t length, unsigned int attr,
+ 	lockdep_off();
+ 	sb_start_write(h_sb);
+ 	lockdep_on();
+-	err = locks_verify_truncate(h_inode, h_file, length);
+-	if (!err)
+-		err = security_path_truncate(h_path);
++	err = security_path_truncate(h_path);
+ 	if (!err) {
+ 		h_userns = mnt_user_ns(h_path->mnt);
+ 		lockdep_off();
+-- 
+2.19.1
+
