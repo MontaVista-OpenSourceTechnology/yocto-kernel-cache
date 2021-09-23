@@ -1,4 +1,4 @@
-From f276dd9842f8ecb7d33fb1fd8a1a0386958774c7 Mon Sep 17 00:00:00 2001
+From a6b17040a90e1d247da032791b97a3de67cb248a Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Thu, 26 Nov 2009 07:32:09 -0800
 Subject: [PATCH] mount_root: clarify error messages for when no rootfs found
@@ -25,13 +25,13 @@ Signed-off-by: Darren Hart <dvhart@linux.intel.com>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 29d326b6c29d..882307e6dd90 100644
+index 2ed30ff6c906..b4ad06695c2c 100644
 --- a/init/do_mounts.c
 +++ b/init/do_mounts.c
-@@ -458,7 +458,9 @@ void __init mount_block_root(char *name, int flags)
- 		printk("DEBUG_BLOCK_EXT_DEVT is enabled, you need to specify "
- 		       "explicit textual name for \"root=\" boot option.\n");
- #endif
+@@ -427,7 +427,9 @@ void __init mount_block_root(char *name, int flags)
+ 		printk("Please append a correct \"root=\" boot option; here are the available partitions:\n");
+ 
+ 		printk_all_partitions();
 -		panic("VFS: Unable to mount root fs on %s", b);
 +		printk(KERN_EMERG "VFS: Unable to mount root fs on %s\n", b);
 +		printk(KERN_EMERG "User configuration error - no valid root filesystem found\n");
@@ -39,8 +39,8 @@ index 29d326b6c29d..882307e6dd90 100644
  	}
  	if (!(flags & SB_RDONLY)) {
  		flags |= SB_RDONLY;
-@@ -471,7 +473,9 @@ void __init mount_block_root(char *name, int flags)
- 	for (p = fs_names; *p; p += strlen(p)+1)
+@@ -440,7 +442,9 @@ void __init mount_block_root(char *name, int flags)
+ 	for (i = 0, p = fs_names; i < num_fs; i++, p += strlen(p)+1)
  		printk(" %s", p);
  	printk("\n");
 -	panic("VFS: Unable to mount root fs on %s", b);
