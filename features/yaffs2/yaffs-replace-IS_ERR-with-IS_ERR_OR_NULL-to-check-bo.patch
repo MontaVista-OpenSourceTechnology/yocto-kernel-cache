@@ -1,0 +1,49 @@
+From a8f317c1a17e3cab01708912f09c5e8fbc3702dc Mon Sep 17 00:00:00 2001
+From: Meng Li <Meng.Li@windriver.com>
+Date: Thu, 21 Oct 2021 09:27:20 +0800
+Subject: [PATCH] yaffs: replace IS_ERR with IS_ERR_OR_NULL to check both ERR
+ and NULL
+
+When run below command to mount a yaffs2 FS to nor flash, there
+is kernel panic as below:
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000020
+......
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 335 Comm: mount Not tainted 5.10.73-yocto-standard #1
+......
+Call trace:
+ yaffs_internal_read_super.constprop.0+0x24c/0x6fc
+ yaffs2_internal_read_super_mtd+0x28/0x40
+ mount_bdev+0x1cc/0x200
+ ......
+ el0_sync_handler+0x1a4/0x1b0
+ el0_sync+0x180/0x1c0
+Because in function yaffs_get_mtd_device(), it check the type of
+mtd device. If it is not NAND flash, NULL will be returned. This
+causes kernel panic if the ret value is not checked whether it
+is NULL or not. So, replace IS_ERR with IS_ERR_OR_NULL to check
+both ERR and NULL.
+
+Signed-off-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index a9cf8edc2245..eeb1b480d70e 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -2964,7 +2964,7 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,
+ 
+ 
+ 	mtd = yaffs_get_mtd_device(sb->s_dev);
+-	if (IS_ERR(mtd)) {
++	if (IS_ERR_OR_NULL(mtd)) {
+ 		return NULL;
+ 	}
+ 
+-- 
+2.19.1
+
