@@ -1,3 +1,9 @@
 # SPDX-License-Identifier: MIT
 #
+
+patch 0001-aufs5-kbuild.patch
+patch 0002-aufs5-base.patch
+patch 0003-aufs5-mmap.patch
+patch 0004-aufs5-standalone.patch
+patch 0005-aufs5-core.patch
 patch aufs-adjust-to-v5.15-fs-changes.patch
