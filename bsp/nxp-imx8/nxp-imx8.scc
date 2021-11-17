@@ -1,4 +1,5 @@
 # Core arm configuation settings
+include cfg/remoteproc.cfg
 kconf hardware nxp-imx8.cfg
 
 include features/profiling/profiling.scc
