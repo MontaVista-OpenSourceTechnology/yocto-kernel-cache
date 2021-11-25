@@ -7,3 +7,5 @@ include ktypes/preempt-rt
 branch xilinx-zynqmp
 
 include xilinx-zynqmp.scc
+
+kconf hardware xilinx-zynqmp-preempt-rt.cfg
