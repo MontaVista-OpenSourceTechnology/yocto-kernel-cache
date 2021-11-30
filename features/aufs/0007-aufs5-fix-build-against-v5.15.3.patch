@@ -1,0 +1,26 @@
+From 18943308ed4b2c3d195d0efbf5752fb12391e7ac Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 30 Nov 2021 12:06:57 -0500
+Subject: [PATCH] aufs5: fix build against v5.15.3+
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/vfsub.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/aufs/vfsub.h b/fs/aufs/vfsub.h
+index 8e1fca0406e4..9441fda85f35 100644
+--- a/fs/aufs/vfsub.h
++++ b/fs/aufs/vfsub.h
+@@ -229,7 +229,7 @@ static inline void vfsub_touch_atime(struct vfsmount *h_mnt,
+ static inline int vfsub_update_time(struct inode *h_inode,
+ 				    struct timespec64 *ts, int flags)
+ {
+-	return update_time(h_inode, ts, flags);
++	return inode_update_time(h_inode, ts, flags);
+ 	/* no vfsub_update_h_iattr() since we don't have struct path */
+ }
+ 
+-- 
+2.19.1
+
