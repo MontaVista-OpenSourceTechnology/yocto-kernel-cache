@@ -7,3 +7,4 @@ include ktypes/preempt-rt
 
 include intel-x86-64.scc
 kconf hardware cfs-bandwidth.cfg
+kconf hardware intel-x86-64-preempt-rt.cfg
