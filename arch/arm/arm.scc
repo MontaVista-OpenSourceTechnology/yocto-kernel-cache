@@ -10,3 +10,5 @@ include v7-A15/v7-A15.scc
 patch arm-ARM-EABI-socketcall.patch
 
 patch vexpress-Pass-LOADADDR-to-Makefile.patch
+patch arm-defconfig-drop-unused-POWER_AVS-option.patch
+patch arm64-defconfig-cleanup-config-options.patch
