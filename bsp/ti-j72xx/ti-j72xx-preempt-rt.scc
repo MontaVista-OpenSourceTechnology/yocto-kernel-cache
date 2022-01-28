@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE ti-j72xx
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+branch ti-j72xx
+
+include ti-j72xx.scc
+kconf hardware ti-j72xx-preempt-rt.cfg
