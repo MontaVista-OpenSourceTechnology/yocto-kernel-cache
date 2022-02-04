@@ -1,7 +1,7 @@
-From 02bf23d26bc4c2e6859aa3810df8d6b955488a06 Mon Sep 17 00:00:00 2001
+From 9f078ff00c84a72ec866294e00617931d3d92ae2 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross@burtonini.com>
 Date: Tue, 11 Jan 2022 12:02:36 +0000
-Subject: [PATCH 2/2] arm64: defconfig: cleanup config options
+Subject: [PATCH] arm64: defconfig: cleanup config options
 
 arm64: defconfig: drop unused POWER_AVS option
 Commit 785b5bb41b0a ("PM: AVS: Drop the avs directory and the
@@ -29,23 +29,14 @@ the defconfig for clarity.
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- arch/arm64/configs/defconfig | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/arm64/configs/defconfig | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 545197bc0501..93954f88b2bf 100644
+index 30516dc0b70e..fb457dc38882 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -28,8 +28,6 @@ CONFIG_KALLSYMS_ALL=y
- # CONFIG_COMPAT_BRK is not set
- CONFIG_PROFILING=y
- CONFIG_ARCH_ACTIONS=y
--CONFIG_ARCH_AGILEX=y
--CONFIG_ARCH_N5X=y
- CONFIG_ARCH_SUNXI=y
- CONFIG_ARCH_ALPINE=y
- CONFIG_ARCH_APPLE=y
-@@ -112,7 +110,6 @@ CONFIG_IMX_SCU_PD=y
+@@ -109,7 +109,6 @@ CONFIG_IMX_SCU_PD=y
  CONFIG_ACPI=y
  CONFIG_ACPI_APEI=y
  CONFIG_ACPI_APEI_GHES=y
@@ -53,7 +44,7 @@ index 545197bc0501..93954f88b2bf 100644
  CONFIG_ACPI_APEI_MEMORY_FAILURE=y
  CONFIG_ACPI_APEI_EINJ=y
  CONFIG_VIRTUALIZATION=y
-@@ -539,7 +536,6 @@ CONFIG_GPIO_PCA953X_IRQ=y
+@@ -544,7 +543,6 @@ CONFIG_GPIO_PCA953X_IRQ=y
  CONFIG_GPIO_BD9571MWV=m
  CONFIG_GPIO_MAX77620=y
  CONFIG_GPIO_SL28CPLD=m
@@ -61,7 +52,7 @@ index 545197bc0501..93954f88b2bf 100644
  CONFIG_QCOM_CPR=y
  CONFIG_ROCKCHIP_IODOMAIN=y
  CONFIG_POWER_RESET_MSM=y
-@@ -795,7 +791,7 @@ CONFIG_SND_AUDIO_GRAPH_CARD=m
+@@ -812,7 +810,7 @@ CONFIG_SND_AUDIO_GRAPH_CARD=m
  CONFIG_HID_MULTITOUCH=m
  CONFIG_I2C_HID_ACPI=m
  CONFIG_I2C_HID_OF=m
