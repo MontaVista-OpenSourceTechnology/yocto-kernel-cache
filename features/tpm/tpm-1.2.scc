@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable TCG TPM (Trusted Computing Group Trusted Platform Module) 1.2 drivers"
+define KFEATURE_COMPATIBILITY board
+
+include tpm-common.scc
+
+kconf hardware tpm-1.2.cfg
