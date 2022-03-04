@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable simulated radio testing tool for mac802154"
+define KFEATURE_COMPATIBILITY all
+
+kconf non-hardware ieee802154-hwsim.cfg
