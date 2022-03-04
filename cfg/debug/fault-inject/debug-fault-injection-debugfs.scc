@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable fault injection debugfs capabilities"
+define KFEATURE_COMPATIBILITY all
+
+include debug-fault-injection.scc
+
+kconf non-hardware debug-fault-injection-debugfs.cfg
