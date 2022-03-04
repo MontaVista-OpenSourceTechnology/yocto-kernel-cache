@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable debug and emulation features needed for syzkaller fuzzing"
+define KFEATURE_COMPATIBILITY all
+
+include cfg/debug/kcov/debug-kcov.scc
+include cfg/debug/mem/debug-memleak.scc
+include cfg/debug/kcsan/debug-kcsan.scc
+include cfg/debug/fault-inject/debug-failslab-slab.scc
+include cfg/debug/fault-inject/debug-fault-injection-debugfs.scc
+
+include features/tun/tun.scc
+include features/usb/usb-dummy-hcd.scc
+include features/usb/usb-raw-gadget.scc
+include features/mac80211/mac80211-hwsim.scc
+include features/bluetooth/bluetooth-vhci.scc
+include features/ieee802154/ieee802154-hwsim.scc
