@@ -4,4 +4,4 @@ define KFEATURE_COMPATIBILITY board
 
 include tpm-common.scc
 
-kconf hardware tpm2.cfg
+kconf hardware tpm-2.0.cfg
