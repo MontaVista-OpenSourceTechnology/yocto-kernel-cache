@@ -8,3 +8,4 @@ patch 0004-aufs5-standalone.patch
 patch 0005-aufs5-core.patch
 patch 0006-aufs-adjust-to-v5.15-fs-changes.patch
 patch 0007-aufs5-fix-build-against-v5.15.3.patch
+patch aufs-i_op-Add-handling-for-au_pin_hdir_set_owner-wit.patch
