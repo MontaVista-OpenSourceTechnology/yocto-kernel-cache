@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE marvell-cn96xx-sdkv5.4
+define KTYPE standard
+define KARCH arm64
+
+include ktypes/standard
+
+include marvell-cn96xx.scc
+kconf hardware sdkv5.4.cfg
