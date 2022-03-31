@@ -1,3 +1,10 @@
 # SPDX-License-Identifier: MIT
 kconf hardware qemuarma15.cfg
 kconf hardware qemuarma15-gfx.cfg
+
+include features/usb/xhci-hcd.scc
+include features/net/net.scc
+
+include cfg/virtio.scc
+include cfg/dmaengine.scc
+include cfg/timer/rtc.scc

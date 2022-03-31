@@ -4,14 +4,5 @@ define KTYPE tiny
 define KARCH arm
 
 include ktypes/tiny/tiny.scc
-# we aren't carrying patches specific to this platform, so let's
-# skip the branch for now.
-# branch qemuarma15
 
-include cfg/virtio.scc
-include cfg/dmaengine.scc
-include cfg/timer/rtc.scc
 include qemuarma15.scc
-
-
-kconf hardware qemuarma15-tiny.cfg
