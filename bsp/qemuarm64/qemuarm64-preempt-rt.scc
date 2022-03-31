@@ -6,7 +6,6 @@ define KARCH arm64
 # no new branch required, re-use the ktypes/preempt-rt/preempt-rt.scc branch
 include ktypes/preempt-rt/preempt-rt.scc
 
-include cfg/virtio.scc
 include qemuarm64.scc
 
 # enable the ability to run 32 bit apps
