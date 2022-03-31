@@ -1,10 +1,14 @@
 # SPDX-License-Identifier: MIT
 define KMACHINE arm-versatile-926ejs
 define KMACHINE qemuarmv5
-define KMACHINE qemuarm
 define KTYPE preempt-rt
 define KARCH arm
 
 # no new branch required, re-use the ktypes/preempt-rt/preempt-rt.scc branch
 include ktypes/preempt-rt/preempt-rt.scc
+branch arm-versatile-926ejs
+
 include arm-versatile-926ejs.scc
+kconf hardware arm-versatile-926ejs-preempt-rt.cfg
+
+patch arm_versatile_926ejs-kick-off-PrimeCell-RTC-PL031.patch
