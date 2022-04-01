@@ -3,3 +3,7 @@ define KFEATURE_DESCRIPTION "Enable/disable configurations that impact kernel se
 define KFEATURE_COMPATIBILITY all
 
 kconf non-hardware security.cfg
+
+if [ "$KARCH" = "x86_64" ]; then
+    kconf non-hardware security-x86_64.cfg
+fi
