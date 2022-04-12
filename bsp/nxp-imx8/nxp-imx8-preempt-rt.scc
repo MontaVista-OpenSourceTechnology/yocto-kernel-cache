@@ -6,3 +6,5 @@ include ktypes/preempt-rt
 branch nxp-imx8
 
 include nxp-imx8.scc
+
+kconf hardware nxp-imx8-preempt-rt.cfg
