@@ -1,7 +1,7 @@
-From 97c9638892228e2dd65e1b9d1654fab1f7ee3f35 Mon Sep 17 00:00:00 2001
+From 06ad4c49d3ea3e5c3f65c84410a38e8c95ae9072 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Fri, 4 Mar 2022 09:42:19 -0500
-Subject: [PATCH 1/2] sched/isolation: really align nohz_full with rcu_nocbs
+Subject: [PATCH] sched/isolation: really align nohz_full with rcu_nocbs
 
 At the moment it is currently possible to sneak a core into nohz_full
 that lies between nr_possible and NR_CPUS - but you won't "see" it
@@ -52,11 +52,11 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 12 insertions(+)
 
 diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 7f06eaf12818..01abc8400d6c 100644
+index 373d42c707bc..73386019efcb 100644
 --- a/kernel/sched/isolation.c
 +++ b/kernel/sched/isolation.c
-@@ -89,6 +89,18 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
- 		return 0;
+@@ -119,6 +119,18 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+ 		}
  	}
  
 +	if (!cpumask_subset(non_housekeeping_mask, cpu_possible_mask)) {
@@ -71,9 +71,9 @@ index 7f06eaf12818..01abc8400d6c 100644
 +		return 0;
 +	}
 +
- 	alloc_bootmem_cpumask_var(&tmp);
- 	if (!housekeeping_flags) {
- 		alloc_bootmem_cpumask_var(&housekeeping_mask);
+ 	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
+ 	if (cpulist_parse(str, non_housekeeping_mask) < 0) {
+ 		pr_warn("Housekeeping: nohz_full= or isolcpus= incorrect CPU range\n");
 -- 
 2.19.1
 
