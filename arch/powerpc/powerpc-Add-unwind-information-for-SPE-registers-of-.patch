@@ -20,13 +20,13 @@ source code, macro DWARF_REG_TO_UNWIND_COLUMN:
 
 Signed-off-by: Liming Wang <liming.wang@windriver.com>
 ---
- arch/powerpc/kernel/vdso32/sigtramp.S |   34 +++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/vdso/sigtramp32.S |   34 +++++++++++++++++++++++++++++++++
  1 files changed, 34 insertions(+), 0 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/sigtramp.S b/arch/powerpc/kernel/vdso32/sigtramp.S
+diff --git a/arch/powerpc/kernel/vdso/sigtramp32.S b/arch/powerpc/kernel/vdso/sigtramp32.S
 index 68d49dd..789a343 100644
---- a/arch/powerpc/kernel/vdso32/sigtramp.S
-+++ b/arch/powerpc/kernel/vdso32/sigtramp.S
+--- a/arch/powerpc/kernel/vdso/sigtramp32.S
++++ b/arch/powerpc/kernel/vdso/sigtramp32.S
 @@ -251,6 +251,40 @@ V_FUNCTION_END(__kernel_sigtramp_rt32)
    vsave_msr1 (31);							\
    vsave_msr2 (33, 32*16+12);						\
