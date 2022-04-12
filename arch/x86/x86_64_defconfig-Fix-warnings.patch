@@ -1,108 +1,27 @@
-From 720b61fc400b51918b8ae95d0fd0e79256214d78 Mon Sep 17 00:00:00 2001
-From: Naveen Saini <naveen.kumar.saini@intel.com>
-Date: Fri, 21 Jan 2022 16:46:21 +0800
-Subject: [PATCH] x86_64_defconfig: Fix warnings
+From 98719e80c5e58bfc748591e1fe91f8fd6dd7ff99 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 15 Oct 2019 22:55:17 -0400
+Subject: [PATCH] crtsavres: fixups for 5.4+
 
-Configure CONFIG_EEEPC_LAPTOP & CONFIG_SND_SEQ_DUMMY as modules, because
-dependencies are configured as modules.
-    [NOTE]: 'CONFIG_EEEPC_LAPTOP' last val (y) and .config val (m) do not match
-    [NOTE]: 'CONFIG_SND_SEQ_DUMMY' last val (y) and .config val (m) do not match
-
-Added dependency configurations:
- CONFIG_HID_LOGITECH for CONFIG_LOGITECH_FF
- CONFIG_NET_VENDOR_DEC for CONFIG_NET_TULIP
- CONFIG_IOMMU_SUPPORT for CONFIG_AMD_IOOMU & CONFIG_INTEL_IOMMU
- CONFIG_NET_VENDOR_NVIDIA for CONFIG_FORCEDETH
-
-        Config 'LOGITECH_FF' has the following Direct dependencies (LOGITECH_FF=n):
-                HID_LOGITECH(=n) && HID(=y) && INPUT(=y)
-        Parent dependencies are:
-             HID_LOGITECH [n] HID [y] INPUT [y]
-    [INFO]: config 'CONFIG_LOGITECH_FF' was set, but it wasn't assignable, check (parent) dependencies
-
-        Config 'NET_TULIP' has the following Direct dependencies (NET_TULIP=n):
-                PCI(=y) || EISA(=n) || CARDBUS(=y) (=y) && NET_VENDOR_DEC(=n) && ETHERNET(=y) && NETDEVICES(=y)
-        Parent dependencies are:
-             NET_VENDOR_DEC [n] ETHERNET [y] EISA [n] PCI [y] CARDBUS [y] NETDEVICES [y]
-    [INFO]: config 'CONFIG_NET_TULIP' was set, but it wasn't assignable, check (parent) dependencies
-
-        Config 'FORCEDETH' has the following Direct dependencies (FORCEDETH=n):
-                PCI(=y) && NET_VENDOR_NVIDIA(=n) && ETHERNET(=y) && NETDEVICES(=y)
-        Parent dependencies are:
-             NETDEVICES [y] PCI [y] NET_VENDOR_NVIDIA [n] ETHERNET [y]
-    [INFO]: config 'CONFIG_FORCEDETH' was set, but it wasn't assignable, check (parent) dependencies
-
-Tested with qemux86-64 machine:
-$ oe-selftest --run-tests kerneldevelopment.KernelConfigs
-
-Disabled debug configurations. Yocto-kernel-cahce have seperate debug configurations.
-
-Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- arch/x86/configs/x86_64_defconfig | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/powerpc/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index e8a7a0af2bda..fef36a0d6961 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -115,7 +115,7 @@ CONFIG_PCCARD=y
- CONFIG_YENTA=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
--CONFIG_DEBUG_DEVRES=y
-+CONFIG_DEBUG_DEVRES=n
- CONFIG_CONNECTOR=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_BLK_DEV_SD=y
-@@ -141,11 +141,13 @@ CONFIG_NETDEVICES=y
- CONFIG_NETCONSOLE=y
- CONFIG_TIGON3=y
- CONFIG_NET_TULIP=y
-+CONFIG_NET_VENDOR_DEC=y
- CONFIG_E100=y
- CONFIG_E1000=y
- CONFIG_E1000E=y
- CONFIG_SKY2=y
- CONFIG_FORCEDETH=y
-+CONFIG_NET_VENDOR_NVIDIA=y
- CONFIG_8139TOO=y
- CONFIG_R8169=y
- CONFIG_INPUT_EVDEV=y
-@@ -186,12 +188,13 @@ CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_HRTIMER=y
- CONFIG_SND_SEQUENCER=y
--CONFIG_SND_SEQ_DUMMY=y
-+CONFIG_SND_SEQ_DUMMY=m
- CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
- CONFIG_HIDRAW=y
- CONFIG_HID_GYRATION=y
- CONFIG_LOGITECH_FF=y
-+CONFIG_HID_LOGITECH=y
- CONFIG_HID_NTRIG=y
- CONFIG_HID_PANTHERLORD=y
- CONFIG_PANTHERLORD_FF=y
-@@ -214,9 +217,10 @@ CONFIG_USB_STORAGE=y
- CONFIG_RTC_CLASS=y
- CONFIG_RTC_HCTOSYS=n
- CONFIG_DMADEVICES=y
--CONFIG_EEEPC_LAPTOP=y
-+CONFIG_EEEPC_LAPTOP=m
- CONFIG_AMD_IOMMU=y
- CONFIG_INTEL_IOMMU=y
-+CONFIG_IOMMU_SUPPORT=y
- CONFIG_INTEL_IOMMU_DEFAULT_ON=n
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
-@@ -257,4 +261,4 @@ CONFIG_SCHEDSTATS=y
- CONFIG_BLK_DEV_IO_TRACE=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
--CONFIG_DEBUG_BOOT_PARAMS=y
-+CONFIG_DEBUG_BOOT_PARAMS=n
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index 642e21b3cf21..926b489370ba 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -426,6 +426,9 @@ vdso_prepare: prepare0
+ 		$(build)=arch/powerpc/kernel/vdso include/generated/vdso64-offsets.h)
+ endif
+ 
++arch/powerpc/lib/crtsavres.o: arch/powerpc/lib/crtsavres.S
++	$(Q)$(MAKE) $(build)=arch/powerpc/lib arch/powerpc/lib/crtsavres.o
++
+ archprepare: checkbin arch/powerpc/lib/crtsavres.o
+ 
+ archheaders:
 -- 
 2.19.1
 
