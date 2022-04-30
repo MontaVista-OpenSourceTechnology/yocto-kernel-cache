@@ -8,3 +8,5 @@ include ktypes/standard/standard.scc
 include qemuarma15.scc
 
 include features/pci/pci.scc
+# for emulated pci support
+include features/pci/pci-of-generic.scc
