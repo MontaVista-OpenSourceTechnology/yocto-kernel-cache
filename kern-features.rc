@@ -231,6 +231,7 @@
 	config = cfg/net/bridge.scc
 	config = cfg/net/ipv6.scc
 	config = cfg/net/ipsec6.scc
+	config = cfg/net/mdio.scc
 	config = cfg/usb-mass-storage.scc
 	config = cfg/efi-ext.scc
 	config = cfg/efi.scc
