@@ -2,3 +2,7 @@ define KFEATURE_DESCRIPTION "Xen Kernel Support"
 define KFEATURE_COMPATIBILITY arch
 
 kconf non-hardware xen.cfg
+
+if [ "$KARCH" = "x86_64" ] || [ "$KARCH" = "i386" ]; then
+    kconf non-hardware xen-x86.cfg
+fi
