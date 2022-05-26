@@ -6,3 +6,4 @@ include features/usb/xhci-hcd.scc
 include features/net/net.scc
 include features/pci/pci.scc
 include cfg/virtio.scc
+include cfg/net/mdio.scc
