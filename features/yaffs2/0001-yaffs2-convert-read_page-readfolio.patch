@@ -1,0 +1,76 @@
+From a10fa57649a96e7cd87ec4b93badc2b441b06ec5 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 29 Jun 2022 10:51:56 -0400
+Subject: [PATCH] yaffs2: convert read_page -> readfolio
+
+This is a first pass of changing yaffs2 to use the new read_folio,
+versus readpage routines. We also adjust writepage to no longer use
+flags, which have been dropped in 5.19+
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 8ceb66c0d070..52f2d13c7126 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -367,13 +367,13 @@ static int yaffs_readpage_unlock(struct file *f, struct page *pg)
+ 	return ret;
+ }
+ 
+-static int yaffs_readpage(struct file *f, struct page *pg)
++static int yaffs_read_folio(struct file *f, struct folio *folio)
+ {
+ 	int ret;
+ 
+-	yaffs_trace(YAFFS_TRACE_OS, "yaffs_readpage");
+-	ret = yaffs_readpage_unlock(f, pg);
+-	yaffs_trace(YAFFS_TRACE_OS, "yaffs_readpage done");
++	yaffs_trace(YAFFS_TRACE_OS, "yaffs_read_folio");
++	ret = yaffs_readpage_unlock(f, &folio->page);
++	yaffs_trace(YAFFS_TRACE_OS, "yaffs_read_folio done");
+ 	return ret;
+ }
+ 
+@@ -548,9 +548,16 @@ static void yaffs_release_space(struct file *f)
+ }
+ 
+ #if (YAFFS_USE_WRITE_BEGIN_END > 0)
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0)
++static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
++			     loff_t pos, unsigned len,
++			     struct page **pagep, void **fsdata)
++#else
+ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ 			     loff_t pos, unsigned len, unsigned flags,
+ 			     struct page **pagep, void **fsdata)
++#endif
+ {
+ 	struct page *pg = NULL;
+ 	pgoff_t index = pos >> PAGE_CACHE_SHIFT;
+@@ -559,7 +566,9 @@ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ 	int space_held = 0;
+ 
+ 	/* Get a page */
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 28)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0)
++	pg = grab_cache_page_write_begin(mapping, index);
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 28)
+ 	pg = grab_cache_page_write_begin(mapping, index, flags);
+ #else
+ 	pg = __grab_cache_page(mapping, index);
+@@ -748,7 +757,7 @@ static int yaffs_commit_write(struct file *f, struct page *pg, unsigned offset,
+ #endif
+ 
+ static struct address_space_operations yaffs_file_address_operations = {
+-	.readpage = yaffs_readpage,
++	.read_folio = yaffs_read_folio,
+ 	.writepage = yaffs_writepage,
+ #if (YAFFS_USE_WRITE_BEGIN_END > 0)
+ 	.write_begin = yaffs_write_begin,
+-- 
+2.19.1
+
