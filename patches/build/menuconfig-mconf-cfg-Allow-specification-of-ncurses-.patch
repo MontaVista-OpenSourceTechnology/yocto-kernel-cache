@@ -1,4 +1,4 @@
-From b50cad575d2b9d3f8fc0b01e83a5c7fd3cddb684 Mon Sep 17 00:00:00 2001
+From 660178adc3529a6cb06bd0bfdfd22c5cb24cee5c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Mon, 2 Jul 2018 23:10:28 -0400
 Subject: [PATCH] menuconfig,mconf-cfg: Allow specification of ncurses location
@@ -28,7 +28,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
 old mode 100755
 new mode 100644
-index c812872d7f9d..65a9b9e5b8a6
+index 025b565e0b7c..a3c59b360ca3
 --- a/scripts/kconfig/mconf-cfg.sh
 +++ b/scripts/kconfig/mconf-cfg.sh
 @@ -4,6 +4,14 @@
@@ -43,9 +43,9 @@ index c812872d7f9d..65a9b9e5b8a6
 +    exit 0
 +fi
 +
- if [ -n "$(command -v pkg-config)" ]; then
- 	if pkg-config --exists $PKG; then
- 		echo cflags=\"$(pkg-config --cflags $PKG)\"
+ if [ -n "$(command -v ${HOSTPKG_CONFIG})" ]; then
+ 	if ${HOSTPKG_CONFIG} --exists $PKG; then
+ 		echo cflags=\"$(${HOSTPKG_CONFIG} --cflags $PKG)\"
 -- 
-2.5.0
+2.19.1
 
