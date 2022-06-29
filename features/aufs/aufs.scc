@@ -1,14 +1,5 @@
 # SPDX-License-Identifier: MIT
 #
-
-#patch 0001-aufs-kbuild.patch
-#patch 0002-aufs-base.patch
-#patch 0003-aufs-mmap.patch
-#patch 0004-aufs-standalone.patch
-#patch 0005-aufs-core.patch
-
-#patch 0001-aufs-fs-adapt-to-5.18-operations-changes.patch
-# patch aufs-i_op-Add-handling-for-au_pin_hdir_set_owner-wit.patch
 patch aufs5-kbuild.patch
 patch aufs5-base.patch
 patch aufs5-mmap.patch
