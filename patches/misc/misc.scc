@@ -12,3 +12,4 @@ patch arm64-perf-Fix-wrong-cast-that-may-cause-wrong-trunc.patch
 patch net-dccp-make-it-depend-on-CONFIG_BROKEN-CVE-2020-16.patch
 patch iwlwifi-select-MAC80211_LEDS-conditionally.patch
 patch vt-conmakehash-improve-reproducibility.patch
+patch lib-build_OID_registry-fix-reproducibility-issues.patch
