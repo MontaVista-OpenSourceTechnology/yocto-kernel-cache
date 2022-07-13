@@ -8,3 +8,4 @@ include features/net/net.scc
 include cfg/virtio.scc
 include cfg/dmaengine.scc
 include cfg/timer/rtc.scc
+include cfg/net/mdio.scc
