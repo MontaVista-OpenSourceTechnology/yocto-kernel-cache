@@ -14,3 +14,4 @@ patch iwlwifi-select-MAC80211_LEDS-conditionally.patch
 patch vt-conmakehash-improve-reproducibility.patch
 patch lib-build_OID_registry-fix-reproducibility-issues.patch
 patch tools-use-basename-to-identify-file-in-gen-mach-type.patch
+patch pnmtologo-use-relocatable-file-name.patch
