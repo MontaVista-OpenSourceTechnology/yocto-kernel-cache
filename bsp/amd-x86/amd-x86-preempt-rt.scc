@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE amd-x86-64
+define KTYPE preempt-rt
+define KARCH x86-64
+
+include ktypes/preempt-rt/preempt-rt.scc
+
+include amd-x86-64.scc
