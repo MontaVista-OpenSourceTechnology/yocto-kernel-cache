@@ -7,3 +7,4 @@ include cfg/usb-mass-storage.scc
 include features/hugetlb/hugetlb.scc
 include arch/arm/32bit-compat.scc
 include features/profiling/profiling.scc
+include features/tsn/tsn.scc
