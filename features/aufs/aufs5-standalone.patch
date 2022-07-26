@@ -1,6 +1,6 @@
-From 6f6411900afbe506bfdf6c56272f7961333cfc71 Mon Sep 17 00:00:00 2001
+From f0ea5e8b0eba0980d078e4c14483ac7420a18e44 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Wed, 29 Jun 2022 11:12:19 -0400
+Date: Tue, 26 Jul 2022 14:22:14 -0400
 Subject: [PATCH 4/5] aufs5: standalone
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
@@ -41,7 +41,7 @@ index cddcf2e44930..8e24a158ef4f 100644
  /**
   * d_ancestor - search for an ancestor
 diff --git a/fs/exec.c b/fs/exec.c
-index 0989fb8472a1..040741a7fc1a 100644
+index 778123259e42..91ffc1b2b404 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -111,6 +111,7 @@ bool path_noexec(const struct path *path)
@@ -129,7 +129,7 @@ index 1d57fbde2feb..50d04ab40175 100644
  long vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index b1b1cdfee9d3..c93e7fd16917 100644
+index e0777eefd846..5e4413802f73 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -489,6 +489,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)

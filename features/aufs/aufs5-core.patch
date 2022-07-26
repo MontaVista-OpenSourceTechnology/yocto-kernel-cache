@@ -1,6 +1,6 @@
-From fc23e3344743c7113f6b14b1c741785981ad9580 Mon Sep 17 00:00:00 2001
+From 3e17a8505b1d434e4662895388c2af209fab618b Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Wed, 29 Jun 2022 11:13:15 -0400
+Date: Tue, 26 Jul 2022 14:23:06 -0400
 Subject: [PATCH 5/5] aufs5: core
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
@@ -43,18 +43,18 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  fs/aufs/dir.h                                 |  134 ++
  fs/aufs/dirren.c                              | 1315 +++++++++++
  fs/aufs/dirren.h                              |  140 ++
- fs/aufs/dynop.c                               |  367 ++++
+ fs/aufs/dynop.c                               |  368 ++++
  fs/aufs/dynop.h                               |   77 +
  fs/aufs/export.c                              |  830 +++++++
  fs/aufs/f_op.c                                |  771 +++++++
  fs/aufs/fhsm.c                                |  427 ++++
- fs/aufs/file.c                                |  861 ++++++++
+ fs/aufs/file.c                                |  864 ++++++++
  fs/aufs/file.h                                |  342 +++
  fs/aufs/finfo.c                               |  149 ++
  fs/aufs/fsctx.c                               | 1242 +++++++++++
  fs/aufs/fstype.h                              |  401 ++++
  fs/aufs/hbl.h                                 |   65 +
- fs/aufs/hfsnotify.c                           |  289 +++
+ fs/aufs/hfsnotify.c                           |  290 +++
  fs/aufs/hfsplus.c                             |   60 +
  fs/aufs/hnotify.c                             |  715 ++++++
  fs/aufs/i_op.c                                | 1512 +++++++++++++
@@ -98,7 +98,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  fs/aufs/xattr.c                               |  368 ++++
  fs/aufs/xino.c                                | 1926 +++++++++++++++++
  include/uapi/linux/aufs_type.h                |  452 ++++
- 93 files changed, 38117 insertions(+)
+ 93 files changed, 38122 insertions(+)
  create mode 100644 Documentation/ABI/testing/debugfs-aufs
  create mode 100644 Documentation/ABI/testing/sysfs-aufs
  create mode 100644 Documentation/filesystems/aufs/README
@@ -11913,10 +11913,10 @@ index 000000000000..2c96cf8b039e
 +#endif /* __AUFS_DIRREN_H__ */
 diff --git a/fs/aufs/dynop.c b/fs/aufs/dynop.c
 new file mode 100644
-index 000000000000..4d788e1559e8
+index 000000000000..fbbaaf89e13a
 --- /dev/null
 +++ b/fs/aufs/dynop.c
-@@ -0,0 +1,367 @@
+@@ -0,0 +1,368 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2010-2021 Junjiro R. Okajima
@@ -12095,7 +12095,7 @@ index 000000000000..4d788e1559e8
 +	AuDbg("%s\n", au_sbtype(h_sb));
 +
 +	DySetAop(writepage);
-+	DySetAopForce(readpage);	/* force */
++	DySetAopForce(read_folio);	/* force */
 +	DySetAop(writepages);
 +	DySetAop(dirty_folio);
 +	DySetAop(invalidate_folio);
@@ -12103,8 +12103,8 @@ index 000000000000..4d788e1559e8
 +	DySetAop(write_begin);
 +	DySetAop(write_end);
 +	DySetAop(bmap);
-+	DySetAop(releasepage);
-+	DySetAop(freepage);
++	DySetAop(release_folio);
++	DySetAop(free_folio);
 +	/* this one will be changed according to an aufs mount option */
 +	DySetAop(direct_IO);
 +	DySetAop(migratepage);
@@ -12116,6 +12116,7 @@ index 000000000000..4d788e1559e8
 +	DySetAop(error_remove_page);
 +	DySetAop(swap_activate);
 +	DySetAop(swap_deactivate);
++	DySetAop(swap_rw);
 +
 +	DyDbgSize(cnt, *h_aop);
 +}
@@ -14415,10 +14416,10 @@ index 000000000000..9f3f8ba3fa76
 +}
 diff --git a/fs/aufs/file.c b/fs/aufs/file.c
 new file mode 100644
-index 000000000000..4aee9e1f52dc
+index 000000000000..283c3413e09b
 --- /dev/null
 +++ b/fs/aufs/file.c
-@@ -0,0 +1,861 @@
+@@ -0,0 +1,864 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2005-2021 Junjiro R. Okajima
@@ -15199,9 +15200,9 @@ index 000000000000..4aee9e1f52dc
 +
 +/* cf. aufs_nopage() */
 +/* for madvise(2) */
-+static int aufs_readpage(struct file *file __maybe_unused, struct page *page)
++static int aufs_read_folio(struct file *file __maybe_unused, struct folio *folio)
 +{
-+	unlock_page(page);
++	folio_unlock(folio);
 +	return 0;
 +}
 +
@@ -15212,7 +15213,7 @@ index 000000000000..4aee9e1f52dc
 +/* they will never be called. */
 +#ifdef CONFIG_AUFS_DEBUG
 +static int aufs_write_begin(struct file *file, struct address_space *mapping,
-+			    loff_t pos, unsigned len, unsigned flags,
++			    loff_t pos, unsigned len,
 +			    struct page **pagep, void **fsdata)
 +{ AuUnsupport(); return 0; }
 +static int aufs_write_end(struct file *file, struct address_space *mapping,
@@ -15226,8 +15227,8 @@ index 000000000000..4aee9e1f52dc
 +{ AuUnsupport(); return true; }
 +static void aufs_invalidate_folio(struct folio *folio, size_t offset, size_t len)
 +{ AuUnsupport(); }
-+static int aufs_releasepage(struct page *page, gfp_t gfp)
-+{ AuUnsupport(); return 0; }
++static bool aufs_release_folio(struct folio *folio, gfp_t gfp)
++{ AuUnsupport(); return true; }
 +#if 0 /* called by memory compaction regardless file */
 +static int aufs_migratepage(struct address_space *mapping, struct page *newpage,
 +			    struct page *page, enum migrate_mode mode)
@@ -15242,7 +15243,7 @@ index 000000000000..4aee9e1f52dc
 +static bool aufs_is_partially_uptodate(struct folio *folio, size_t from,
 +				      size_t count)
 +{ AuUnsupport(); return true; }
-+static void aufs_is_dirty_writeback(struct page *page, bool *dirty,
++static void aufs_is_dirty_writeback(struct folio *folio, bool *dirty,
 +				    bool *writeback)
 +{ AuUnsupport(); }
 +static int aufs_error_remove_page(struct address_space *mapping,
@@ -15253,10 +15254,12 @@ index 000000000000..4aee9e1f52dc
 +{ AuUnsupport(); return 0; }
 +static void aufs_swap_deactivate(struct file *file)
 +{ AuUnsupport(); }
++static int aufs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
++{ AuUnsupport(); return 0; }
 +#endif /* CONFIG_AUFS_DEBUG */
 +
 +const struct address_space_operations aufs_aop = {
-+	.readpage		= aufs_readpage,
++	.read_folio		= aufs_read_folio,
 +	.direct_IO		= aufs_direct_IO,
 +#ifdef CONFIG_AUFS_DEBUG
 +	.writepage		= aufs_writepage,
@@ -15267,7 +15270,7 @@ index 000000000000..4aee9e1f52dc
 +	.write_end		= aufs_write_end,
 +	/* no bmap, no block device */
 +	.invalidate_folio	= aufs_invalidate_folio,
-+	.releasepage		= aufs_releasepage,
++	.release_folio		= aufs_release_folio,
 +	/* is fallback_migrate_page ok? */
 +	/* .migratepage		= aufs_migratepage, */
 +	.isolate_page		= aufs_isolate_page,
@@ -15277,7 +15280,8 @@ index 000000000000..4aee9e1f52dc
 +	.is_dirty_writeback	= aufs_is_dirty_writeback,
 +	.error_remove_page	= aufs_error_remove_page,
 +	.swap_activate		= aufs_swap_activate,
-+	.swap_deactivate	= aufs_swap_deactivate
++	.swap_deactivate	= aufs_swap_deactivate,
++	.swap_rw		= aufs_swap_rw
 +#endif /* CONFIG_AUFS_DEBUG */
 +};
 diff --git a/fs/aufs/file.h b/fs/aufs/file.h
@@ -17511,10 +17515,10 @@ index 000000000000..33b6f7da81eb
 +#endif /* __AUFS_HBL_H__ */
 diff --git a/fs/aufs/hfsnotify.c b/fs/aufs/hfsnotify.c
 new file mode 100644
-index 000000000000..597d045a48b4
+index 000000000000..b4a46ce77714
 --- /dev/null
 +++ b/fs/aufs/hfsnotify.c
-@@ -0,0 +1,289 @@
+@@ -0,0 +1,290 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2005-2021 Junjiro R. Okajima
@@ -17756,7 +17760,8 @@ index 000000000000..597d045a48b4
 +		goto out;
 +
 +	err = 0;
-+	group = fsnotify_alloc_group(&au_hfsn_ops);
++	group = fsnotify_alloc_group(&au_hfsn_ops,
++				     /*flags - not for userspace*/0);
 +	if (IS_ERR(group)) {
 +		err = PTR_ERR(group);
 +		pr_err("fsnotify_alloc_group() failed, %d\n", err);
@@ -38412,7 +38417,7 @@ index 000000000000..4e7e39c98edf
 +}
 diff --git a/include/uapi/linux/aufs_type.h b/include/uapi/linux/aufs_type.h
 new file mode 100644
-index 000000000000..d7a170f830a4
+index 000000000000..0a1f318e8ef0
 --- /dev/null
 +++ b/include/uapi/linux/aufs_type.h
 @@ -0,0 +1,452 @@
@@ -38458,7 +38463,7 @@ index 000000000000..d7a170f830a4
 +#include <limits.h>
 +#endif /* __KERNEL__ */
 +
-+#define AUFS_VERSION	"5.18-20220620"
++#define AUFS_VERSION	"5.x-rcN-20220711"
 +
 +/* todo? move this to linux-2.6.19/include/magic.h */
 +#define AUFS_SUPER_MAGIC	('a' << 24 | 'u' << 16 | 'f' << 8 | 's')
