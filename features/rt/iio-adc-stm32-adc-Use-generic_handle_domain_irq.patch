@@ -1,0 +1,41 @@
+From 73bfe24cbc1f6cf3550bb1c798302c65f606238e Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Wed, 11 May 2022 13:06:09 +0200
+Subject: [PATCH 20/55] iio: adc: stm32-adc: Use generic_handle_domain_irq()
+
+The call chain
+	generic_handle_irq(irq_find_mapping(domain, x));
+
+could be replaced with
+	generic_handle_domain_irq(domain, x);
+
+which looks up the struct irq_desc for the interrupt and handles it with
+handle_irq_desc().
+This is a slight optimisation given that the driver invokes only one
+function and the struct irq_desc is used directly instead being looked
+up via irq_to_desc().
+
+Use generic_handle_domain_irq().
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/r/YnuYoQIzJoFIyEJY@linutronix.de
+---
+ drivers/iio/adc/stm32-adc-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 3efb8c404ccc..1ce52af3fe8b 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -358,7 +358,7 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
+ 		if ((status & priv->cfg->regs->eoc_msk[i] &&
+ 		     stm32_adc_eoc_enabled(priv, i)) ||
+ 		     (status & priv->cfg->regs->ovr_msk[i]))
+-			generic_handle_irq(irq_find_mapping(priv->domain, i));
++			generic_handle_domain_irq(priv->domain, i);
+ 	}
+ 
+ 	chained_irq_exit(chip, desc);
+-- 
+2.19.1
+
