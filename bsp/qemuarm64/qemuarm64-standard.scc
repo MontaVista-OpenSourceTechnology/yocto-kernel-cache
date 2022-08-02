@@ -4,6 +4,7 @@ define KTYPE standard
 define KARCH arm64
 
 include ktypes/standard/standard.scc
+branch qemuarm64
 
 include qemuarm64.scc
 
