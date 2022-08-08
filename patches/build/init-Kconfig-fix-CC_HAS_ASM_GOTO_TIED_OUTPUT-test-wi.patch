@@ -1,0 +1,103 @@
+From e0e977e1b098d96389f2ab657849456ded9189c9 Mon Sep 17 00:00:00 2001
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date: Thu, 4 Aug 2022 21:03:20 +0200
+Subject: [PATCH] init/Kconfig: fix CC_HAS_ASM_GOTO_TIED_OUTPUT test with dash
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When using dash as /bin/sh, the CC_HAS_ASM_GOTO_TIED_OUTPUT test fails
+with a syntax error which is not the one we are looking for:
+
+<stdin>: In function ‘foo’:
+<stdin>:1:29: warning: missing terminating " character
+<stdin>:1:29: error: missing terminating " character
+<stdin>:2:5: error: expected ‘:’ before ‘+’ token
+<stdin>:2:7: warning: missing terminating " character
+<stdin>:2:7: error: missing terminating " character
+<stdin>:2:5: error: expected declaration or statement at end of input
+
+Move all the CC_HAS_ASM_GOTO tests to scripts/gcc-goto.sh to solve the
+escaping issues.
+
+Fixes: 1aa0e8b144b6 ("Kconfig: Add option for asm goto w/ tied outputs to workaround clang-13 bug")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ init/Kconfig        |  6 +++---
+ scripts/gcc-goto.sh | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index c7900e8975f1..80b252ba58b0 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -71,16 +71,16 @@ config CC_CAN_LINK_STATIC
+ 	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m32-flag) -static)
+ 
+ config CC_HAS_ASM_GOTO
+-	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
++	def_bool $(success,$(srctree)/scripts/gcc-goto.sh goto $(CC))
+ 
+ config CC_HAS_ASM_GOTO_OUTPUT
+ 	depends on CC_HAS_ASM_GOTO
+-	def_bool $(success,echo 'int foo(int x) { asm goto ("": "=r"(x) ::: bar); return x; bar: return 0; }' | $(CC) -x c - -c -o /dev/null)
++	def_bool $(success,$(srctree)/scripts/gcc-goto.sh goto_output $(CC))
+ 
+ config CC_HAS_ASM_GOTO_TIED_OUTPUT
+ 	depends on CC_HAS_ASM_GOTO_OUTPUT
+ 	# Detect buggy gcc and clang, fixed in gcc-11 clang-14.
+-	def_bool $(success,echo 'int foo(int *x) { asm goto (".long (%l[bar]) - .\n": "+m"(*x) ::: bar); return *x; bar: return 0; }' | $CC -x c - -c -o /dev/null)
++	def_bool $(success,$(srctree)/scripts/gcc-goto.sh goto_tied_output $(CC))
+ 
+ config TOOLS_SUPPORT_RELR
+ 	def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+diff --git a/scripts/gcc-goto.sh b/scripts/gcc-goto.sh
+index 8b980fb2270a..aa9498b74df8 100755
+--- a/scripts/gcc-goto.sh
++++ b/scripts/gcc-goto.sh
+@@ -3,6 +3,11 @@
+ # Test for gcc 'asm goto' support
+ # Copyright (C) 2010, Jason Baron <jbaron@redhat.com>
+ 
++TEST=$1
++shift
++
++case $TEST in
++    "goto")
+ cat << "END" | $@ -x c - -fno-PIE -c -o /dev/null
+ int main(void)
+ {
+@@ -20,3 +25,29 @@ entry:
+ 	return 0;
+ }
+ END
++    ;;
++
++    "goto_output")
++cat << "END" | $@ -x c - -c -o /dev/null
++int foo(int x) {
++	asm goto ("": "=r"(x) ::: bar);
++	return x;
++	bar: return 0;
++}
++END
++    ;;
++
++    "goto_tied_output")
++cat << "END" | $@ -x c - -c -o /dev/null
++int foo(int *x) {
++	asm goto (".long (%l[bar]) - .\n": "+m"(*x) ::: bar);
++	return *x;
++	bar: return 0;
++}
++END
++    ;;
++
++    *)
++	exit -1
++    ;;
++esac
+-- 
+2.19.1
+
