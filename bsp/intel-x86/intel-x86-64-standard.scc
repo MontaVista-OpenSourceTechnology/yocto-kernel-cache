@@ -4,7 +4,6 @@ define KTYPE standard
 define KARCH x86
 
 include ktypes/standard
-
+include features/transparent-hugepage/transparent-hugepage.scc
 include intel-x86-64.scc
-kconf hardware intel-x86-hugepage.cfg
 kconf hardware cfs-bandwidth.cfg
