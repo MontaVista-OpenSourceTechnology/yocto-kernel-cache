@@ -4,6 +4,5 @@ define KTYPE standard
 define KARCH x86-64
 
 include ktypes/standard/standard.scc
-
+include features/transparent-hugepage/transparent-hugepage.scc
 include amd-x86-64.scc
-kconf hardware amd-x86-hugepage.cfg
