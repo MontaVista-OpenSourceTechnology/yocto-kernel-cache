@@ -1,0 +1,34 @@
+From ae1445c1cc1cec47fa51f7831cd9110ecd5b2a55 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 3 Oct 2022 15:16:27 -0400
+Subject: [PATCH] yaffs2: replace bdevname call with sprintf
+
+commit 900d156bac2bc474cf7c7bee4efbc6c83ec5ae58 [block: remove bdevname]
+removed this function, we follow the pattern and use sprintf as a
+replacement.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 52f2d13c7126..140f7aa7a1a1 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -117,7 +117,11 @@
+ #define Page_Uptodate(page) test_bit(PG_uptodate, &(page)->flags)
+ 
+ /* FIXME: use sb->s_id instead ? */
+-#define yaffs_devname(sb, buf) bdevname(sb->s_bdev, buf)
++//#define yaffs_devname(sb, buf) bdevname(sb->s_bdev, buf)
++static inline char* yaffs_devname(struct super_block *sb, char *buf) {
++	snprintf(buf, sizeof(buf), "%pg", sb->s_bdev);
++	return buf;
++}
+ 
+ #else
+ 
+-- 
+2.19.1
+
