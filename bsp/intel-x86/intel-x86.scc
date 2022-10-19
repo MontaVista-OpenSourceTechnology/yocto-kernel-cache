@@ -64,3 +64,4 @@ kconf hardware intel-x86-ixgbe-overrides.cfg
 kconf hardware intel-x86-i915-overrides.cfg
 kconf hardware intel-x86-dptf-overrides.cfg
 kconf hardware intel-x86-serial-8250-overrides.cfg
+kconf hardware intel-x86-i40e-overrides.cfg
