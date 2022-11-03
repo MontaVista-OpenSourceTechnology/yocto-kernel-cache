@@ -23,7 +23,7 @@ include features/intel-e1xxxx/intel-e100.scc
 include features/intel-e1xxxx/intel-e1xxxx.scc
 include features/igb/igb.scc
 include features/scsi/cdrom.scc
-
+include features/igc/igc.scc
 include features/x2apic/x2apic.scc
 
 # generic Bluetooth support
