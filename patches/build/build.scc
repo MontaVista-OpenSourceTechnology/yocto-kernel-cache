@@ -11,4 +11,3 @@ patch menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch
 
 # solved in 6.x by removing the need for ASM_GOTO as an arch dependency
 #patch init-Kconfig-fix-CC_HAS_ASM_GOTO_TIED_OUTPUT-test-wi.patch
-patch build-partially-revert-kbuild-add-phony-targets-to-..patch
