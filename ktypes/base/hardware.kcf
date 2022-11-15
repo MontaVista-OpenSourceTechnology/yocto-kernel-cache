@@ -63,6 +63,7 @@ arch/arm/mach-qcom/Kconfig
 arch/arm/mach-rda/Kconfig
 arch/arm/mach-realtek/Kconfig
 arch/arm/mach-rockchip/Kconfig
+arch/arm/mach-rpc/Kconfig
 arch/arm/mach-s3c/Kconfig
 arch/arm/mach-s3c/Kconfig.s3c24xx
 arch/arm/mach-s3c/Kconfig.s3c64xx
@@ -73,6 +74,7 @@ arch/arm/mach-socfpga/Kconfig
 arch/arm/mach-spear/Kconfig
 arch/arm/mach-sti/Kconfig
 arch/arm/mach-stm32/Kconfig
+arch/arm/mach-sunplus/Kconfig
 arch/arm/mach-sunxi/Kconfig
 arch/arm/mach-tegra/Kconfig
 arch/arm/mach-uniphier/Kconfig
@@ -108,6 +110,7 @@ arch/mips/bcm63xx/boards/Kconfig
 arch/mips/bcm63xx/Kconfig
 arch/mips/bmips/Kconfig
 arch/mips/cavium-octeon/Kconfig
+arch/mips/crypto/Kconfig
 arch/mips/generic/Kconfig
 arch/mips/ingenic/Kconfig
 arch/mips/jazz/Kconfig
@@ -124,7 +127,6 @@ arch/mips/sgi-ip27/Kconfig
 arch/mips/sibyte/Kconfig
 arch/mips/txx9/Kconfig
 arch/mips/vdso/Kconfig
-arch/mips/vr41xx/Kconfig
 arch/nios2/Kconfig
 arch/nios2/Kconfig.debug
 arch/nios2/platform/Kconfig.platform
@@ -132,6 +134,7 @@ arch/openrisc/Kconfig
 arch/openrisc/Kconfig.debug
 arch/parisc/Kconfig
 arch/parisc/Kconfig.debug
+arch/powerpc/crypto/Kconfig
 arch/powerpc/Kconfig
 arch/powerpc/Kconfig.debug
 arch/powerpc/kvm/Kconfig
@@ -166,6 +169,7 @@ arch/riscv/Kconfig.debug
 arch/riscv/Kconfig.erratas
 arch/riscv/Kconfig.socs
 arch/riscv/kvm/Kconfig
+arch/s390/crypto/Kconfig
 arch/s390/Kconfig
 arch/s390/Kconfig.debug
 arch/s390/kvm/Kconfig
@@ -182,11 +186,13 @@ arch/sh/Kconfig
 arch/sh/Kconfig.cpu
 arch/sh/Kconfig.debug
 arch/sh/mm/Kconfig
+arch/sparc/crypto/Kconfig
 arch/sparc/Kconfig
 arch/sparc/Kconfig.debug
 arch/um/drivers/Kconfig
 arch/um/Kconfig
 arch/um/Kconfig.debug
+arch/x86/crypto/Kconfig
 arch/x86/events/Kconfig
 arch/x86/Kconfig
 arch/x86/Kconfig.assembler
@@ -289,6 +295,7 @@ drivers/cpuidle/Kconfig.powerpc
 drivers/cpuidle/Kconfig.riscv
 drivers/crypto/allwinner/Kconfig
 drivers/crypto/amlogic/Kconfig
+drivers/crypto/aspeed/Kconfig
 drivers/crypto/caam/Kconfig
 drivers/crypto/cavium/cpt/Kconfig
 drivers/crypto/cavium/nitrox/Kconfig
@@ -358,6 +365,7 @@ drivers/gpu/drm/atmel-hlcdc/Kconfig
 drivers/gpu/drm/bridge/adv7511/Kconfig
 drivers/gpu/drm/bridge/analogix/Kconfig
 drivers/gpu/drm/bridge/cadence/Kconfig
+drivers/gpu/drm/bridge/imx/Kconfig
 drivers/gpu/drm/bridge/Kconfig
 drivers/gpu/drm/bridge/synopsys/Kconfig
 drivers/gpu/drm/display/Kconfig
@@ -380,6 +388,7 @@ drivers/gpu/drm/ingenic/Kconfig
 drivers/gpu/drm/Kconfig
 drivers/gpu/drm/kmb/Kconfig
 drivers/gpu/drm/lima/Kconfig
+drivers/gpu/drm/logicvc/Kconfig
 drivers/gpu/drm/mcde/Kconfig
 drivers/gpu/drm/mediatek/Kconfig
 drivers/gpu/drm/meson/Kconfig
@@ -438,6 +447,7 @@ drivers/hwspinlock/Kconfig
 drivers/hwtracing/coresight/Kconfig
 drivers/hwtracing/intel_th/Kconfig
 drivers/hwtracing/Kconfig
+drivers/hwtracing/ptt/Kconfig
 drivers/hwtracing/stm/Kconfig
 drivers/i2c/algos/Kconfig
 drivers/i2c/busses/Kconfig
@@ -469,6 +479,7 @@ drivers/iio/gyro/Kconfig
 drivers/iio/health/Kconfig
 drivers/iio/humidity/Kconfig
 drivers/iio/imu/bmi160/Kconfig
+drivers/iio/imu/bno055/Kconfig
 drivers/iio/imu/inv_icm42600/Kconfig
 drivers/iio/imu/inv_mpu6050/Kconfig
 drivers/iio/imu/Kconfig
@@ -491,6 +502,7 @@ drivers/iio/trigger/Kconfig
 drivers/infiniband/hw/bnxt_re/Kconfig
 drivers/infiniband/hw/cxgb4/Kconfig
 drivers/infiniband/hw/efa/Kconfig
+drivers/infiniband/hw/erdma/Kconfig
 drivers/infiniband/hw/hfi1/Kconfig
 drivers/infiniband/hw/hns/Kconfig
 drivers/infiniband/hw/irdma/Kconfig
@@ -560,7 +572,6 @@ drivers/media/cec/usb/pulse8/Kconfig
 drivers/media/cec/usb/rainshadow/Kconfig
 drivers/media/common/b2c2/Kconfig
 drivers/media/common/Kconfig
-drivers/media/common/saa7146/Kconfig
 drivers/media/common/siano/Kconfig
 drivers/media/common/v4l2-tpg/Kconfig
 drivers/media/common/videobuf2/Kconfig
@@ -592,22 +603,20 @@ drivers/media/pci/intel/ipu3/Kconfig
 drivers/media/pci/ivtv/Kconfig
 drivers/media/pci/Kconfig
 drivers/media/pci/mantis/Kconfig
-drivers/media/pci/meye/Kconfig
 drivers/media/pci/netup_unidvb/Kconfig
 drivers/media/pci/ngene/Kconfig
 drivers/media/pci/pluto2/Kconfig
 drivers/media/pci/pt1/Kconfig
 drivers/media/pci/pt3/Kconfig
 drivers/media/pci/saa7134/Kconfig
-drivers/media/pci/saa7146/Kconfig
 drivers/media/pci/saa7164/Kconfig
 drivers/media/pci/smipcie/Kconfig
 drivers/media/pci/solo6x10/Kconfig
 drivers/media/pci/sta2x11/Kconfig
-drivers/media/pci/ttpci/Kconfig
 drivers/media/pci/tw5864/Kconfig
 drivers/media/pci/tw686x/Kconfig
 drivers/media/pci/tw68/Kconfig
+drivers/media/pci/zoran/Kconfig
 drivers/media/platform/allegro-dvt/Kconfig
 drivers/media/platform/amlogic/Kconfig
 drivers/media/platform/amlogic/meson-ge2d/Kconfig
@@ -621,11 +630,13 @@ drivers/media/platform/Kconfig
 drivers/media/platform/marvell/Kconfig
 drivers/media/platform/mediatek/jpeg/Kconfig
 drivers/media/platform/mediatek/Kconfig
+drivers/media/platform/mediatek/mdp3/Kconfig
 drivers/media/platform/mediatek/mdp/Kconfig
 drivers/media/platform/mediatek/vcodec/Kconfig
 drivers/media/platform/mediatek/vpu/Kconfig
 drivers/media/platform/nvidia/Kconfig
 drivers/media/platform/nvidia/tegra-vde/Kconfig
+drivers/media/platform/nxp/dw100/Kconfig
 drivers/media/platform/nxp/imx-jpeg/Kconfig
 drivers/media/platform/nxp/Kconfig
 drivers/media/platform/qcom/camss/Kconfig
@@ -653,6 +664,8 @@ drivers/media/platform/st/stm32/Kconfig
 drivers/media/platform/sunxi/Kconfig
 drivers/media/platform/sunxi/sun4i-csi/Kconfig
 drivers/media/platform/sunxi/sun6i-csi/Kconfig
+drivers/media/platform/sunxi/sun6i-mipi-csi2/Kconfig
+drivers/media/platform/sunxi/sun8i-a83t-mipi-csi2/Kconfig
 drivers/media/platform/sunxi/sun8i-di/Kconfig
 drivers/media/platform/sunxi/sun8i-rotate/Kconfig
 drivers/media/platform/ti/am437x/Kconfig
@@ -660,6 +673,7 @@ drivers/media/platform/ti/davinci/Kconfig
 drivers/media/platform/ti/Kconfig
 drivers/media/platform/ti/omap3isp/Kconfig
 drivers/media/platform/ti/omap/Kconfig
+drivers/media/platform/verisilicon/Kconfig
 drivers/media/platform/via/Kconfig
 drivers/media/platform/xilinx/Kconfig
 drivers/media/radio/Kconfig
@@ -680,7 +694,6 @@ drivers/media/usb/airspy/Kconfig
 drivers/media/usb/as102/Kconfig
 drivers/media/usb/au0828/Kconfig
 drivers/media/usb/b2c2/Kconfig
-drivers/media/usb/cpia2/Kconfig
 drivers/media/usb/cx231xx/Kconfig
 drivers/media/usb/dvb-usb/Kconfig
 drivers/media/usb/dvb-usb-v2/Kconfig
@@ -699,13 +712,10 @@ drivers/media/usb/pwc/Kconfig
 drivers/media/usb/s2255/Kconfig
 drivers/media/usb/siano/Kconfig
 drivers/media/usb/stk1160/Kconfig
-drivers/media/usb/stkwebcam/Kconfig
-drivers/media/usb/tm6000/Kconfig
 drivers/media/usb/ttusb-budget/Kconfig
 drivers/media/usb/ttusb-dec/Kconfig
 drivers/media/usb/usbtv/Kconfig
 drivers/media/usb/uvc/Kconfig
-drivers/media/usb/zr364xx/Kconfig
 drivers/media/v4l2-core/Kconfig
 drivers/memory/Kconfig
 drivers/memory/samsung/Kconfig
@@ -727,6 +737,7 @@ drivers/misc/genwqe/Kconfig
 drivers/misc/habanalabs/Kconfig
 drivers/misc/Kconfig
 drivers/misc/lis3lv02d/Kconfig
+drivers/misc/mchp_pci1xxxx/Kconfig
 drivers/misc/mei/hdcp/Kconfig
 drivers/misc/mei/Kconfig
 drivers/misc/mei/pxp/Kconfig
@@ -747,6 +758,7 @@ drivers/mtd/lpddr/Kconfig
 drivers/mtd/maps/Kconfig
 drivers/mtd/nand/Kconfig
 drivers/mtd/nand/onenand/Kconfig
+drivers/mtd/nand/raw/brcmnand/Kconfig
 drivers/mtd/nand/raw/ingenic/Kconfig
 drivers/mtd/nand/raw/Kconfig
 drivers/mtd/nand/spi/Kconfig
@@ -786,6 +798,7 @@ drivers/net/ethernet/3com/Kconfig
 drivers/net/ethernet/8390/Kconfig
 drivers/net/ethernet/actions/Kconfig
 drivers/net/ethernet/adaptec/Kconfig
+drivers/net/ethernet/adi/Kconfig
 drivers/net/ethernet/aeroflex/Kconfig
 drivers/net/ethernet/agere/Kconfig
 drivers/net/ethernet/alacritech/Kconfig
@@ -900,6 +913,7 @@ drivers/net/ethernet/toshiba/Kconfig
 drivers/net/ethernet/tundra/Kconfig
 drivers/net/ethernet/vertexcom/Kconfig
 drivers/net/ethernet/via/Kconfig
+drivers/net/ethernet/wangxun/Kconfig
 drivers/net/ethernet/wiznet/Kconfig
 drivers/net/ethernet/xilinx/Kconfig
 drivers/net/ethernet/xircom/Kconfig
@@ -917,6 +931,7 @@ drivers/net/pcs/Kconfig
 drivers/net/phy/Kconfig
 drivers/net/plip/Kconfig
 drivers/net/ppp/Kconfig
+drivers/net/pse-pd/Kconfig
 drivers/net/slip/Kconfig
 drivers/net/team/Kconfig
 drivers/net/usb/Kconfig
@@ -1008,6 +1023,7 @@ drivers/ntb/hw/mscc/Kconfig
 drivers/ntb/Kconfig
 drivers/ntb/test/Kconfig
 drivers/nvdimm/Kconfig
+drivers/nvme/common/Kconfig
 drivers/nvme/host/Kconfig
 drivers/nvme/Kconfig
 drivers/nvmem/Kconfig
@@ -1053,6 +1069,7 @@ drivers/phy/rockchip/Kconfig
 drivers/phy/samsung/Kconfig
 drivers/phy/socionext/Kconfig
 drivers/phy/st/Kconfig
+drivers/phy/sunplus/Kconfig
 drivers/phy/tegra/Kconfig
 drivers/phy/ti/Kconfig
 drivers/phy/xilinx/Kconfig
@@ -1076,6 +1093,7 @@ drivers/pinctrl/renesas/Kconfig
 drivers/pinctrl/samsung/Kconfig
 drivers/pinctrl/spear/Kconfig
 drivers/pinctrl/sprd/Kconfig
+drivers/pinctrl/starfive/Kconfig
 drivers/pinctrl/stm32/Kconfig
 drivers/pinctrl/sunplus/Kconfig
 drivers/pinctrl/sunxi/Kconfig
@@ -1088,11 +1106,14 @@ drivers/platform/chrome/Kconfig
 drivers/platform/chrome/wilco_ec/Kconfig
 drivers/platform/goldfish/Kconfig
 drivers/platform/Kconfig
+drivers/platform/loongarch/Kconfig
 drivers/platform/mellanox/Kconfig
 drivers/platform/mips/Kconfig
 drivers/platform/olpc/Kconfig
 drivers/platform/surface/aggregator/Kconfig
 drivers/platform/surface/Kconfig
+drivers/platform/x86/amd/Kconfig
+drivers/platform/x86/amd/pmf/Kconfig
 drivers/platform/x86/dell/Kconfig
 drivers/platform/x86/intel/atomisp2/Kconfig
 drivers/platform/x86/intel/ifs/Kconfig
@@ -1179,6 +1200,7 @@ drivers/soc/canaan/Kconfig
 drivers/soc/fsl/Kconfig
 drivers/soc/fsl/qbman/Kconfig
 drivers/soc/fsl/qe/Kconfig
+drivers/soc/fujitsu/Kconfig
 drivers/soc/imx/Kconfig
 drivers/soc/ixp4xx/Kconfig
 drivers/soc/Kconfig
@@ -1203,18 +1225,15 @@ drivers/spmi/Kconfig
 drivers/ssb/Kconfig
 drivers/staging/axis-fifo/Kconfig
 drivers/staging/board/Kconfig
-drivers/staging/clocking-wizard/Kconfig
 drivers/staging/emxx_udc/Kconfig
 drivers/staging/fbtft/Kconfig
 drivers/staging/fieldbus/anybuss/Kconfig
 drivers/staging/fieldbus/Kconfig
-drivers/staging/fwserial/Kconfig
 drivers/staging/gdm724x/Kconfig
 drivers/staging/greybus/Kconfig
 drivers/staging/iio/accel/Kconfig
 drivers/staging/iio/adc/Kconfig
 drivers/staging/iio/addac/Kconfig
-drivers/staging/iio/cdc/Kconfig
 drivers/staging/iio/frequency/Kconfig
 drivers/staging/iio/impedance-analyzer/Kconfig
 drivers/staging/iio/Kconfig
@@ -1224,8 +1243,18 @@ drivers/staging/Kconfig
 drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
-drivers/staging/media/av7110/Kconfig
-drivers/staging/media/hantro/Kconfig
+drivers/staging/media/deprecated/cpia2/Kconfig
+drivers/staging/media/deprecated/fsl-viu/Kconfig
+drivers/staging/media/deprecated/meye/Kconfig
+drivers/staging/media/deprecated/saa7146/av7110/Kconfig
+drivers/staging/media/deprecated/saa7146/common/Kconfig
+drivers/staging/media/deprecated/saa7146/Kconfig
+drivers/staging/media/deprecated/saa7146/saa7146/Kconfig
+drivers/staging/media/deprecated/saa7146/ttpci/Kconfig
+drivers/staging/media/deprecated/stkwebcam/Kconfig
+drivers/staging/media/deprecated/tm6000/Kconfig
+drivers/staging/media/deprecated/vpfe_capture/Kconfig
+drivers/staging/media/deprecated/zr364xx/Kconfig
 drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig
 drivers/staging/media/Kconfig
@@ -1236,7 +1265,6 @@ drivers/staging/media/rkvdec/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
 drivers/staging/media/tegra-video/Kconfig
-drivers/staging/media/zoran/Kconfig
 drivers/staging/most/dim2/Kconfig
 drivers/staging/most/i2c/Kconfig
 drivers/staging/most/Kconfig
@@ -1244,7 +1272,6 @@ drivers/staging/most/net/Kconfig
 drivers/staging/most/video/Kconfig
 drivers/staging/nvec/Kconfig
 drivers/staging/octeon/Kconfig
-drivers/staging/octeon-usb/Kconfig
 drivers/staging/olpc_dcon/Kconfig
 drivers/staging/pi433/Kconfig
 drivers/staging/qlge/Kconfig
@@ -1359,9 +1386,6 @@ drivers/virt/Kconfig
 drivers/virt/nitro_enclaves/Kconfig
 drivers/virt/vboxguest/Kconfig
 drivers/vlynq/Kconfig
-drivers/vme/boards/Kconfig
-drivers/vme/bridges/Kconfig
-drivers/vme/Kconfig
 drivers/w1/Kconfig
 drivers/w1/masters/Kconfig
 drivers/w1/slaves/Kconfig
@@ -1371,6 +1395,7 @@ drivers/zorro/Kconfig
 mm/damon/Kconfig
 mm/Kconfig
 mm/Kconfig.debug
+net/atm/Kconfig
 net/can/j1939/Kconfig
 net/can/Kconfig
 net/iucv/Kconfig
@@ -1402,6 +1427,7 @@ sound/sh/Kconfig
 sound/soc/adi/Kconfig
 sound/soc/amd/acp/Kconfig
 sound/soc/amd/Kconfig
+sound/soc/apple/Kconfig
 sound/soc/atmel/Kconfig
 sound/soc/au1x/Kconfig
 sound/soc/bcm/Kconfig
@@ -1412,6 +1438,7 @@ sound/soc/fsl/Kconfig
 sound/soc/generic/Kconfig
 sound/soc/hisilicon/Kconfig
 sound/soc/img/Kconfig
+sound/soc/intel/avs/boards/Kconfig
 sound/soc/intel/boards/Kconfig
 sound/soc/intel/Kconfig
 sound/soc/jz4740/Kconfig
