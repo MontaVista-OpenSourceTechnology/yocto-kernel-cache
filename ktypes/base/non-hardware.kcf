@@ -56,6 +56,7 @@ drivers/staging/Kconfig
 drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
+drivers/staging/media/deprecated/atmel/Kconfig
 drivers/staging/media/deprecated/cpia2/Kconfig
 drivers/staging/media/deprecated/fsl-viu/Kconfig
 drivers/staging/media/deprecated/meye/Kconfig
@@ -77,6 +78,7 @@ drivers/staging/media/omap4iss/Kconfig
 drivers/staging/media/rkvdec/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
+drivers/staging/media/sunxi/sun6i-isp/Kconfig
 drivers/staging/media/tegra-video/Kconfig
 drivers/staging/most/dim2/Kconfig
 drivers/staging/most/i2c/Kconfig
@@ -108,6 +110,7 @@ drivers/vhost/Kconfig
 drivers/virt/acrn/Kconfig
 drivers/virt/coco/efi_secret/Kconfig
 drivers/virt/coco/sev-guest/Kconfig
+drivers/virt/coco/tdx-guest/Kconfig
 drivers/virtio/Kconfig
 drivers/virt/Kconfig
 drivers/virt/nitro_enclaves/Kconfig

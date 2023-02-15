@@ -205,6 +205,7 @@ arch/x86/xen/Kconfig
 arch/xtensa/Kconfig
 arch/xtensa/Kconfig.debug
 crypto/async_tx/Kconfig
+drivers/accel/Kconfig
 drivers/accessibility/Kconfig
 drivers/accessibility/speakup/Kconfig
 drivers/acpi/apei/Kconfig
@@ -506,6 +507,7 @@ drivers/infiniband/hw/erdma/Kconfig
 drivers/infiniband/hw/hfi1/Kconfig
 drivers/infiniband/hw/hns/Kconfig
 drivers/infiniband/hw/irdma/Kconfig
+drivers/infiniband/hw/mana/Kconfig
 drivers/infiniband/hw/mlx4/Kconfig
 drivers/infiniband/hw/mlx5/Kconfig
 drivers/infiniband/hw/mthca/Kconfig
@@ -542,6 +544,7 @@ drivers/interconnect/qcom/Kconfig
 drivers/interconnect/samsung/Kconfig
 drivers/iommu/amd/Kconfig
 drivers/iommu/intel/Kconfig
+drivers/iommu/iommufd/Kconfig
 drivers/iommu/Kconfig
 drivers/ipack/carriers/Kconfig
 drivers/ipack/devices/Kconfig
@@ -634,6 +637,7 @@ drivers/media/platform/mediatek/mdp3/Kconfig
 drivers/media/platform/mediatek/mdp/Kconfig
 drivers/media/platform/mediatek/vcodec/Kconfig
 drivers/media/platform/mediatek/vpu/Kconfig
+drivers/media/platform/microchip/Kconfig
 drivers/media/platform/nvidia/Kconfig
 drivers/media/platform/nvidia/tegra-vde/Kconfig
 drivers/media/platform/nxp/dw100/Kconfig
@@ -644,6 +648,7 @@ drivers/media/platform/qcom/Kconfig
 drivers/media/platform/qcom/venus/Kconfig
 drivers/media/platform/renesas/Kconfig
 drivers/media/platform/renesas/rcar-vin/Kconfig
+drivers/media/platform/renesas/rzg2l-cru/Kconfig
 drivers/media/platform/rockchip/Kconfig
 drivers/media/platform/rockchip/rga/Kconfig
 drivers/media/platform/rockchip/rkisp1/Kconfig
@@ -688,6 +693,7 @@ drivers/media/test-drivers/Kconfig
 drivers/media/test-drivers/vicodec/Kconfig
 drivers/media/test-drivers/vidtv/Kconfig
 drivers/media/test-drivers/vimc/Kconfig
+drivers/media/test-drivers/visl/Kconfig
 drivers/media/test-drivers/vivid/Kconfig
 drivers/media/tuners/Kconfig
 drivers/media/usb/airspy/Kconfig
@@ -870,6 +876,7 @@ drivers/net/ethernet/micrel/Kconfig
 drivers/net/ethernet/microchip/Kconfig
 drivers/net/ethernet/microchip/lan966x/Kconfig
 drivers/net/ethernet/microchip/sparx5/Kconfig
+drivers/net/ethernet/microchip/vcap/Kconfig
 drivers/net/ethernet/microsoft/Kconfig
 drivers/net/ethernet/moxa/Kconfig
 drivers/net/ethernet/mscc/Kconfig
@@ -976,6 +983,7 @@ drivers/net/wireless/mediatek/mt76/mt76x0/Kconfig
 drivers/net/wireless/mediatek/mt76/mt76x2/Kconfig
 drivers/net/wireless/mediatek/mt76/mt7915/Kconfig
 drivers/net/wireless/mediatek/mt76/mt7921/Kconfig
+drivers/net/wireless/mediatek/mt76/mt7996/Kconfig
 drivers/net/wireless/microchip/Kconfig
 drivers/net/wireless/microchip/wilc1000/Kconfig
 drivers/net/wireless/purelifi/Kconfig
@@ -1045,6 +1053,8 @@ drivers/pci/switch/Kconfig
 drivers/pcmcia/Kconfig
 drivers/peci/controller/Kconfig
 drivers/peci/Kconfig
+drivers/perf/amlogic/Kconfig
+drivers/perf/arm_cspmu/Kconfig
 drivers/perf/hisilicon/Kconfig
 drivers/perf/Kconfig
 drivers/phy/allwinner/Kconfig
@@ -1115,6 +1125,7 @@ drivers/platform/surface/Kconfig
 drivers/platform/x86/amd/Kconfig
 drivers/platform/x86/amd/pmf/Kconfig
 drivers/platform/x86/dell/Kconfig
+drivers/platform/x86/hp/Kconfig
 drivers/platform/x86/intel/atomisp2/Kconfig
 drivers/platform/x86/intel/ifs/Kconfig
 drivers/platform/x86/intel/int1092/Kconfig
@@ -1205,6 +1216,7 @@ drivers/soc/imx/Kconfig
 drivers/soc/ixp4xx/Kconfig
 drivers/soc/Kconfig
 drivers/soc/litex/Kconfig
+drivers/soc/loongson/Kconfig
 drivers/soc/mediatek/Kconfig
 drivers/soc/microchip/Kconfig
 drivers/soc/pxa/Kconfig
@@ -1243,6 +1255,7 @@ drivers/staging/Kconfig
 drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
+drivers/staging/media/deprecated/atmel/Kconfig
 drivers/staging/media/deprecated/cpia2/Kconfig
 drivers/staging/media/deprecated/fsl-viu/Kconfig
 drivers/staging/media/deprecated/meye/Kconfig
@@ -1264,6 +1277,7 @@ drivers/staging/media/omap4iss/Kconfig
 drivers/staging/media/rkvdec/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
+drivers/staging/media/sunxi/sun6i-isp/Kconfig
 drivers/staging/media/tegra-video/Kconfig
 drivers/staging/most/dim2/Kconfig
 drivers/staging/most/i2c/Kconfig
@@ -1327,6 +1341,7 @@ drivers/usb/common/Kconfig
 drivers/usb/core/Kconfig
 drivers/usb/dwc2/Kconfig
 drivers/usb/dwc3/Kconfig
+drivers/usb/fotg210/Kconfig
 drivers/usb/gadget/Kconfig
 drivers/usb/gadget/legacy/Kconfig
 drivers/usb/gadget/udc/aspeed-vhub/Kconfig
@@ -1381,6 +1396,7 @@ drivers/video/logo/Kconfig
 drivers/virt/acrn/Kconfig
 drivers/virt/coco/efi_secret/Kconfig
 drivers/virt/coco/sev-guest/Kconfig
+drivers/virt/coco/tdx-guest/Kconfig
 drivers/virtio/Kconfig
 drivers/virt/Kconfig
 drivers/virt/nitro_enclaves/Kconfig
