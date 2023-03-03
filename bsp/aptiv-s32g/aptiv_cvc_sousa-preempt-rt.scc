@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE aptiv_cvc_sousa
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+include aptiv-cvc.scc
