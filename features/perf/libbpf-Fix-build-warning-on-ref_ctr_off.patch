@@ -1,7 +1,7 @@
-From a70a0f1c0266cbcdea75c3060ac3b94d78d54736 Mon Sep 17 00:00:00 2001
+From a41f5bda3e72b4f2bcdbe84cd65190121e3cc3ff Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 4 Dec 2022 18:23:47 -0800
-Subject: [PATCH 2/3] libbpf: Fix build warning on ref_ctr_off
+Subject: [PATCH] libbpf: Fix build warning on ref_ctr_off
 
 Clang warns on 32-bit ARM on this comparision
 
@@ -29,18 +29,18 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 184ce1684dcd..6191bc83b06c 100644
+index 05c4db355f28..23991e0d21a9 100644
 --- a/tools/lib/bpf/libbpf.c
 +++ b/tools/lib/bpf/libbpf.c
-@@ -9837,7 +9837,7 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
+@@ -9867,7 +9867,7 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
  	char errmsg[STRERR_BUFSIZE];
  	int type, pfd;
  
--	if (ref_ctr_off >= (1ULL << PERF_UPROBE_REF_CTR_OFFSET_BITS))
-+	if (BITS_PER_LONG > 32 && ref_ctr_off >= (1ULL << PERF_UPROBE_REF_CTR_OFFSET_BITS))
+-	if ((__u64)ref_ctr_off >= (1ULL << PERF_UPROBE_REF_CTR_OFFSET_BITS))
++	if (BITS_PER_LONG > 32 && (__u64)ref_ctr_off >= (1ULL << PERF_UPROBE_REF_CTR_OFFSET_BITS))
  		return -EINVAL;
  
  	memset(&attr, 0, attr_sz);
 -- 
-2.19.1
+2.34.1
 
