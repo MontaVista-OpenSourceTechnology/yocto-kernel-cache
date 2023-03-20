@@ -26,7 +26,6 @@ arch/arm/mach-axxia/Kconfig
 arch/arm/mach-bcm/Kconfig
 arch/arm/mach-berlin/Kconfig
 arch/arm/mach-clps711x/Kconfig
-arch/arm/mach-cns3xxx/Kconfig
 arch/arm/mach-davinci/Kconfig
 arch/arm/mach-digicolor/Kconfig
 arch/arm/mach-dove/Kconfig
@@ -38,7 +37,6 @@ arch/arm/mach-highbank/Kconfig
 arch/arm/mach-hisi/Kconfig
 arch/arm/mach-hpe/Kconfig
 arch/arm/mach-imx/Kconfig
-arch/arm/mach-iop32x/Kconfig
 arch/arm/mach-ixp4xx/Kconfig
 arch/arm/mach-keystone/Kconfig
 arch/arm/mach-lpc32xx/Kconfig
@@ -65,7 +63,6 @@ arch/arm/mach-realtek/Kconfig
 arch/arm/mach-rockchip/Kconfig
 arch/arm/mach-rpc/Kconfig
 arch/arm/mach-s3c/Kconfig
-arch/arm/mach-s3c/Kconfig.s3c24xx
 arch/arm/mach-s3c/Kconfig.s3c64xx
 arch/arm/mach-s5pv210/Kconfig
 arch/arm/mach-sa1100/Kconfig
@@ -205,6 +202,8 @@ arch/x86/xen/Kconfig
 arch/xtensa/Kconfig
 arch/xtensa/Kconfig.debug
 crypto/async_tx/Kconfig
+drivers/accel/habanalabs/Kconfig
+drivers/accel/ivpu/Kconfig
 drivers/accel/Kconfig
 drivers/accessibility/Kconfig
 drivers/accessibility/speakup/Kconfig
@@ -218,6 +217,7 @@ drivers/acpi/pmic/Kconfig
 drivers/amba/Kconfig
 drivers/android/Kconfig
 drivers/ata/Kconfig
+drivers/ata/pata_parport/Kconfig
 drivers/atm/Kconfig
 drivers/auxdisplay/Kconfig
 drivers/base/firmware_loader/Kconfig
@@ -229,7 +229,6 @@ drivers/block/drbd/Kconfig
 drivers/block/Kconfig
 drivers/block/mtip32xx/Kconfig
 drivers/block/null_blk/Kconfig
-drivers/block/paride/Kconfig
 drivers/block/rnbd/Kconfig
 drivers/block/zram/Kconfig
 drivers/bluetooth/Kconfig
@@ -309,7 +308,6 @@ drivers/crypto/marvell/Kconfig
 drivers/crypto/nx/Kconfig
 drivers/crypto/qat/Kconfig
 drivers/crypto/stm32/Kconfig
-drivers/crypto/ux500/Kconfig
 drivers/crypto/virtio/Kconfig
 drivers/crypto/vmx/Kconfig
 drivers/cxl/Kconfig
@@ -384,6 +382,7 @@ drivers/gpu/drm/i915/Kconfig.debug
 drivers/gpu/drm/i915/Kconfig.profile
 drivers/gpu/drm/i915/Kconfig.unstable
 drivers/gpu/drm/imx/dcss/Kconfig
+drivers/gpu/drm/imx/ipuv3/Kconfig
 drivers/gpu/drm/imx/Kconfig
 drivers/gpu/drm/ingenic/Kconfig
 drivers/gpu/drm/Kconfig
@@ -430,6 +429,7 @@ drivers/gpu/trace/Kconfig
 drivers/gpu/vga/Kconfig
 drivers/greybus/Kconfig
 drivers/hid/amd-sfh-hid/Kconfig
+drivers/hid/bpf/Kconfig
 drivers/hid/i2c-hid/Kconfig
 drivers/hid/intel-ish-hid/Kconfig
 drivers/hid/Kconfig
@@ -575,6 +575,7 @@ drivers/media/cec/usb/pulse8/Kconfig
 drivers/media/cec/usb/rainshadow/Kconfig
 drivers/media/common/b2c2/Kconfig
 drivers/media/common/Kconfig
+drivers/media/common/saa7146/Kconfig
 drivers/media/common/siano/Kconfig
 drivers/media/common/v4l2-tpg/Kconfig
 drivers/media/common/videobuf2/Kconfig
@@ -612,10 +613,12 @@ drivers/media/pci/pluto2/Kconfig
 drivers/media/pci/pt1/Kconfig
 drivers/media/pci/pt3/Kconfig
 drivers/media/pci/saa7134/Kconfig
+drivers/media/pci/saa7146/Kconfig
 drivers/media/pci/saa7164/Kconfig
 drivers/media/pci/smipcie/Kconfig
 drivers/media/pci/solo6x10/Kconfig
 drivers/media/pci/sta2x11/Kconfig
+drivers/media/pci/ttpci/Kconfig
 drivers/media/pci/tw5864/Kconfig
 drivers/media/pci/tw686x/Kconfig
 drivers/media/pci/tw68/Kconfig
@@ -740,7 +743,6 @@ drivers/misc/cxl/Kconfig
 drivers/misc/echo/Kconfig
 drivers/misc/eeprom/Kconfig
 drivers/misc/genwqe/Kconfig
-drivers/misc/habanalabs/Kconfig
 drivers/misc/Kconfig
 drivers/misc/lis3lv02d/Kconfig
 drivers/misc/mchp_pci1xxxx/Kconfig
@@ -941,12 +943,14 @@ drivers/net/ppp/Kconfig
 drivers/net/pse-pd/Kconfig
 drivers/net/slip/Kconfig
 drivers/net/team/Kconfig
+drivers/net/thunderbolt/Kconfig
 drivers/net/usb/Kconfig
 drivers/net/wan/Kconfig
 drivers/net/wireless/admtek/Kconfig
 drivers/net/wireless/ath/ar5523/Kconfig
 drivers/net/wireless/ath/ath10k/Kconfig
 drivers/net/wireless/ath/ath11k/Kconfig
+drivers/net/wireless/ath/ath12k/Kconfig
 drivers/net/wireless/ath/ath5k/Kconfig
 drivers/net/wireless/ath/ath6kl/Kconfig
 drivers/net/wireless/ath/ath9k/Kconfig
@@ -1219,12 +1223,14 @@ drivers/soc/litex/Kconfig
 drivers/soc/loongson/Kconfig
 drivers/soc/mediatek/Kconfig
 drivers/soc/microchip/Kconfig
+drivers/soc/nuvoton/Kconfig
 drivers/soc/pxa/Kconfig
 drivers/soc/qcom/Kconfig
 drivers/soc/renesas/Kconfig
 drivers/soc/rockchip/Kconfig
 drivers/soc/samsung/Kconfig
 drivers/soc/sifive/Kconfig
+drivers/soc/starfive/Kconfig
 drivers/soc/sunxi/Kconfig
 drivers/soc/tegra/Kconfig
 drivers/soc/ti/Kconfig
@@ -1255,19 +1261,8 @@ drivers/staging/Kconfig
 drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
+drivers/staging/media/av7110/Kconfig
 drivers/staging/media/deprecated/atmel/Kconfig
-drivers/staging/media/deprecated/cpia2/Kconfig
-drivers/staging/media/deprecated/fsl-viu/Kconfig
-drivers/staging/media/deprecated/meye/Kconfig
-drivers/staging/media/deprecated/saa7146/av7110/Kconfig
-drivers/staging/media/deprecated/saa7146/common/Kconfig
-drivers/staging/media/deprecated/saa7146/Kconfig
-drivers/staging/media/deprecated/saa7146/saa7146/Kconfig
-drivers/staging/media/deprecated/saa7146/ttpci/Kconfig
-drivers/staging/media/deprecated/stkwebcam/Kconfig
-drivers/staging/media/deprecated/tm6000/Kconfig
-drivers/staging/media/deprecated/vpfe_capture/Kconfig
-drivers/staging/media/deprecated/zr364xx/Kconfig
 drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig
 drivers/staging/media/Kconfig
@@ -1289,7 +1284,6 @@ drivers/staging/octeon/Kconfig
 drivers/staging/olpc_dcon/Kconfig
 drivers/staging/pi433/Kconfig
 drivers/staging/qlge/Kconfig
-drivers/staging/r8188eu/Kconfig
 drivers/staging/rtl8192e/Kconfig
 drivers/staging/rtl8192e/rtl8192e/Kconfig
 drivers/staging/rtl8192u/Kconfig
@@ -1318,6 +1312,7 @@ drivers/thermal/broadcom/Kconfig
 drivers/thermal/intel/int340x_thermal/Kconfig
 drivers/thermal/intel/Kconfig
 drivers/thermal/Kconfig
+drivers/thermal/mediatek/Kconfig
 drivers/thermal/qcom/Kconfig
 drivers/thermal/samsung/Kconfig
 drivers/thermal/st/Kconfig
