@@ -3,3 +3,7 @@ define KFEATURE_DESCRIPTION "Coretemp support for Intel platforms"
 define KFEATURE_COMPATIBILITY board
 
 kconf hardware coretemp.cfg
+if [ "$KARCH" = "x86_64" ] ; then
+    kconf hardware coretemp-x86_64.cfg
+fi
+
