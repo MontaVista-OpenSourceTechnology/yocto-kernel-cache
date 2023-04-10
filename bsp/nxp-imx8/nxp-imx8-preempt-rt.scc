@@ -1,0 +1,10 @@
+define KMACHINE nxp-imx8
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+branch nxp-imx8
+
+include nxp-imx8.scc
+
+kconf hardware nxp-imx8-preempt-rt.cfg
