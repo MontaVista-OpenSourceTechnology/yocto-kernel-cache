@@ -124,7 +124,6 @@
 	config = features/rpmb/rpmb-sim.scc
 	config = features/rpmb/rpmb-uapi.scc
 	config = features/rpmb/rpmb-base.scc
-	config = features/random/random.scc
 	config = features/usb/usb-raw-gadget.scc
 	config = features/usb/designware-usb3.scc
 	config = features/usb/usb-gadgets.scc

@@ -85,7 +85,6 @@ include features/input/keyboard-gpio.scc
 include features/ciphers/ciphers.scc
 include features/pci-iov/pci-iov.scc
 include features/intel-tco/intel-tco.scc
-include features/random/random.scc
 
 # default policy for standard kernels
 include cfg/usb-mass-storage.scc
