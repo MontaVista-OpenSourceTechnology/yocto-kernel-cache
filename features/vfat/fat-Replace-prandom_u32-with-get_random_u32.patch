@@ -1,0 +1,40 @@
+From 0b07d2478b6baf627d000f7f1901b148f2a6dfc2 Mon Sep 17 00:00:00 2001
+From: Kevin Hao <kexin.hao@windriver.com>
+Date: Fri, 7 Apr 2023 21:03:41 +0800
+Subject: [PATCH] fat: Replace prandom_u32() with get_random_u32()
+
+The prandom_u32() is just wrapper of get_random_u32() and has been
+removed by commit de492c83cae0 ("prandom: remove unused functions").
+So use get_random_u32() directly.
+
+Signed-off-by: Kevin Hao <kexin.hao@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/fat/namei_vfat.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
+index ef5cf74789ca..ef79a242751d 100644
+--- a/fs/fat/namei_vfat.c
++++ b/fs/fat/namei_vfat.c
+@@ -616,7 +616,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
+ 				     0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x22, 0x2a,
+ 				     0x3a, 0x3c, 0x3e, 0x3f, 0x5b, 0x5d, 0x7c };
+ 	int i, tilde_pos, slash_pos;
+-	u32 rand_num = prandom_u32();
++	u32 rand_num = get_random_u32();
+ 
+ 	/* We need a '~' in the prefix to make Win98 happy. */
+ 	tilde_pos = rand_num % 8;
+@@ -651,7 +651,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
+ 				invalidchar[rand_num % sizeof(invalidchar)];
+ 			rand_num /= sizeof(invalidchar);
+ 			if (rand_num < sizeof(invalidchar))
+-				rand_num = prandom_u32();
++				rand_num = get_random_u32();
+ 		}
+ 	}
+ }
+-- 
+2.34.1
+
