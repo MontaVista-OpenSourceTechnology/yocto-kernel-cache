@@ -79,6 +79,7 @@
 	config = features/mei/mei-spd.scc
 	config = features/pci/pci.scc
 	config = features/pci/pci-of-generic.scc
+	config = features/iscsi/iscsi.scc
 	config = features/eg20t/eg20t.scc
 	config = features/intel-uncore-frequency/intel-uncore-frequency.scc
 	config = features/can/can.scc
