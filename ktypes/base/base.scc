@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
-define KERNEL_VERSION 6.3
+define KERNEL_VERSION 6.4
 
 # Force the base configuration
 
 # uncomment this branch line for shared kernel tree builds
-branch v6.3
+branch v6.4
 
 force kconf non-hardware base.cfg
