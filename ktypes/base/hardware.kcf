@@ -55,7 +55,6 @@ arch/arm/mach-nspire/Kconfig
 arch/arm/mach-omap1/Kconfig
 arch/arm/mach-omap2/Kconfig
 arch/arm/mach-orion5x/Kconfig
-arch/arm/mach-oxnas/Kconfig
 arch/arm/mach-pxa/Kconfig
 arch/arm/mach-qcom/Kconfig
 arch/arm/mach-rda/Kconfig
@@ -88,6 +87,7 @@ arch/hexagon/Kconfig.debug
 arch/ia64/Kconfig
 arch/ia64/Kconfig.debug
 arch/Kconfig
+arch/loongarch/crypto/Kconfig
 arch/loongarch/Kconfig
 arch/loongarch/Kconfig.debug
 arch/m68k/Kconfig
@@ -163,7 +163,7 @@ arch/powerpc/sysdev/xics/Kconfig
 arch/powerpc/sysdev/xive/Kconfig
 arch/riscv/Kconfig
 arch/riscv/Kconfig.debug
-arch/riscv/Kconfig.erratas
+arch/riscv/Kconfig.errata
 arch/riscv/Kconfig.socs
 arch/riscv/kvm/Kconfig
 arch/s390/crypto/Kconfig
@@ -205,6 +205,7 @@ crypto/async_tx/Kconfig
 drivers/accel/habanalabs/Kconfig
 drivers/accel/ivpu/Kconfig
 drivers/accel/Kconfig
+drivers/accel/qaic/Kconfig
 drivers/accessibility/Kconfig
 drivers/accessibility/speakup/Kconfig
 drivers/acpi/apei/Kconfig
@@ -237,11 +238,12 @@ drivers/bus/Kconfig
 drivers/bus/mhi/ep/Kconfig
 drivers/bus/mhi/host/Kconfig
 drivers/bus/mhi/Kconfig
+drivers/cdx/controller/Kconfig
+drivers/cdx/Kconfig
 drivers/char/agp/Kconfig
 drivers/char/hw_random/Kconfig
 drivers/char/ipmi/Kconfig
 drivers/char/Kconfig
-drivers/char/pcmcia/Kconfig
 drivers/char/tpm/Kconfig
 drivers/char/tpm/st33zp24/Kconfig
 drivers/char/xillybus/Kconfig
@@ -302,11 +304,13 @@ drivers/crypto/cavium/nitrox/Kconfig
 drivers/crypto/ccp/Kconfig
 drivers/crypto/chelsio/Kconfig
 drivers/crypto/hisilicon/Kconfig
+drivers/crypto/intel/ixp4xx/Kconfig
+drivers/crypto/intel/Kconfig
+drivers/crypto/intel/keembay/Kconfig
+drivers/crypto/intel/qat/Kconfig
 drivers/crypto/Kconfig
-drivers/crypto/keembay/Kconfig
 drivers/crypto/marvell/Kconfig
 drivers/crypto/nx/Kconfig
-drivers/crypto/qat/Kconfig
 drivers/crypto/stm32/Kconfig
 drivers/crypto/virtio/Kconfig
 drivers/crypto/vmx/Kconfig
@@ -380,10 +384,10 @@ drivers/gpu/drm/i2c/Kconfig
 drivers/gpu/drm/i915/Kconfig
 drivers/gpu/drm/i915/Kconfig.debug
 drivers/gpu/drm/i915/Kconfig.profile
-drivers/gpu/drm/i915/Kconfig.unstable
 drivers/gpu/drm/imx/dcss/Kconfig
 drivers/gpu/drm/imx/ipuv3/Kconfig
 drivers/gpu/drm/imx/Kconfig
+drivers/gpu/drm/imx/lcdc/Kconfig
 drivers/gpu/drm/ingenic/Kconfig
 drivers/gpu/drm/Kconfig
 drivers/gpu/drm/kmb/Kconfig
@@ -588,7 +592,6 @@ drivers/media/i2c/ccs/Kconfig
 drivers/media/i2c/cx25840/Kconfig
 drivers/media/i2c/et8ek8/Kconfig
 drivers/media/i2c/Kconfig
-drivers/media/i2c/m5mols/Kconfig
 drivers/media/Kconfig
 drivers/media/mc/Kconfig
 drivers/media/mmc/Kconfig
@@ -644,6 +647,7 @@ drivers/media/platform/microchip/Kconfig
 drivers/media/platform/nvidia/Kconfig
 drivers/media/platform/nvidia/tegra-vde/Kconfig
 drivers/media/platform/nxp/dw100/Kconfig
+drivers/media/platform/nxp/imx8-isi/Kconfig
 drivers/media/platform/nxp/imx-jpeg/Kconfig
 drivers/media/platform/nxp/Kconfig
 drivers/media/platform/qcom/camss/Kconfig
@@ -974,6 +978,7 @@ drivers/net/wireless/intersil/Kconfig
 drivers/net/wireless/intersil/orinoco/Kconfig
 drivers/net/wireless/intersil/p54/Kconfig
 drivers/net/wireless/Kconfig
+drivers/net/wireless/legacy/Kconfig
 drivers/net/wireless/marvell/Kconfig
 drivers/net/wireless/marvell/libertas/Kconfig
 drivers/net/wireless/marvell/libertas_tf/Kconfig
@@ -1012,6 +1017,7 @@ drivers/net/wireless/ti/wl1251/Kconfig
 drivers/net/wireless/ti/wl12xx/Kconfig
 drivers/net/wireless/ti/wl18xx/Kconfig
 drivers/net/wireless/ti/wlcore/Kconfig
+drivers/net/wireless/virtual/Kconfig
 drivers/net/wireless/zydas/Kconfig
 drivers/net/wireless/zydas/zd1211rw/Kconfig
 drivers/net/wwan/Kconfig
@@ -1039,6 +1045,7 @@ drivers/nvme/common/Kconfig
 drivers/nvme/host/Kconfig
 drivers/nvme/Kconfig
 drivers/nvmem/Kconfig
+drivers/nvmem/layouts/Kconfig
 drivers/nvme/target/Kconfig
 drivers/of/Kconfig
 drivers/opp/Kconfig
@@ -1100,9 +1107,9 @@ drivers/pinctrl/meson/Kconfig
 drivers/pinctrl/mvebu/Kconfig
 drivers/pinctrl/nomadik/Kconfig
 drivers/pinctrl/nuvoton/Kconfig
+drivers/pinctrl/nxp/Kconfig
 drivers/pinctrl/pxa/Kconfig
 drivers/pinctrl/qcom/Kconfig
-drivers/pinctrl/ralink/Kconfig
 drivers/pinctrl/renesas/Kconfig
 drivers/pinctrl/samsung/Kconfig
 drivers/pinctrl/spear/Kconfig
@@ -1142,6 +1149,7 @@ drivers/platform/x86/intel/telemetry/Kconfig
 drivers/platform/x86/intel/uncore-frequency/Kconfig
 drivers/platform/x86/intel/wmi/Kconfig
 drivers/platform/x86/Kconfig
+drivers/platform/x86/x86-android-tablets/Kconfig
 drivers/pnp/isapnp/Kconfig
 drivers/pnp/Kconfig
 drivers/pnp/pnpacpi/Kconfig
@@ -1163,6 +1171,7 @@ drivers/regulator/Kconfig
 drivers/remoteproc/Kconfig
 drivers/reset/hisilicon/Kconfig
 drivers/reset/Kconfig
+drivers/reset/starfive/Kconfig
 drivers/reset/sti/Kconfig
 drivers/reset/tegra/Kconfig
 drivers/rpmsg/Kconfig
@@ -1255,7 +1264,6 @@ drivers/staging/iio/addac/Kconfig
 drivers/staging/iio/frequency/Kconfig
 drivers/staging/iio/impedance-analyzer/Kconfig
 drivers/staging/iio/Kconfig
-drivers/staging/iio/meter/Kconfig
 drivers/staging/iio/resolver/Kconfig
 drivers/staging/Kconfig
 drivers/staging/ks7010/Kconfig
@@ -1305,6 +1313,7 @@ drivers/target/Kconfig
 drivers/target/loopback/Kconfig
 drivers/target/sbp/Kconfig
 drivers/target/tcm_fc/Kconfig
+drivers/target/tcm_remote/Kconfig
 drivers/tee/amdtee/Kconfig
 drivers/tee/Kconfig
 drivers/tee/optee/Kconfig

@@ -50,7 +50,6 @@ drivers/staging/iio/addac/Kconfig
 drivers/staging/iio/frequency/Kconfig
 drivers/staging/iio/impedance-analyzer/Kconfig
 drivers/staging/iio/Kconfig
-drivers/staging/iio/meter/Kconfig
 drivers/staging/iio/resolver/Kconfig
 drivers/staging/Kconfig
 drivers/staging/ks7010/Kconfig
@@ -177,7 +176,6 @@ fs/unicode/Kconfig
 fs/vboxsf/Kconfig
 fs/verity/Kconfig
 fs/xfs/Kconfig
-fs/yaffs2/Kconfig
 fs/zonefs/Kconfig
 init/Kconfig
 kernel/bpf/Kconfig
