@@ -1,0 +1,7 @@
+define KMACHINE nxp-imx6
+define KTYPE standard
+define KARCH arm
+
+include ktypes/standard
+
+include nxp-imx6.scc
