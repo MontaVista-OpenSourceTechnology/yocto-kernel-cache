@@ -1,0 +1,65 @@
+From dded404c66bb87f08216afd1e3c9d84359e80012 Mon Sep 17 00:00:00 2001
+From: He Zhe <zhe.he@windriver.com>
+Date: Wed, 31 May 2023 14:01:07 +0800
+Subject: [PATCH] yaffs2: Fix miscalculation of devname buffer length
+
+The following build warning helps us find a real mishandling of array length.
+
+fs/yaffs2/yaffs_vfs.c:122:29: warning: argument to 'sizeof' in 'snprintf' call
+is the same expression as the destination; did you mean to provide an explicit
+length? [-Wsizeof-pointer-memaccess]
+
+If an array is passed as a function parameter it'll be treated as a simple
+pointer and thus sizeof will return the length of a pointer rather than the
+length of the array.
+
+Add and pass the buffer length to make it work correctly.
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 140f7aa7a1a1..e9e29a41a680 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -118,8 +118,8 @@
+ 
+ /* FIXME: use sb->s_id instead ? */
+ //#define yaffs_devname(sb, buf) bdevname(sb->s_bdev, buf)
+-static inline char* yaffs_devname(struct super_block *sb, char *buf) {
+-	snprintf(buf, sizeof(buf), "%pg", sb->s_bdev);
++static inline char* yaffs_devname(struct super_block *sb, char *buf, unsigned long len) {
++	snprintf(buf, len, "%pg", sb->s_bdev);
+ 	return buf;
+ }
+ 
+@@ -2944,12 +2944,12 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,
+ 
+ 	if (!sb->s_dev)
+ 		printk(KERN_INFO "yaffs: sb->s_dev is NULL\n");
+-	else if (!yaffs_devname(sb, devname_buf))
++	else if (!yaffs_devname(sb, devname_buf, sizeof(devname_buf)))
+ 		printk(KERN_INFO "yaffs: devname is NULL\n");
+ 	else
+ 		printk(KERN_INFO "yaffs: dev is %d name is \"%s\" %s\n",
+ 		       sb->s_dev,
+-		       yaffs_devname(sb, devname_buf), read_only ? "ro" : "rw");
++		       yaffs_devname(sb, devname_buf, sizeof(devname_buf)), read_only ? "ro" : "rw");
+ 
+ 	if (!data_str)
+ 		data_str = "";
+@@ -2974,7 +2974,7 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,
+ 	yaffs_trace(YAFFS_TRACE_ALWAYS,
+ 		"yaffs: Attempting MTD mount of %u.%u,\"%s\"",
+ 		MAJOR(sb->s_dev), MINOR(sb->s_dev),
+-		yaffs_devname(sb, devname_buf));
++		yaffs_devname(sb, devname_buf, sizeof(devname_buf)));
+ 
+ 
+ 	mtd = yaffs_get_mtd_device(sb->s_dev);
+-- 
+2.34.1
+
