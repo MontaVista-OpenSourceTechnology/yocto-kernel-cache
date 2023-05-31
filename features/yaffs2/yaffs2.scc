@@ -18,3 +18,4 @@ patch yaffs-replace-IS_ERR-with-IS_ERR_OR_NULL-to-check-bo.patch
 patch 0001-yaffs2-convert-read_page-readfolio.patch
 patch 0001-yaffs2-replace-bdevname-call-with-sprintf.patch 
 patch yaffs2-convert-user_namespace-to-mnt_idmap.patch
+patch yaffs2-Fix-miscalculation-of-devname-buffer-length.patch
