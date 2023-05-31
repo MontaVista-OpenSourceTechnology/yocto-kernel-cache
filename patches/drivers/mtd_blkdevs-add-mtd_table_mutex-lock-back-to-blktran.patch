@@ -1,0 +1,89 @@
+From 30350f237490eb52050647b2a75f6f4e91b2e44d Mon Sep 17 00:00:00 2001
+From: LiweiSong <liwei.song@windriver.com>
+Date: Wed, 31 May 2023 17:31:35 +0800
+Subject: [PATCH] mtd_blkdevs: add mtd_table_mutex lock back to blktrans_{open,
+ release} to avoid race condition
+
+without lock mtd_table_mutex in blktrans_{open, release}, there will
+be a race condition when access devices /dev/mtd1 and /dev/mtdblock1
+at the same time with a high frequency open and close test:
+
+kernel BUG at drivers/mtd/mtdcore.c:1221!
+Internal error: Oops - BUG: 0 1 PREEMPT_RT SMP
+CPU: 0 PID: 15349 Comm: mtd-test Not tainted 5.15.52-rt41-yocto-preempt-rt #1
+Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+pstate: 60000005put_mtd_device+0x4c/0x84
+lr : blktrans_release+0xb0/0x120
+Call trace:
+__put_mtd_device+0x4c/0x84
+blktrans_release+0xb0/0x120
+blkdev_put+0xd4/0x210
+blkdev_close+0x34/0x50
+__fput+0x8c/0x240
+____fput+0x1c/0x30
+task_work_run+0x98/00t_64_sync_handler+0xa4/0x130
+el0t_64_sync+0x1a0/0x1a4
+
+since the original purpose of commit 799ae31c58ae ("mtd_blkdevs:
+don't hold del_mtd_blktrans_dev in blktrans_{open, release}") is
+to fix a DEADLOCK issue, here convert mutex_lock to mutex_trylock
+and return immediately if failed acquire mtd_table_mutex, then
+both race condition and DEADLOCK can be avoided.
+
+Fixes: 799ae31c58ae ("mtd_blkdevs: don't hold del_mtd_blktrans_dev in blktrans_{open, release}")
+Signed-off-by: Liwei Song <liwei.song@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ drivers/mtd/mtd_blkdevs.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
+index 60b222799871..31967ff4b826 100644
+--- a/drivers/mtd/mtd_blkdevs.c
++++ b/drivers/mtd/mtd_blkdevs.c
+@@ -189,6 +189,8 @@ static int blktrans_open(struct block_device *bdev, fmode_t mode)
+ 
+ 	kref_get(&dev->ref);
+ 
++	if (!mutex_trylock(&mtd_table_mutex))
++		return ret;
+ 	mutex_lock(&dev->lock);
+ 
+ 	if (dev->open)
+@@ -213,6 +215,7 @@ static int blktrans_open(struct block_device *bdev, fmode_t mode)
+ unlock:
+ 	dev->open++;
+ 	mutex_unlock(&dev->lock);
++	mutex_unlock(&mtd_table_mutex);
+ 	return ret;
+ 
+ error_release:
+@@ -221,6 +224,7 @@ static int blktrans_open(struct block_device *bdev, fmode_t mode)
+ error_put:
+ 	module_put(dev->tr->owner);
+ 	mutex_unlock(&dev->lock);
++	mutex_unlock(&mtd_table_mutex);
+ 	blktrans_dev_put(dev);
+ 	return ret;
+ }
+@@ -229,6 +233,8 @@ static void blktrans_release(struct gendisk *disk, fmode_t mode)
+ {
+ 	struct mtd_blktrans_dev *dev = disk->private_data;
+ 
++	if (!mutex_trylock(&mtd_table_mutex))
++		return;
+ 	mutex_lock(&dev->lock);
+ 
+ 	if (--dev->open)
+@@ -243,6 +249,7 @@ static void blktrans_release(struct gendisk *disk, fmode_t mode)
+ 	}
+ unlock:
+ 	mutex_unlock(&dev->lock);
++	mutex_unlock(&mtd_table_mutex);
+ 	blktrans_dev_put(dev);
+ }
+ 
+-- 
+2.34.1
+

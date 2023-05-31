@@ -1,1 +1,2 @@
 # SPDX-License-Identifier: MIT
+patch mtd_blkdevs-add-mtd_table_mutex-lock-back-to-blktran.patch
