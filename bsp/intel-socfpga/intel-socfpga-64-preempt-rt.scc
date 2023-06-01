@@ -1,0 +1,7 @@
+define KMACHINE intel-socfpga-64
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+
+include intel-socfpga-64.scc
