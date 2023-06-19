@@ -1,0 +1,32 @@
+define KMACHINE pentagram
+define KTYPE tiny
+define KARCH arm
+
+include ktypes/tiny/tiny.scc
+branch pentagram
+
+include pentagram.scc
+
+include systemd_features.scc
+# not for tiny (cgroups for limits + process isolation)
+include features/cgroups.scc
+include features/namespaces/namespaces.scc
+
+#include pm.scc
+
+include hw_pwm.scc
+include hw_nvmem.scc
+include hw_i2c.scc
+
+include net/hw_net.scc
+include net/sw_net.scc
+
+kconf non-hardware fs/ext4.cfg
+
+include watchdog/sp.scc
+
+include sw_nls.scc
+
+# enabled for -debug. even in NOP mode it takes 12% of performance.
+# https://elinux.org/images/4/4b/Bird-Ftrace.pdf
+include features/ftrace/ftrace-function-tracer-disable.scc
