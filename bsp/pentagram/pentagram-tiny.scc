@@ -7,7 +7,7 @@ branch pentagram
 
 include pentagram.scc
 
-include cfg/systemd_features.scc
+include systemd_features.scc
 # not for tiny (cgroups for limits + process isolation)
 include features/cgroups.scc
 include features/namespaces/namespaces.scc
@@ -26,3 +26,7 @@ kconf non-hardware fs/ext4.cfg
 include watchdog/sp.scc
 
 include sw_nls.scc
+
+# enabled for -debug. even in NOP mode it takes 12% of performance.
+# https://elinux.org/images/4/4b/Bird-Ftrace.pdf
+include features/ftrace/ftrace-function-tracer-disable.scc

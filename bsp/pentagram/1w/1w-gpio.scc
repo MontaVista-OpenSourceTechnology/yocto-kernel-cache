@@ -1,0 +1,5 @@
+define KFEATURE_DESCRIPTION "1-Wire GPIO-based master"
+define KFEATURE_COMPATIBILITY all
+
+kconf hardware 1w.cfg
+kconf hardware 1w-gpio.cfg

@@ -1,0 +1,5 @@
+define KFEATURE_DESCRIPTION "1-Wire slaves"
+define KFEATURE_COMPATIBILITY all
+
+kconf hardware 1w.cfg
+kconf hardware 1w-slaves.cfg

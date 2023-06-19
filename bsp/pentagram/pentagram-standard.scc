@@ -5,15 +5,11 @@ define KARCH arm
 include pentagram-tiny.scc
 #include ktypes/standard/standard.scc
 
-# defined in .bbappend
-#include cfg/rpi-ovls/ovls.scc
-#include cfg/rpi-ovls/ovls-4.19.scc
-
 # default policy for standard kernels
 #include features/latencytop/latencytop.scc
 #include features/profiling/profiling.scc
 
-include cfg/systemd_features.scc
+include systemd_features.scc
 # not for tiny (cgroups for limits + process isolation)
 include features/cgroups.scc
 include features/namespaces/namespaces.scc
@@ -23,11 +19,12 @@ include features/leds/leds.scc
 include usb/usb.scc
 include usb/customers.scc
 
-include wifi/tppg2_brcm.scc
 include bt/bt.scc
 
 include spi/sp_nornand.scc
 include spi/sp_spi.scc
+
+include sdio/sdio.scc
 
 # ICM
 #include input/sp_icm.scc
@@ -46,15 +43,16 @@ include media/video_usb.scc
 include ui/vt.scc
 include ui/gconsole.scc
 
-#include sensors/thermal.scc
-#include sensors/hwmon.scc
+include sensors/hw_thermal.scc
+include sensors/hwmon.scc
 
 include features/can/can.scc
 
 include features/fuse/fuse.scc
 
-# temporary there
-#include debug/pins0.scc
-#include debug/pins9.scc
-include debug/dyndbg.scc
-include debug/printk.scc
+include features/uio/uio.scc
+#include features/netfilter/netfilter.scc
+
+include sound.scc
+include 1w/1w-gpio.scc
+include 1w/1w-slaves.scc
