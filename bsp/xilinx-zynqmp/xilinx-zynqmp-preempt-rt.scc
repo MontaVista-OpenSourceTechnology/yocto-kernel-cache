@@ -6,3 +6,4 @@ define KARCH arm64
 include ktypes/preempt-rt/preempt-rt.scc
 
 include xilinx-zynqmp.scc
+kconf hardware xilinx-zynqmp-rt.cfg
