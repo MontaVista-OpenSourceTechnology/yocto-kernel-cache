@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: MIT
 #
 
-# patch aufs5-kbuild.patch
-# patch aufs5-base.patch
-# patch aufs5-mmap.patch
-# patch aufs5-standalone.patch
-# patch aufs5-core.patch
+patch aufs6-kbuild.patch
+patch aufs6-base.patch
+patch aufs6-mmap.patch
+patch aufs6-standalone.patch
+patch aufs6-core.patch
+patch aufs6-fix-magic.mk-include-path.patch

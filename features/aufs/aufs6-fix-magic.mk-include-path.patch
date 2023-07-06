@@ -1,0 +1,37 @@
+From 40dfcb393658098382d48669718a1cb16674c833 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 6 Jul 2023 11:34:59 -0400
+Subject: [PATCH 6/6] aufs6: fix magic.mk include path
+
+commit 482d7131560c51da3ca [aufs stdalone: make it standalone] in the
+aufs upstream changes the way that the .mk file is included.
+
+This doesn't work properly with all kernel build processes, so we
+restore the use of srctree/src to locate the file.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/aufs/Makefile b/fs/aufs/Makefile
+index 4af8ecde3e3f..72db3cae2b92 100644
+--- a/fs/aufs/Makefile
++++ b/fs/aufs/Makefile
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-include ${src}/magic.mk
++include ${srctree}/${src}/magic.mk
+ ifeq (${CONFIG_AUFS_FS},m)
+-include ${src}/conf.mk
++include ${srctree}/${src}/conf.mk
+ endif
+--include ${src}/priv_def.mk
++-include ${srctree}/${src}/priv_def.mk
+ 
+ # cf. include/linux/kernel.h
+ # enable pr_debug
+-- 
+2.34.1
+
