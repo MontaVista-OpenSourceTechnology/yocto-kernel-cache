@@ -1,3 +1,2 @@
 # SPDX-License-Identifier: MIT
 patch x86_64_defconfig-Fix-warnings.patch
-patch Revert-tick-common-Align-tick-period-with-the-HZ-tic.patch
