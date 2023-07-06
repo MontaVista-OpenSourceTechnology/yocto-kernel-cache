@@ -1,0 +1,28 @@
+From caa81a9e214f80303cb3f3d2b400b832e3766ad3 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Fri, 11 Oct 2019 13:14:35 +0200
+Subject: [PATCH 74/83] ARM64: Allow to enable RT
+
+Allow to select RT.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index d97df1cf90b6..9a656136c81e 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -96,6 +96,7 @@ config ARM64
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+ 	select ARCH_SUPPORTS_PAGE_TABLE_CHECK
+ 	select ARCH_SUPPORTS_PER_VMA_LOCK
++	select ARCH_SUPPORTS_RT
+ 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
+ 	select ARCH_WANT_DEFAULT_BPF_JIT
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+-- 
+2.34.1
+
