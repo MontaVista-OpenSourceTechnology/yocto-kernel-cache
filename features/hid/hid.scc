@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable base HID config"
+define KFEATURE_COMPATIBILITY board
+
+kconf hardware hid.cfg
