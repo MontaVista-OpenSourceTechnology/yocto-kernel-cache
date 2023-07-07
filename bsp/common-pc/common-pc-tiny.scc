@@ -7,5 +7,5 @@ define KARCH i386
 include ktypes/tiny/tiny.scc
 branch common-pc
 
+include features/hid/hid.scc
 include common-pc.scc
-
