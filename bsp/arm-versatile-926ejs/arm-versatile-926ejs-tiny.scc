@@ -7,6 +7,7 @@ define KARCH arm
 include ktypes/tiny/tiny.scc
 branch arm-versatile-926ejs
 
+include features/hid/hid.scc
 include arm-versatile-926ejs.scc
 
 patch arm_versatile_926ejs-kick-off-PrimeCell-RTC-PL031.patch
