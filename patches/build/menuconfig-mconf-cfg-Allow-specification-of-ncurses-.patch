@@ -26,8 +26,6 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  mode change 100755 => 100644 scripts/kconfig/mconf-cfg.sh
 
 diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-old mode 100755
-new mode 100644
 index 025b565e0b7c..a3c59b360ca3
 --- a/scripts/kconfig/mconf-cfg.sh
 +++ b/scripts/kconfig/mconf-cfg.sh
