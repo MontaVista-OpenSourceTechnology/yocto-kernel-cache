@@ -7,6 +7,7 @@ include features/blktrace/blktrace.scc
 include features/hrt/hrt.scc
 include features/ftrace/ftrace.scc
 include arch/arm/arm.scc nopatch
+include features/tmpfs/tmpfs-posix-acl.scc
 include features/cgroups/cgroups.scc
 include features/net_sched/net_sched.scc
 include features/kprobes/kprobes.scc
