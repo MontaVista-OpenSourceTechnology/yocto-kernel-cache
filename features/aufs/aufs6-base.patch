@@ -1,4 +1,4 @@
-From aa3618b080636badabf77aa6f1e3729851922a93 Mon Sep 17 00:00:00 2001
+From 63d0d4a0b8cfad65757832e7c75f96785ffec0a1 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 6 Jul 2023 10:32:11 -0400
 Subject: [PATCH] aufs6: base
@@ -6,6 +6,7 @@ Subject: [PATCH] aufs6: base
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
  MAINTAINERS                   | 13 +++++++++++++
+ drivers/block/loop.c          | 18 ++++++++++++++++++
  fs/dcache.c                   |  2 +-
  fs/fcntl.c                    |  4 +++-
  fs/namespace.c                |  6 ++++++
@@ -15,7 +16,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  include/linux/mnt_namespace.h |  3 +++
  include/linux/splice.h        |  6 ++++++
  kernel/locking/lockdep.c      |  3 ++-
- 10 files changed, 40 insertions(+), 5 deletions(-)
+ 11 files changed, 58 insertions(+), 5 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
 index d516295978a4..940cb00678a6 100644
@@ -41,6 +42,35 @@ index d516295978a4..940cb00678a6 100644
  AUXILIARY DISPLAY DRIVERS
  M:	Miguel Ojeda <ojeda@kernel.org>
  S:	Maintained
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 637c5bda2387..cbefd23beb44 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -645,6 +645,24 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 	goto done;
+ }
+ 
++/*
++ * for AUFS
++ * no get/put for file.
++ */
++struct file *loop_backing_file(struct super_block *sb)
++{
++	struct file *ret;
++	struct loop_device *l;
++
++	ret = NULL;
++	if (MAJOR(sb->s_dev) == LOOP_MAJOR) {
++		l = sb->s_bdev->bd_disk->private_data;
++		ret = l->lo_backing_file;
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(loop_backing_file);
++
+ /* loop sysfs attributes */
+ 
+ static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
 index 52e6d5fdab6b..519321f32f95 100644
 --- a/fs/dcache.c
