@@ -1,4 +1,4 @@
-From a6b17040a90e1d247da032791b97a3de67cb248a Mon Sep 17 00:00:00 2001
+From a62301b552d9d1c8076d680f4675c57fa552ead6 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Thu, 26 Nov 2009 07:32:09 -0800
 Subject: [PATCH] mount_root: clarify error messages for when no rootfs found
@@ -25,13 +25,13 @@ Signed-off-by: Darren Hart <dvhart@linux.intel.com>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 2ed30ff6c906..b4ad06695c2c 100644
+index 1aa015883519..eb43a590281d 100644
 --- a/init/do_mounts.c
 +++ b/init/do_mounts.c
-@@ -427,7 +427,9 @@ void __init mount_block_root(char *name, int flags)
- 		printk("Please append a correct \"root=\" boot option; here are the available partitions:\n");
+@@ -205,7 +205,9 @@ void __init mount_root_generic(char *name, char *pretty_name, int flags)
+ 			pr_err("\n");
+ 		}
  
- 		printk_all_partitions();
 -		panic("VFS: Unable to mount root fs on %s", b);
 +		printk(KERN_EMERG "VFS: Unable to mount root fs on %s\n", b);
 +		printk(KERN_EMERG "User configuration error - no valid root filesystem found\n");
@@ -39,7 +39,7 @@ index 2ed30ff6c906..b4ad06695c2c 100644
  	}
  	if (!(flags & SB_RDONLY)) {
  		flags |= SB_RDONLY;
-@@ -440,7 +442,9 @@ void __init mount_block_root(char *name, int flags)
+@@ -218,7 +220,9 @@ void __init mount_root_generic(char *name, char *pretty_name, int flags)
  	for (i = 0, p = fs_names; i < num_fs; i++, p += strlen(p)+1)
  		printk(" %s", p);
  	printk("\n");
@@ -51,5 +51,5 @@ index 2ed30ff6c906..b4ad06695c2c 100644
  	put_page(page);
  }
 -- 
-2.19.1
+2.34.1
 
