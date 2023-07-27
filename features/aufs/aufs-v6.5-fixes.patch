@@ -1,0 +1,66 @@
+From 96475cb19ae51eca400da683bf191443304ce3e6 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 27 Jul 2023 18:14:23 -0400
+Subject: [PATCH] aufs: v6.5 fixes
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/i_op_add.c     | 2 +-
+ fs/aufs/vfsub.c        | 2 +-
+ fs/splice.c            | 1 -
+ include/linux/splice.h | 3 ---
+ 4 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/fs/aufs/i_op_add.c b/fs/aufs/i_op_add.c
+index 6c6550ae1b7e..39291230486e 100644
+--- a/fs/aufs/i_op_add.c
++++ b/fs/aufs/i_op_add.c
+@@ -483,7 +483,7 @@ int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 	h_parent = au_h_dptr(parent, bindex);
+ 	h_ppath.mnt = h_mnt;
+ 	h_ppath.dentry = h_parent;
+-	h_file = vfs_tmpfile_open(h_idmap, &h_ppath, mode, /*open_flag*/0,
++	h_file = kernel_tmpfile_open(h_idmap, &h_ppath, mode, /*open_flag*/0,
+ 				  current_cred());
+ 	if (IS_ERR(h_file)) {
+ 		err = PTR_ERR(h_file);
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index bb5123ad9269..acde6f85de10 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -618,7 +618,7 @@ long vfsub_splice_to(struct file *in, loff_t *ppos,
+ 	long err;
+ 
+ 	lockdep_off();
+-	err = do_splice_to(in, ppos, pipe, len, flags);
++	err = vfs_splice_read(in, ppos, pipe, len, flags);
+ 	lockdep_on();
+ 	file_accessed(in);
+ 	if (err >= 0)
+diff --git a/fs/splice.c b/fs/splice.c
+index 5ebf8a727feb..674a9c95146a 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -922,7 +922,6 @@ static int warn_unsupported(struct file *file, const char *op)
+ 		op, file, current->pid, current->comm);
+ 	return -EINVAL;
+ }
+-EXPORT_SYMBOL_GPL(do_splice_to);
+ 
+ /*
+  * Attempt to initiate a splice from pipe to file.
+diff --git a/include/linux/splice.h b/include/linux/splice.h
+index 7416cf375ad1..f08de3775987 100644
+--- a/include/linux/splice.h
++++ b/include/linux/splice.h
+@@ -102,7 +102,4 @@ extern const struct pipe_buf_operations default_pipe_buf_ops;
+ 
+ extern long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			   loff_t *ppos, size_t len, unsigned int flags);
+-extern long do_splice_to(struct file *in, loff_t *ppos,
+-			 struct pipe_inode_info *pipe, size_t len,
+-			 unsigned int flags);
+ #endif
+-- 
+2.34.1
+

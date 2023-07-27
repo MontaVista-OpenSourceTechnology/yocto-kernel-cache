@@ -7,3 +7,4 @@ patch aufs6-mmap.patch
 patch aufs6-standalone.patch
 patch aufs6-core.patch
 patch aufs6-fix-magic.mk-include-path.patch
+patch aufs-v6.5-fixes.patch
