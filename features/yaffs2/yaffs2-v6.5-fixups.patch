@@ -1,0 +1,26 @@
+From e9ca040537fb905d7a55ee9d20ce0414eed5f10e Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 27 Jul 2023 18:17:32 -0400
+Subject: [PATCH] yaffs2: v6.5 fixups
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 32864c715545..04abeee99ff5 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -844,7 +844,7 @@ static const struct file_operations yaffs_file_operations = {
+ 	.mmap = generic_file_mmap,
+ 	.flush = yaffs_file_flush,
+ 	.fsync = yaffs_sync_object,
+-	.splice_read = generic_file_splice_read,
++	.splice_read = copy_splice_read,
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 16, 0)
+ 	.splice_write = iter_file_splice_write,
+ #else
+-- 
+2.34.1
+
