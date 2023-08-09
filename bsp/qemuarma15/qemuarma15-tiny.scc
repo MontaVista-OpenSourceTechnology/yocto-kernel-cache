@@ -5,4 +5,6 @@ define KARCH arm
 
 include ktypes/tiny/tiny.scc
 
+include features/hid/hid.scc
+
 include qemuarma15.scc
