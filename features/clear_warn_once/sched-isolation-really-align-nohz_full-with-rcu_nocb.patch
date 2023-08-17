@@ -1,4 +1,4 @@
-From 06ad4c49d3ea3e5c3f65c84410a38e8c95ae9072 Mon Sep 17 00:00:00 2001
+From b7b4352a182fd595fbc2d0bf2e42d53ab6154f92 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Fri, 4 Mar 2022 09:42:19 -0500
 Subject: [PATCH] sched/isolation: really align nohz_full with rcu_nocbs
@@ -52,11 +52,11 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 12 insertions(+)
 
 diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 373d42c707bc..73386019efcb 100644
+index 373d42c707bc..b97d6e05013d 100644
 --- a/kernel/sched/isolation.c
 +++ b/kernel/sched/isolation.c
-@@ -119,6 +119,18 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
- 		}
+@@ -125,6 +125,18 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+ 		goto free_non_housekeeping_mask;
  	}
  
 +	if (!cpumask_subset(non_housekeeping_mask, cpu_possible_mask)) {
@@ -68,12 +68,12 @@ index 373d42c707bc..73386019efcb 100644
 +	if (cpumask_empty(non_housekeeping_mask)) {
 +		pr_info("housekeeping: kernel parameter 'nohz_full=' or 'isolcpus=' has no valid CPUs.\n");
 +		free_bootmem_cpumask_var(non_housekeeping_mask);
-+		return 0;
++		goto free_non_housekeeping_mask;
 +	}
 +
- 	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
- 	if (cpulist_parse(str, non_housekeeping_mask) < 0) {
- 		pr_warn("Housekeeping: nohz_full= or isolcpus= incorrect CPU range\n");
+ 	alloc_bootmem_cpumask_var(&housekeeping_staging);
+ 	cpumask_andnot(housekeeping_staging,
+ 		       cpu_possible_mask, non_housekeeping_mask);
 -- 
-2.19.1
+2.34.1
 
