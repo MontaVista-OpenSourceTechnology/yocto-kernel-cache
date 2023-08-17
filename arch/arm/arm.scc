@@ -11,3 +11,4 @@ patch arm-ARM-EABI-socketcall.patch
 
 patch vexpress-Pass-LOADADDR-to-Makefile.patch
 patch arm64-defconfig-cleanup-config-options.patch
+patch 0001-drm-fb-helper-move-zeroing-code-to-drm_fb_helper_fil.patch
