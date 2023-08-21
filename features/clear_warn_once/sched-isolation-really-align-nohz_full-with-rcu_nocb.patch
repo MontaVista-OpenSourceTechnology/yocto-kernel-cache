@@ -1,7 +1,15 @@
-From b7b4352a182fd595fbc2d0bf2e42d53ab6154f92 Mon Sep 17 00:00:00 2001
+Date:   Mon, 21 Feb 2022 13:20:08 -0500
+Subject: [PATCH 1/2] sched/isolation: really align nohz_full with rcu_nocbs
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Date: Fri, 4 Mar 2022 09:42:19 -0500
-Subject: [PATCH] sched/isolation: really align nohz_full with rcu_nocbs
+To: linux-kernel@vger.kernel.org, Frederic Weisbecker <fweisbec@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>
+CC: Paul Gortmaker <paul.gortmaker@windriver.com>, Thomas Gleixner
+ <tglx@linutronix.de>, "Paul E . McKenney" <paulmck@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
 At the moment it is currently possible to sneak a core into nohz_full
 that lies between nr_possible and NR_CPUS - but you won't "see" it
@@ -39,23 +47,25 @@ One can see both new housekeeping checks are triggered in the above.
 The same invalid boot arg combination would have previously resulted in
 an infinitely scrolling mix of WARN from all cores per tick on this box.
 
-Link: https://lore.kernel.org/lkml/20211206145950.10927-2-paul.gortmaker@windriver.com
+We may need to revisit these sanity checks when nohz_full is accepted as
+a stand alone keyword "enable" w/o a cpuset (see rcu/nohz d2cf0854d728).
+
 Fixes: 915a2bc3c6b7 ("sched/isolation: Reconcile rcu_nocbs= and nohz_full=")
-Cc: Paul E. McKenney <paulmck@kernel.org>
 Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul E. McKenney <paulmck@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- kernel/sched/isolation.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/sched/isolation.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 373d42c707bc..b97d6e05013d 100644
+index b4d10815c45a..f7d2406c1f1d 100644
 --- a/kernel/sched/isolation.c
 +++ b/kernel/sched/isolation.c
-@@ -125,6 +125,18 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+@@ -126,6 +126,17 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
  		goto free_non_housekeeping_mask;
  	}
  
@@ -67,7 +77,6 @@ index 373d42c707bc..b97d6e05013d 100644
 +
 +	if (cpumask_empty(non_housekeeping_mask)) {
 +		pr_info("housekeeping: kernel parameter 'nohz_full=' or 'isolcpus=' has no valid CPUs.\n");
-+		free_bootmem_cpumask_var(non_housekeeping_mask);
 +		goto free_non_housekeeping_mask;
 +	}
 +
@@ -75,5 +84,5 @@ index 373d42c707bc..b97d6e05013d 100644
  	cpumask_andnot(housekeeping_staging,
  		       cpu_possible_mask, non_housekeeping_mask);
 -- 
-2.34.1
+2.17.1
 
