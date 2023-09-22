@@ -1,0 +1,64 @@
+From 70f40841c195a81a8ef8290862adeb86fe264b24 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 21 Sep 2023 17:04:31 -0400
+Subject: [PATCH] yaffs2: update VFS ctime operations to 6.6+
+
+In 6.6+ kernels the inode ctime is hidden, and should only
+be accessed through accesor routines. We convert one of our
+calls to the accesor, but the other, we use the new "hidden"
+__ctime.
+
+We also convert the interator to use the shared iterator and
+iterator wrap routines.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 04abeee99ff5..8a9738de8906 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");
+ 	} while (0)
+ #else
+ #define update_dir_time(dir) do {\
+-		(dir)->i_ctime = (dir)->i_mtime = current_time(dir); \
++		(dir)->i_mtime = inode_set_ctime_to_ts( dir, current_time(dir) ); \
+ 	} while (0)
+ #endif
+ 
+@@ -1901,7 +1901,7 @@ static int yaffs_iterate(struct file *f, struct dir_context *dc)
+ 
+ 	return ret_val;
+ }
+-
++WRAP_DIR_ITER(yaffs_iterate)
+ #else
+ 
+ static int yaffs_readdir(struct file *f, void *dirent, filldir_t filldir)
+@@ -2018,7 +2018,7 @@ static int yaffs_readdir(struct file *f, void *dirent, filldir_t filldir)
+ static const struct file_operations yaffs_dir_operations = {
+ 	.read = generic_read_dir,
+ #ifdef YAFFS_USE_DIR_ITERATE
+-	.iterate = yaffs_iterate,
++	.iterate_shared = shared_yaffs_iterate,
+ #else
+ 	.readdir = yaffs_readdir,
+ #endif
+@@ -2079,8 +2079,9 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
+ 		inode->i_atime.tv_nsec = 0;
+ 		inode->i_mtime.tv_sec = (time64_t) obj->yst_mtime;
+ 		inode->i_mtime.tv_nsec = 0;
+-		inode->i_ctime.tv_sec = (time64_t) obj->yst_ctime;
+-		inode->i_ctime.tv_nsec = 0;
++		//inode->i_ctime.tv_sec = (time64_t) obj->yst_ctime;
++		inode->__i_ctime.tv_sec = (time64_t) obj->yst_ctime;
++		inode->__i_ctime.tv_nsec = 0;
+ #else
+ 		inode->i_rdev = obj->yst_rdev;
+ 		inode->i_atime = obj->yst_atime;
+-- 
+2.34.1
+
