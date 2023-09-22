@@ -1,0 +1,40 @@
+From 5d75cb88038136d82ae6bb62da3fa8f70785e662 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 21 Sep 2023 18:20:40 -0400
+Subject: [PATCH 6/8] aufs6: adapt to v6.6
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/fcntl.c | 2 +-
+ mm/mmap.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index fdd334fc02fb..ec0562996478 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -34,7 +34,7 @@
+ 
+ #define SETFL_MASK (O_APPEND | O_NONBLOCK | O_NDELAY | O_DIRECT | O_NOATIME)
+ 
+-int setfl(int fd, struct file *filp, unsigned int arg)
++int setfl(int fd, struct file *filp, long unsigned int arg)
+ {
+ 	struct inode * inode = file_inode(filp);
+ 	int error = 0;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 0a0f3d5f558d..0bb0c5a0ad0e 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3004,7 +3004,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+ 	file = vma->vm_file;
+ 	prfile = vma->vm_prfile;
+ 	ret = do_mmap(vma->vm_file, start, size,
+-			prot, flags, pgoff, &populate, NULL);
++			prot, flags, 0, pgoff, &populate, NULL);
+ 	if (!IS_ERR_VALUE(ret) && file && prfile) {
+ 		struct vm_area_struct *new_vma;
+ 
+-- 
+2.34.1
+

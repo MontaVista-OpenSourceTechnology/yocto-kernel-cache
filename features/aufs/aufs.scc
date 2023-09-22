@@ -6,5 +6,6 @@ patch aufs6-base.patch
 patch aufs6-mmap.patch
 patch aufs6-standalone.patch
 patch aufs6-core.patch
+patch aufs6-adapt-to-v6.6.patch
 patch aufs6-fix-magic.mk-include-path.patch
-patch aufs-v6.5-fixes.patch
+patch aufs6-adapt-to-v6.6-i_op-ctime-changes.patch

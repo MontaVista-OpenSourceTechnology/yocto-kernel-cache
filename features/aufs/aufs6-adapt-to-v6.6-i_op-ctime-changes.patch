@@ -1,0 +1,146 @@
+From 8eeb547a388fee17c1c168bbb33d95e0c19e2cb4 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 21 Sep 2023 22:18:30 -0400
+Subject: [PATCH 8/8] aufs6: adapt to v6.6 i_op->ctime changes
+
+The following commits in 6.6+ change the way i_nodes and ctime are
+handled. We adapt the code to match:
+
+ 541d4c798a598854fcce7326d947cbcbd35701d6 [fs: drop the timespec64 arg from generic_update_time]
+ 3e3271549670783be20e233a2b78a87a0b04c715 [vfs: get rid of old '->iterate' directory operation]
+ 0d72b92883c651a11059d93335f33d65c6eb653b [fs: pass the request_mask to generic_fillattr]
+ 913e99287b98fd051ac1976140a2764a8ef9dfbf [fs: drop the timespec64 argument from update_time]
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/i_op.c     | 9 ++++-----
+ fs/aufs/i_op_add.c | 2 +-
+ fs/aufs/i_op_del.c | 9 ++++++---
+ fs/aufs/i_op_ren.c | 6 ++++--
+ fs/aufs/vfsub.h    | 5 ++---
+ 5 files changed, 17 insertions(+), 14 deletions(-)
+
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index 141620c2e0bd..993d57633393 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -1169,7 +1169,7 @@ static void au_refresh_iattr(struct inode *inode, struct kstat *st,
+ 	inode->i_gid = st->gid;
+ 	inode->i_atime = st->atime;
+ 	inode->i_mtime = st->mtime;
+-	inode->i_ctime = st->ctime;
++	inode_set_ctime_to_ts( inode, st->ctime );
+ 
+ 	au_cpup_attr_nlink(inode, /*force*/0);
+ 	if (S_ISDIR(inode->i_mode)) {
+@@ -1306,7 +1306,7 @@ static int aufs_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 	goto out_di;
+ 
+ out_fill:
+-	generic_fillattr(idmap, inode, st);
++	generic_fillattr(idmap, request, inode, st);
+ out_di:
+ 	di_read_unlock(dentry, AuLock_IR);
+ out_si:
+@@ -1388,8 +1388,7 @@ static int au_is_special(struct inode *inode)
+ 	return (inode->i_mode & (S_IFBLK | S_IFCHR | S_IFIFO | S_IFSOCK));
+ }
+ 
+-static int aufs_update_time(struct inode *inode, struct timespec64 *ts,
+-			    int flags)
++static int aufs_update_time(struct inode *inode, int flags)
+ {
+ 	int err;
+ 	aufs_bindex_t bindex;
+@@ -1413,7 +1412,7 @@ static int aufs_update_time(struct inode *inode, struct timespec64 *ts,
+ 		h_mnt = au_sbr_mnt(sb, bindex);
+ 		err = vfsub_mnt_want_write(h_mnt);
+ 		if (!err) {
+-			err = vfsub_update_time(h_inode, ts, flags);
++			err = vfsub_update_time(h_inode, flags);
+ 			vfsub_mnt_drop_write(h_mnt);
+ 		}
+ 	} else if (au_is_special(h_inode)) {
+diff --git a/fs/aufs/i_op_add.c b/fs/aufs/i_op_add.c
+index 2adf97d4488d..1ce4d45c8f7b 100644
+--- a/fs/aufs/i_op_add.c
++++ b/fs/aufs/i_op_add.c
+@@ -824,7 +824,7 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
+ 	au_dir_ts(dir, a->bdst);
+ 	inode_inc_iversion(dir);
+ 	inc_nlink(inode);
+-	inode->i_ctime = dir->i_ctime;
++	inode_set_ctime_to_ts( inode, inode_get_ctime(dir));
+ 	d_instantiate(dentry, au_igrab(inode));
+ 	if (d_unhashed(a->h_path.dentry))
+ 		/* some filesystem calls d_drop() */
+diff --git a/fs/aufs/i_op_del.c b/fs/aufs/i_op_del.c
+index d85f47cef29f..fbbda9626f6f 100644
+--- a/fs/aufs/i_op_del.c
++++ b/fs/aufs/i_op_del.c
+@@ -277,7 +277,8 @@ static void epilog(struct inode *dir, struct dentry *dentry,
+ 
+ 	inode = d_inode(dentry);
+ 	d_drop(dentry);
+-	inode->i_ctime = dir->i_ctime;
++	//inode->i_ctime = dir->i_ctime;
++	inode_set_ctime_to_ts(inode, inode_get_ctime(dir));
+ 
+ 	au_dir_ts(dir, bindex);
+ 	inode_inc_iversion(dir);
+@@ -379,10 +380,12 @@ int aufs_unlink(struct inode *dir, struct dentry *dentry)
+ 		if (bindex == btop) {
+ 			vfsub_update_h_iattr(&a->h_path, /*did*/NULL);
+ 			/*ignore*/
+-			inode->i_ctime = d_inode(a->h_path.dentry)->i_ctime;
++			//inode->i_ctime = d_inode(a->h_path.dentry)->i_ctime;
++			inode_set_ctime_to_ts(inode, inode_get_ctime(d_inode(a->h_path.dentry)) );
+ 		} else
+ 			/* todo: this timestamp may be reverted later */
+-			inode->i_ctime = h_dir->i_ctime;
++		        //inode->i_ctime = h_dir->i_ctime;
++			inode_set_ctime_to_ts(inode,inode_get_ctime(h_dir) );
+ 		goto out_unpin; /* success */
+ 	}
+ 
+diff --git a/fs/aufs/i_op_ren.c b/fs/aufs/i_op_ren.c
+index ab69a6ac9a42..f3f9d9efe6fa 100644
+--- a/fs/aufs/i_op_ren.c
++++ b/fs/aufs/i_op_ren.c
+@@ -443,12 +443,14 @@ static int do_rename(struct au_ren_args *a)
+ 		AuDebugOn(au_dbtop(a->dst_dentry) != a->btgt);
+ 		a->h_path.dentry = au_h_dptr(a->dst_dentry, a->btgt);
+ 		vfsub_update_h_iattr(&a->h_path, /*did*/NULL); /*ignore*/
+-		a->dst_inode->i_ctime = d_inode(a->h_path.dentry)->i_ctime;
++		//a->dst_inode->i_ctime = d_inode(a->h_path.dentry)->i_ctime;
++		inode_set_ctime_to_ts( a->dst_inode, inode_get_ctime(d_inode(a->h_path.dentry)) );
+ 	}
+ 	AuDebugOn(au_dbtop(a->src_dentry) != a->btgt);
+ 	a->h_path.dentry = au_h_dptr(a->src_dentry, a->btgt);
+ 	vfsub_update_h_iattr(&a->h_path, /*did*/NULL); /*ignore*/
+-	a->src_inode->i_ctime = d_inode(a->h_path.dentry)->i_ctime;
++	//a->src_inode->i_ctime = d_inode(a->h_path.dentry)->i_ctime;
++	inode_set_ctime_to_ts( a->src_inode, inode_get_ctime(d_inode(a->h_path.dentry)) );
+ 
+ 	if (!a->exchange) {
+ 		/* remove whiteout for dentry */
+diff --git a/fs/aufs/vfsub.h b/fs/aufs/vfsub.h
+index 928c463620c1..ed218d95770d 100644
+--- a/fs/aufs/vfsub.h
++++ b/fs/aufs/vfsub.h
+@@ -240,10 +240,9 @@ static inline void vfsub_touch_atime(struct vfsmount *h_mnt,
+ }
+ #endif
+ 
+-static inline int vfsub_update_time(struct inode *h_inode,
+-				    struct timespec64 *ts, int flags)
++static inline int vfsub_update_time(struct inode *h_inode, int flags)
+ {
+-	return inode_update_time(h_inode, ts, flags);
++	return inode_update_time(h_inode, flags);
+ 	/* no vfsub_update_h_iattr() since we don't have struct path */
+ }
+ 
+-- 
+2.34.1
+

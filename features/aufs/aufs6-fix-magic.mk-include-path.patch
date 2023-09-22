@@ -1,7 +1,7 @@
-From 40dfcb393658098382d48669718a1cb16674c833 Mon Sep 17 00:00:00 2001
+From 001144b1c29e0214cad19720e6e1c35a576b124c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 6 Jul 2023 11:34:59 -0400
-Subject: [PATCH 6/6] aufs6: fix magic.mk include path
+Subject: [PATCH 7/8] aufs6: fix magic.mk include path
 
 commit 482d7131560c51da3ca [aufs stdalone: make it standalone] in the
 aufs upstream changes the way that the .mk file is included.
