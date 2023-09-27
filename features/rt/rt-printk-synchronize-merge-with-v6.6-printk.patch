@@ -1,0 +1,70 @@
+From 5c709d1ffa3e3a16a1acaa67b6fb2cf637ceae0c Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 27 Sep 2023 09:20:01 -0400
+Subject: [PATCH 87/87] rt/printk: synchronize merge with v6.6-printk
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ kernel/printk/printk.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 835ba17f6823..3ddf7fb4820b 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3136,6 +3136,9 @@ void console_unblank(void)
+ 	struct console *c;
+ 	int cookie;
+ 
++	if (!have_bkl_console)
++		return;
++
+ 	/*
+ 	 * First check if there are any consoles implementing the unblank()
+ 	 * callback. If not, there is no reason to continue and take the
+@@ -3153,9 +3156,6 @@ void console_unblank(void)
+ 	if (!found_unblank)
+ 		return;
+ 
+-	if (!have_bkl_console)
+-		return;
+-
+ 	/*
+ 	 * Stop console printing because the unblank() callback may
+ 	 * assume the console is not within its write() callback.
+@@ -3203,9 +3203,9 @@ void console_unblank(void)
+  */
+ void console_flush_on_panic(enum con_flush_mode mode)
+ {
++	struct console *c;
+ 	bool handover;
+ 	u64 next_seq;
+-	struct console *c;
+ 	short flags;
+ 	int cookie;
+ 	u64 seq;
+@@ -3244,12 +3244,7 @@ void console_flush_on_panic(enum con_flush_mode mode)
+ 	 * If another context is holding the console lock,
+ 	 * @console_may_schedule might be set. Clear it so that
+ 	 * this context does not call cond_resched() while flushing.
+-	 *
+-	 * Since semaphores are not NMI-safe, the console lock must be
+-	 * ignored if the panic is in NMI context.
+ 	 */
+-	if (!in_nmi())
+-		console_trylock();
+ 	console_may_schedule = 0;
+ 
+ 	if (mode == CONSOLE_REPLAY_ALL) {
+@@ -3265,8 +3260,6 @@ void console_flush_on_panic(enum con_flush_mode mode)
+ 	}
+ 
+ 	console_flush_all(false, &next_seq, &handover);
+-	if (!in_nmi())
+-		console_unlock();
+ }
+ 
+ /*
+-- 
+2.34.1
+

@@ -1,0 +1,32 @@
+From 923acab2c7a92c790983c72c323fdb6c0a46702d Mon Sep 17 00:00:00 2001
+From: John Ogness <john.ogness@linutronix.de>
+Date: Fri, 24 Feb 2023 15:23:51 +0000
+Subject: [PATCH 28/87] kdb: do not assume write() callback available
+
+It is allowed for consoles to provide no write() callback. For
+example ttynull does this.
+
+Check if a write() callback is available before using it.
+
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/debug/kdb/kdb_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+index 813cb6cf72d6..9443bc63c5a2 100644
+--- a/kernel/debug/kdb/kdb_io.c
++++ b/kernel/debug/kdb/kdb_io.c
+@@ -590,6 +590,8 @@ static void kdb_msg_write(const char *msg, int msg_len)
+ 			continue;
+ 		if (c == dbg_io_ops->cons)
+ 			continue;
++		if (!c->write)
++			continue;
+ 		/*
+ 		 * Set oops_in_progress to encourage the console drivers to
+ 		 * disregard their internal spin locks: in the current calling
+-- 
+2.34.1
+

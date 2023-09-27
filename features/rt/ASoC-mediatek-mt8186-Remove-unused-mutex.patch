@@ -1,0 +1,31 @@
+From 57e57c5d8d8a76ae12e2ae41fe71cb7be3caa736 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Thu, 3 Aug 2023 10:39:08 +0200
+Subject: [PATCH 18/87] ASoC: mediatek: mt8186: Remove unused mutex.
+
+The mutex mutex_request_dram has no user.
+
+Remove mutex_request_dram.
+
+Link: https://lore.kernel.org/r/20230803083908.9DxbPvOK@linutronix.de
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ sound/soc/mediatek/mt8186/mt8186-afe-clk.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/sound/soc/mediatek/mt8186/mt8186-afe-clk.c b/sound/soc/mediatek/mt8186/mt8186-afe-clk.c
+index 539e3a023bc4..70ec101890d3 100644
+--- a/sound/soc/mediatek/mt8186/mt8186-afe-clk.c
++++ b/sound/soc/mediatek/mt8186/mt8186-afe-clk.c
+@@ -13,8 +13,6 @@
+ #include "mt8186-afe-clk.h"
+ #include "mt8186-audsys-clk.h"
+ 
+-static DEFINE_MUTEX(mutex_request_dram);
+-
+ static const char *aud_clks[CLK_NUM] = {
+ 	[CLK_AFE] = "aud_afe_clk",
+ 	[CLK_DAC] = "aud_dac_clk",
+-- 
+2.34.1
+
