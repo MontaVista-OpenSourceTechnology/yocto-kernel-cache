@@ -1,0 +1,33 @@
+From 3df55718f80defca89c4aae4e8fde33d710d9a4f Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 26 Sep 2023 20:48:57 -0400
+Subject: [PATCH] yaffs2: replace iterate with iterate_shared
+
+The directory iteration in kernel v6.5.x should use the .iterate_shared
+structure assignment.
+
+In 6.6.x this changes to .iterate
+
+We adjust our assignment to fix the build.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 04abeee99ff5..e6fdacdb4333 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -2018,7 +2018,7 @@ static int yaffs_readdir(struct file *f, void *dirent, filldir_t filldir)
+ static const struct file_operations yaffs_dir_operations = {
+ 	.read = generic_read_dir,
+ #ifdef YAFFS_USE_DIR_ITERATE
+-	.iterate = yaffs_iterate,
++	.iterate_shared = yaffs_iterate,
+ #else
+ 	.readdir = yaffs_readdir,
+ #endif
+-- 
+2.34.1
+
