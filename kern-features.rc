@@ -125,6 +125,7 @@
 	config = features/rpmb/rpmb-sim.scc
 	config = features/rpmb/rpmb-uapi.scc
 	config = features/rpmb/rpmb-base.scc
+	config = features/random/random.scc
 	config = features/usb/usb-raw-gadget.scc
 	config = features/usb/designware-usb3.scc
 	config = features/usb/usb-gadgets.scc
@@ -194,6 +195,7 @@
 	config = features/intel-persistent-memory/intel-x86-64-pmem.scc
 	config = features/nfsd/nfsd-enable.scc
 	config = features/nfsd/nfsd.scc
+	config = features/hid/hid.scc
 	config = features/nf_tables/nf_tables.scc
 	config = features/nf_tables/nft_test.scc
 	config = features/qat/qat.scc
