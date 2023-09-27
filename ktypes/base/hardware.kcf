@@ -262,6 +262,7 @@ drivers/clk/meson/Kconfig
 drivers/clk/microchip/Kconfig
 drivers/clk/mstar/Kconfig
 drivers/clk/mvebu/Kconfig
+drivers/clk/nuvoton/Kconfig
 drivers/clk/pistachio/Kconfig
 drivers/clk/qcom/Kconfig
 drivers/clk/ralink/Kconfig
@@ -311,6 +312,7 @@ drivers/crypto/intel/qat/Kconfig
 drivers/crypto/Kconfig
 drivers/crypto/marvell/Kconfig
 drivers/crypto/nx/Kconfig
+drivers/crypto/starfive/Kconfig
 drivers/crypto/stm32/Kconfig
 drivers/crypto/virtio/Kconfig
 drivers/crypto/vmx/Kconfig
@@ -406,9 +408,10 @@ drivers/gpu/drm/panfrost/Kconfig
 drivers/gpu/drm/pl111/Kconfig
 drivers/gpu/drm/qxl/Kconfig
 drivers/gpu/drm/radeon/Kconfig
-drivers/gpu/drm/rcar-du/Kconfig
+drivers/gpu/drm/renesas/Kconfig
+drivers/gpu/drm/renesas/rcar-du/Kconfig
+drivers/gpu/drm/renesas/shmobile/Kconfig
 drivers/gpu/drm/rockchip/Kconfig
-drivers/gpu/drm/shmobile/Kconfig
 drivers/gpu/drm/solomon/Kconfig
 drivers/gpu/drm/sprd/Kconfig
 drivers/gpu/drm/sti/Kconfig
@@ -607,6 +610,7 @@ drivers/media/pci/ddbridge/Kconfig
 drivers/media/pci/dm1105/Kconfig
 drivers/media/pci/dt3155/Kconfig
 drivers/media/pci/intel/ipu3/Kconfig
+drivers/media/pci/intel/Kconfig
 drivers/media/pci/ivtv/Kconfig
 drivers/media/pci/Kconfig
 drivers/media/pci/mantis/Kconfig
@@ -750,6 +754,7 @@ drivers/misc/genwqe/Kconfig
 drivers/misc/Kconfig
 drivers/misc/lis3lv02d/Kconfig
 drivers/misc/mchp_pci1xxxx/Kconfig
+drivers/misc/mei/gsc_proxy/Kconfig
 drivers/misc/mei/hdcp/Kconfig
 drivers/misc/mei/Kconfig
 drivers/misc/mei/pxp/Kconfig
@@ -1110,6 +1115,7 @@ drivers/pinctrl/nuvoton/Kconfig
 drivers/pinctrl/nxp/Kconfig
 drivers/pinctrl/pxa/Kconfig
 drivers/pinctrl/qcom/Kconfig
+drivers/pinctrl/qcom/Kconfig.msm
 drivers/pinctrl/renesas/Kconfig
 drivers/pinctrl/samsung/Kconfig
 drivers/pinctrl/spear/Kconfig
@@ -1350,6 +1356,7 @@ drivers/usb/gadget/Kconfig
 drivers/usb/gadget/legacy/Kconfig
 drivers/usb/gadget/udc/aspeed-vhub/Kconfig
 drivers/usb/gadget/udc/bdc/Kconfig
+drivers/usb/gadget/udc/cdns2/Kconfig
 drivers/usb/gadget/udc/Kconfig
 drivers/usb/host/Kconfig
 drivers/usb/image/Kconfig
@@ -1373,6 +1380,7 @@ drivers/usb/typec/tipd/Kconfig
 drivers/usb/typec/ucsi/Kconfig
 drivers/usb/usbip/Kconfig
 drivers/vdpa/Kconfig
+drivers/vfio/cdx/Kconfig
 drivers/vfio/fsl-mc/Kconfig
 drivers/vfio/Kconfig
 drivers/vfio/mdev/Kconfig
@@ -1456,6 +1464,7 @@ sound/soc/codecs/Kconfig
 sound/soc/dwc/Kconfig
 sound/soc/fsl/Kconfig
 sound/soc/generic/Kconfig
+sound/soc/google/Kconfig
 sound/soc/hisilicon/Kconfig
 sound/soc/img/Kconfig
 sound/soc/intel/avs/boards/Kconfig
@@ -1464,6 +1473,7 @@ sound/soc/intel/Kconfig
 sound/soc/jz4740/Kconfig
 sound/soc/Kconfig
 sound/soc/kirkwood/Kconfig
+sound/soc/loongson/Kconfig
 sound/soc/mediatek/Kconfig
 sound/soc/meson/Kconfig
 sound/soc/mxs/Kconfig
@@ -1480,6 +1490,7 @@ sound/soc/sof/mediatek/Kconfig
 sound/soc/sof/xtensa/Kconfig
 sound/soc/spear/Kconfig
 sound/soc/sprd/Kconfig
+sound/soc/starfive/Kconfig
 sound/soc/sti/Kconfig
 sound/soc/stm/Kconfig
 sound/soc/sunxi/Kconfig

@@ -107,13 +107,13 @@ fs/9p/Kconfig
 fs/adfs/Kconfig
 fs/affs/Kconfig
 fs/afs/Kconfig
+fs/aufs/Kconfig
 fs/autofs/Kconfig
 fs/befs/Kconfig
 fs/bfs/Kconfig
 fs/btrfs/Kconfig
 fs/cachefiles/Kconfig
 fs/ceph/Kconfig
-fs/cifs/Kconfig
 fs/coda/Kconfig
 fs/configfs/Kconfig
 fs/cramfs/Kconfig
@@ -142,7 +142,6 @@ fs/jfs/Kconfig
 fs/Kconfig
 fs/Kconfig.binfmt
 fs/kernfs/Kconfig
-fs/ksmbd/Kconfig
 fs/minix/Kconfig
 fs/netfs/Kconfig
 fs/nfsd/Kconfig
@@ -166,6 +165,9 @@ fs/qnx6/Kconfig
 fs/quota/Kconfig
 fs/reiserfs/Kconfig
 fs/romfs/Kconfig
+fs/smb/client/Kconfig
+fs/smb/Kconfig
+fs/smb/server/Kconfig
 fs/squashfs/Kconfig
 fs/sysfs/Kconfig
 fs/sysv/Kconfig
@@ -176,6 +178,7 @@ fs/unicode/Kconfig
 fs/vboxsf/Kconfig
 fs/verity/Kconfig
 fs/xfs/Kconfig
+fs/yaffs2/Kconfig
 fs/zonefs/Kconfig
 init/Kconfig
 kernel/bpf/Kconfig
