@@ -1,0 +1,68 @@
+From 5b2595c3e0dce2912b32ef69aaaacd52cd0e720c Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 29 Sep 2023 00:11:41 +0000
+Subject: [PATCH] mips: make current_cpu_data preempt safe
+
+When DEBUG_PREEMPT is enabled, mips/mips64 boots are filled with
+backtraces similar to:
+
+  [  130.730686] BUG: using smp_processor_id() in preemptible [00000000] code: systemd/1
+  [  130.738542] caller is blast_dcache32+0x40/0x190
+  [  130.745908] CPU: 0 PID: 1 Comm: systemd Not tainted 6.4.11-yocto-standard #1
+  [  130.753928] Stack : 0000000000000001 0000000000000000 0000000000000018 9000000004937798
+  [  130.762192]         9000000004937798 90000000049378c8 0000000000000000 0000000000000000
+  [  130.770458]         008fac6060240fea 0000000000014f20 9000000004937728 0000000000000000
+  [  130.778826]         00000000000b61b4 0000000000000030 ffffffff80e8eed0 0000000000000004
+  [  130.787111]         9000000084937577 0000000000000000 0000000000000000 ffffffff810c3b18
+  [  130.795440]         ffffffff811f0000 0000000000000000 ffffffff81440000 0000000000000000
+  [  130.803830]         0000000000000000 0000000000000000 ffffffff809842e8 0000000000175097
+  [  130.812272]         0000000000000001 9000000004934000 9000000004937790 c0000000005d9000
+  [  130.820722]         ffffffff8010b6fc 0000000000000000 0000000000000000 0000000000000000
+  [  130.829134]         0000000000000000 0000000000000000 ffffffff8010b71c 008fac6060240fea
+  [  130.837649]         ...
+  [  130.845556] Call Trace:
+  [  130.853432] [<ffffffff8010b71c>] show_stack+0x64/0x158
+  [  130.861534] [<ffffffff80ea1790>] dump_stack_lvl+0x5c/0x7c
+  [  130.869565] [<ffffffff80ea29c4>] check_preemption_disabled+0x10c/0x118
+  [  130.877605] [<ffffffff8012d7c8>] blast_dcache32+0x40/0x190
+  [  130.885585] [<ffffffff8039f648>] __vmalloc_node_range+0x3e0/0x780
+  [  130.893527] [<ffffffff8039fbbc>] vzalloc+0x6c/0x78
+  [  130.901378] [<ffffffff8095d6c4>] n_tty_open+0x1c/0xb8
+  [  130.909252] [<ffffffff8095f5a8>] tty_ldisc_open+0x50/0xd0
+  [  130.917053] [<ffffffff80960150>] tty_ldisc_setup+0x20/0x70
+  [  130.924927] [<ffffffff80958694>] tty_init_dev.part.0+0xbc/0x2c0
+  [  130.932742] [<ffffffff80958da8>] tty_open+0x4b8/0x730
+  [  130.940486] [<ffffffff803e6960>] chrdev_open+0xe0/0x250
+  [  130.948211] [<ffffffff803da7f4>] do_dentry_open+0x274/0x520
+  [  130.955960] [<ffffffff803f642c>] path_openat+0xbc4/0x10d8
+  [  130.963718] [<ffffffff803f7460>] do_filp_open+0x148/0x190
+  [  130.971482] [<ffffffff803dc264>] do_sys_openat2+0xcc/0x1b0
+  [  130.979288] [<ffffffff803dc710>] sys_openat+0x50/0xa8
+  [  130.987077] [<ffffffff80119490>] syscall_common+0x34/0x58
+
+We don't control the locking around current_cpu_data, so it cannot use
+smp_processor_id() as the cpu index.
+
+To make ourselves safe in any context, we must use raw_smp_processor_id()
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ arch/mips/include/asm/cpu-info.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/include/asm/cpu-info.h b/arch/mips/include/asm/cpu-info.h
+index a600670d00e9..07f9cddd6c77 100644
+--- a/arch/mips/include/asm/cpu-info.h
++++ b/arch/mips/include/asm/cpu-info.h
+@@ -117,7 +117,7 @@ struct cpuinfo_mips {
+ } __attribute__((aligned(SMP_CACHE_BYTES)));
+ 
+ extern struct cpuinfo_mips cpu_data[];
+-#define current_cpu_data cpu_data[smp_processor_id()]
++#define current_cpu_data cpu_data[raw_smp_processor_id()]
+ #define raw_current_cpu_data cpu_data[raw_smp_processor_id()]
+ #define boot_cpu_data cpu_data[0]
+ 
+-- 
+2.34.1
+
