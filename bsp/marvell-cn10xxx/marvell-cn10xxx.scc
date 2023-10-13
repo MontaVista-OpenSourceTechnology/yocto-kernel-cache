@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-kconf hardware marvell-cn106xx.cfg
+kconf hardware marvell-cn10xxx.cfg
 kconf hardware features/edac/edac.cfg
 
 include cfg/usb-mass-storage.scc
