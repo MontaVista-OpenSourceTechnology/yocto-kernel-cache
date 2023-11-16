@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE microchip-polarfire-soc
+define KTYPE standard
+define KARCH riscv64
+
+include ktypes/standard
+
+include microchip-polarfire-soc.scc

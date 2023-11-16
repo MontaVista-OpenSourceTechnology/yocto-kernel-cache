@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+kconf hardware microchip-polarfire-soc.cfg
+
+include cfg/usb-mass-storage.scc
+include cfg/fs/flash_fs.scc
