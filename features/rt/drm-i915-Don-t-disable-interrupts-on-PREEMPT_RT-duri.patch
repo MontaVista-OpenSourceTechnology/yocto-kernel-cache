@@ -1,8 +1,8 @@
-From 15f10927ba5c59a5c7d98e9f320b253d322aabca Mon Sep 17 00:00:00 2001
+From a4cb3ff6c8b5ef0c57105056f32fa3efc03f6fd1 Mon Sep 17 00:00:00 2001
 From: Mike Galbraith <umgwanakikbuti@gmail.com>
 Date: Sat, 27 Feb 2016 09:01:42 +0100
-Subject: [PATCH 50/83] drm/i915: Don't disable interrupts on PREEMPT_RT during
- atomic updates
+Subject: [PATCH 153/184] drm/i915: Don't disable interrupts on PREEMPT_RT
+ during atomic updates
 
 Commit
    8d7849db3eab7 ("drm/i915: Make sprite updates atomic")

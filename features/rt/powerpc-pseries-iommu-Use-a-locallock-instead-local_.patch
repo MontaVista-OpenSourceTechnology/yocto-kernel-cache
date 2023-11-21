@@ -1,7 +1,7 @@
-From 5554e86cf3c1466e7ace2dd76fe1f1c74196814a Mon Sep 17 00:00:00 2001
+From 1c91d7362a9e4a547e9dcc344dde820407cfdd9b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 26 Mar 2019 18:31:54 +0100
-Subject: [PATCH 76/83] powerpc/pseries/iommu: Use a locallock instead
+Subject: [PATCH 175/184] powerpc/pseries/iommu: Use a locallock instead
  local_irq_save()
 
 The locallock protects the per-CPU variable tce_page. The function

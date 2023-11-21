@@ -1,7 +1,8 @@
-From 2c9ce131044daea6ff19d16b13a6534343f3de96 Mon Sep 17 00:00:00 2001
+From 04c7f5df320266e9fcb53441c4c08233da2de10e Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 25 Oct 2021 15:05:18 +0200
-Subject: [PATCH 51/83] drm/i915: Don't check for atomic context on PREEMPT_RT
+Subject: [PATCH 154/184] drm/i915: Don't check for atomic context on
+ PREEMPT_RT
 
 The !in_atomic() check in _wait_for_atomic() triggers on PREEMPT_RT
 because the uncore::lock is a spinlock_t and does not disable

@@ -1,7 +1,7 @@
-From f3a662f37294edb45ea679d569ce29f9ff77a04b Mon Sep 17 00:00:00 2001
+From 5922a43a8010730a5f89e4d43c02cf491e87b109 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 11 Oct 2019 13:14:41 +0200
-Subject: [PATCH 81/83] POWERPC: Allow to enable RT
+Subject: [PATCH 179/184] POWERPC: Allow to enable RT
 
 Allow to select RT.
 
@@ -12,7 +12,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 0c4a7721d692..c169f313ef1c 100644
+index d5d5388973ac..15c3f9e4937e 100644
 --- a/arch/powerpc/Kconfig
 +++ b/arch/powerpc/Kconfig
 @@ -166,6 +166,7 @@ config PPC
@@ -23,8 +23,8 @@ index 0c4a7721d692..c169f313ef1c 100644
  	select ARCH_USE_BUILTIN_BSWAP
  	select ARCH_USE_CMPXCHG_LOCKREF		if PPC64
  	select ARCH_USE_MEMTEST
-@@ -269,6 +270,7 @@ config PPC
- 	select HAVE_PREEMPT_LAZY
+@@ -268,6 +269,7 @@ config PPC
+ 	select HAVE_PERF_USER_STACK_DUMP
  	select HAVE_REGS_AND_STACK_ACCESS_API
  	select HAVE_RELIABLE_STACKTRACE
 +	select HAVE_POSIX_CPU_TIMERS_TASK_WORK	if !KVM

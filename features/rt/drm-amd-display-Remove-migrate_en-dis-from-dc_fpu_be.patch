@@ -1,7 +1,7 @@
-From c4da48d427ee13a251b9c714974fd161e3529cb0 Mon Sep 17 00:00:00 2001
+From 4992ac8a66336bd228d98eff28fafa40e60e1116 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:12 +0200
-Subject: [PATCH 10/83] drm/amd/display: Remove migrate_en/dis from
+Subject: [PATCH 010/184] drm/amd/display: Remove migrate_en/dis from
  dc_fpu_begin().
 
 This is a revert of the commit mentioned below while it is not wrong, as

@@ -1,7 +1,7 @@
-From e7a667172158fb3772598bb04b1191c499d45b24 Mon Sep 17 00:00:00 2001
+From a697450327632b77a2e583c48f6cbffa35e550f7 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 1 Dec 2021 17:41:09 +0100
-Subject: [PATCH 19/83] softirq: Use a dedicated thread for timer wakeups.
+Subject: [PATCH 020/184] softirq: Use a dedicated thread for timer wakeups.
 
 A timer/hrtimer softirq is raised in-IRQ context. With threaded
 interrupts enabled or on PREEMPT_RT this leads to waking the ksoftirqd
@@ -45,10 +45,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  4 files changed, 108 insertions(+), 6 deletions(-)
 
 diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index a92bce40b04b..601877e01614 100644
+index 4a1dc88ddbff..0efba74a835c 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -605,6 +605,22 @@ extern void __raise_softirq_irqoff(unsigned int nr);
+@@ -609,6 +609,22 @@ extern void __raise_softirq_irqoff(unsigned int nr);
  extern void raise_softirq_irqoff(unsigned int nr);
  extern void raise_softirq(unsigned int nr);
  

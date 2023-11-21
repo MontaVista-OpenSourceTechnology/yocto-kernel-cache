@@ -1,7 +1,7 @@
-From 9e518d036939b2568b2cc4ead91d6766b447a815 Mon Sep 17 00:00:00 2001
+From ea27a6521036895c2d48070ecf4f17acdbc91ce4 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 8 Sep 2023 18:22:48 +0200
-Subject: [PATCH 01/83] sched: Constrain locks in sched_submit_work()
+Subject: [PATCH 001/184] sched: Constrain locks in sched_submit_work()
 
 Even though sched_submit_work() is ran from preemptible context,
 it is discouraged to have it use blocking locks due to the recursion
@@ -18,10 +18,10 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-2-bigeasy@linutronix.de
  1 file changed, 9 insertions(+)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 802551e0009b..cc8b73af8cec 100644
+index 9e9a45a3394f..4caff735541a 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6720,11 +6720,18 @@ void __noreturn do_task_dead(void)
+@@ -6724,11 +6724,18 @@ void __noreturn do_task_dead(void)
  
  static inline void sched_submit_work(struct task_struct *tsk)
  {
@@ -40,7 +40,7 @@ index 802551e0009b..cc8b73af8cec 100644
  	task_flags = tsk->flags;
  	/*
  	 * If a worker goes to sleep, notify and ask workqueue whether it
-@@ -6749,6 +6756,8 @@ static inline void sched_submit_work(struct task_struct *tsk)
+@@ -6753,6 +6760,8 @@ static inline void sched_submit_work(struct task_struct *tsk)
  	 * make sure to submit it to avoid deadlocks.
  	 */
  	blk_flush_plug(tsk->plug, true);

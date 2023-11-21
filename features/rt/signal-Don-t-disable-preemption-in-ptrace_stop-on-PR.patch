@@ -1,7 +1,7 @@
-From ea82d2b91ce26a8e62b7f340e193fae16bc5ba8d Mon Sep 17 00:00:00 2001
+From b8efc1ab3d4685f0357b94d08bb50b344c83b256 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 3 Aug 2023 12:09:32 +0200
-Subject: [PATCH 09/83] signal: Don't disable preemption in ptrace_stop() on
+Subject: [PATCH 009/184] signal: Don't disable preemption in ptrace_stop() on
  PREEMPT_RT.
 
 On PREEMPT_RT keeping preemption disabled during the invocation of

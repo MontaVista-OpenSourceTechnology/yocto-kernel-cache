@@ -1,7 +1,7 @@
-From 321ebb822067e46697780809e847febb8ee38a14 Mon Sep 17 00:00:00 2001
+From 8bdcb535030a05d1af1a278d0093e57c3d69e99e Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 26 Jul 2019 11:30:49 +0200
-Subject: [PATCH 75/83] powerpc: traps: Use PREEMPT_RT
+Subject: [PATCH 174/184] powerpc: traps: Use PREEMPT_RT
 
 Add PREEMPT_RT to the backtrace if enabled.
 
@@ -12,7 +12,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 64ff37721fd0..56ba6a33ae95 100644
+index fe3f720c9cd6..1b88d2cd55c7 100644
 --- a/arch/powerpc/kernel/traps.c
 +++ b/arch/powerpc/kernel/traps.c
 @@ -261,12 +261,17 @@ static char *get_mmu_str(void)

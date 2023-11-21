@@ -1,7 +1,7 @@
-From 39ecf22648cebcc745d37c4c4f7e1f15e0ae4a51 Mon Sep 17 00:00:00 2001
+From fde5fbf53b45e7623615b4ba7a62e5d12d165103 Mon Sep 17 00:00:00 2001
 From: Bogdan Purcareata <bogdan.purcareata@freescale.com>
 Date: Fri, 24 Apr 2015 15:53:13 +0000
-Subject: [PATCH 79/83] powerpc/kvm: Disable in-kernel MPIC emulation for
+Subject: [PATCH 177/184] powerpc/kvm: Disable in-kernel MPIC emulation for
  PREEMPT_RT
 
 While converting the openpic emulation code to use a raw_spinlock_t enables

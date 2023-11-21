@@ -1,7 +1,7 @@
-From 3cb4442786128b0951d98c9fcded9cf186cdd10d Mon Sep 17 00:00:00 2001
+From ac3292cb852b9740a68c1e4cbf72678222ff4755 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 1 Aug 2023 17:26:48 +0200
-Subject: [PATCH 18/83] sched/rt: Don't try push tasks if there are none.
+Subject: [PATCH 019/184] sched/rt: Don't try push tasks if there are none.
 
 I have a RT task X at a high priority and cyclictest on each CPU with
 lower priority than X's. If X is active and each CPU wakes their own
@@ -42,10 +42,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 0597ba0f85ff..716b9f0a1fa1 100644
+index 904dd8534597..563161845e79 100644
 --- a/kernel/sched/rt.c
 +++ b/kernel/sched/rt.c
-@@ -2247,8 +2247,11 @@ static int rto_next_cpu(struct root_domain *rd)
+@@ -2249,8 +2249,11 @@ static int rto_next_cpu(struct root_domain *rd)
  
  		rd->rto_cpu = cpu;
  

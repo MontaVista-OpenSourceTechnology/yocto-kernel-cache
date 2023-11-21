@@ -1,7 +1,7 @@
-From 195e138926ec586573f5b5188c92e4dbde80fe9b Mon Sep 17 00:00:00 2001
+From 375b20e74692a7b6713991158a4f557b67512435 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:14 +0200
-Subject: [PATCH 12/83] drm/amd/display: Add a warning if the FPU is used
+Subject: [PATCH 012/184] drm/amd/display: Add a warning if the FPU is used
  outside from task context.
 
 Add a warning if the FPU is used from any context other than task

@@ -1,7 +1,7 @@
-From 1e2b8920656e6e4e9c1a62e12703eef49220d378 Mon Sep 17 00:00:00 2001
+From 9533256874d97d5248ab8663bb3b41ae0963d502 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 26 Mar 2019 18:31:29 +0100
-Subject: [PATCH 80/83] powerpc/stackprotector: work around stack-guard init
+Subject: [PATCH 178/184] powerpc/stackprotector: work around stack-guard init
  from atomic
 
 This is invoked from the secondary CPU in atomic context. On x86 we use

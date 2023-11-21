@@ -1,7 +1,7 @@
-From f58784aebebd2648c1cfdcda36b443a1d2b9c488 Mon Sep 17 00:00:00 2001
+From 0d4a6d2bd9e209a4e1381df1c31d6c21135c5b3c Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 8 Jul 2011 20:25:16 +0200
-Subject: [PATCH 83/83] Add localversion for -RT release
+Subject: [PATCH 184/184] Add localversion for -RT release
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
@@ -11,11 +11,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 diff --git a/localversion-rt b/localversion-rt
 new file mode 100644
-index 000000000000..0efe7ba1930e
+index 000000000000..18777ec0c27d
 --- /dev/null
 +++ b/localversion-rt
 @@ -0,0 +1 @@
-+-rt5
++-rt15
 -- 
 2.34.1
 

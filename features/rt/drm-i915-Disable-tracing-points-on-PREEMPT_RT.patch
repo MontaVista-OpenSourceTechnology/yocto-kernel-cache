@@ -1,7 +1,7 @@
-From 9df363606037ff586e1e3a3193a63b8efaa6947d Mon Sep 17 00:00:00 2001
+From 136e4b6ee8e3831c39a4a5286be7c0b1aa32195e Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 6 Dec 2018 09:52:20 +0100
-Subject: [PATCH 52/83] drm/i915: Disable tracing points on PREEMPT_RT
+Subject: [PATCH 155/184] drm/i915: Disable tracing points on PREEMPT_RT
 
 Luca Abeni reported this:
 | BUG: scheduling while atomic: kworker/u8:2/15203/0x00000003

@@ -1,7 +1,7 @@
-From dd90267ecbc78842ed3c64dd84cafbdf521f4502 Mon Sep 17 00:00:00 2001
+From 73d5550cc59ba692908e0144abb32ba200900b57 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:38 +0200
-Subject: [PATCH 26/83] softirq: Add function to preempt serving softirqs.
+Subject: [PATCH 027/184] softirq: Add function to preempt serving softirqs.
 
 Add a functionality for the softirq handler to preempt its current work
 if needed. The softirq core has no particular state. It reads and resets

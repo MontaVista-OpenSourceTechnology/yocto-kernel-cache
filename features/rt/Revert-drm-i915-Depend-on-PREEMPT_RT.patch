@@ -1,7 +1,7 @@
-From 3954414fb28e5be66359279d4d1dbf0adb0ae2cc Mon Sep 17 00:00:00 2001
+From 47343a00df067fe7a4444362785804b7ad5b4a5f Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 21 Feb 2022 17:59:14 +0100
-Subject: [PATCH 58/83] Revert "drm/i915: Depend on !PREEMPT_RT."
+Subject: [PATCH 162/184] Revert "drm/i915: Depend on !PREEMPT_RT."
 
 Once the known issues are addressed, it should be safe to enable the
 driver.

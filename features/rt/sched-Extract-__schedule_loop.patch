@@ -1,7 +1,7 @@
-From a760e6572e2d16c0de1b79556dbb51c4425a2e8f Mon Sep 17 00:00:00 2001
+From 15667b4d05489c255ca815b6363b1177d4fbdee9 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:50 +0200
-Subject: [PATCH 03/83] sched: Extract __schedule_loop()
+Subject: [PATCH 003/184] sched: Extract __schedule_loop()
 
 There are currently two implementations of this basic __schedule()
 loop, and there is soon to be a third.
@@ -15,10 +15,10 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-4-bigeasy@linutronix.de
  1 file changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index cc8b73af8cec..f419298db184 100644
+index 4caff735541a..184fbb3ad394 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6770,16 +6770,21 @@ static void sched_update_worker(struct task_struct *tsk)
+@@ -6774,16 +6774,21 @@ static void sched_update_worker(struct task_struct *tsk)
  	}
  }
  
@@ -45,7 +45,7 @@ index cc8b73af8cec..f419298db184 100644
  	sched_update_worker(tsk);
  }
  EXPORT_SYMBOL(schedule);
-@@ -6843,11 +6848,7 @@ void __sched schedule_preempt_disabled(void)
+@@ -6847,11 +6852,7 @@ void __sched schedule_preempt_disabled(void)
  #ifdef CONFIG_PREEMPT_RT
  void __sched notrace schedule_rtlock(void)
  {

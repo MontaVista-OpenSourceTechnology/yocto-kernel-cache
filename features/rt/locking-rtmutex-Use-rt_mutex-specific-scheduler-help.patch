@@ -1,7 +1,7 @@
-From 093593574756ea08d3a085e86a3937cbbaaf2b77 Mon Sep 17 00:00:00 2001
+From 27fac1df24e0e0f34cc5b7976a8ef9290df68dd0 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:52 +0200
-Subject: [PATCH 05/83] locking/rtmutex: Use rt_mutex specific scheduler
+Subject: [PATCH 005/184] locking/rtmutex: Use rt_mutex specific scheduler
  helpers
 
 Have rt_mutex use the rt_mutex specific scheduler helpers to avoid

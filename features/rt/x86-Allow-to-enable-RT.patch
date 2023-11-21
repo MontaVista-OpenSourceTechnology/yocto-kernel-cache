@@ -1,7 +1,7 @@
-From cad2141012b8bd9c38a686c077e7b524538bb142 Mon Sep 17 00:00:00 2001
+From 8ad7c82d2c929b6609e5c37d59d312386bef6e68 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 7 Aug 2019 18:15:38 +0200
-Subject: [PATCH 16/83] x86: Allow to enable RT
+Subject: [PATCH 017/184] x86: Allow to enable RT
 
 Allow to select RT.
 

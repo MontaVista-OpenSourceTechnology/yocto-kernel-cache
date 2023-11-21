@@ -1,7 +1,7 @@
-From ea433a379f7fdf74c08e2bcbfd805b7cb980878a Mon Sep 17 00:00:00 2001
+From b2bac8266717a4b4e4811ddcc13ab3db7068d669 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 28 Jun 2023 09:36:10 +0200
-Subject: [PATCH 71/83] ARM: vfp: Use vfp_lock() in vfp_support_entry().
+Subject: [PATCH 170/184] ARM: vfp: Use vfp_lock() in vfp_support_entry().
 
 vfp_entry() is invoked from exception handler and is fully preemptible.
 It uses local_bh_disable() to remain uninterrupted while checking the

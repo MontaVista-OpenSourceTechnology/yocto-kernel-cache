@@ -1,7 +1,7 @@
-From 4a0be5e1ddbfbea545ff314912c50e64f6d32e9e Mon Sep 17 00:00:00 2001
+From 31a4ef72a15de2f44ec8e14b527057f8773672fe Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 15 Sep 2023 17:19:44 +0200
-Subject: [PATCH 07/83] futex/pi: Fix recursive rt_mutex waiter state
+Subject: [PATCH 007/184] futex/pi: Fix recursive rt_mutex waiter state
 
 Some new assertions pointed out that the existing code has nested rt_mutex wait
 state in the futex code.

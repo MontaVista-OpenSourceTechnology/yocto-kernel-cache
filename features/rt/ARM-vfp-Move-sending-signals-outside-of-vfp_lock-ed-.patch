@@ -1,8 +1,8 @@
-From b39332411889b69c766cd45de27d4c7c69585c86 Mon Sep 17 00:00:00 2001
+From 27adec256e183e94f03891e7979be738c7ccb416 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 28 Jun 2023 09:39:33 +0200
-Subject: [PATCH 72/83] ARM: vfp: Move sending signals outside of vfp_lock()ed
- section.
+Subject: [PATCH 171/184] ARM: vfp: Move sending signals outside of
+ vfp_lock()ed section.
 
 VFP_bounce() is invoked from within vfp_support_entry() and may send a
 signal. Sending a signal uses spinlock_t which becomes a sleeping lock

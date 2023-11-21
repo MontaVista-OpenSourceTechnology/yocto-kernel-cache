@@ -1,0 +1,43 @@
+From 03763ba23c6c5a8f23ec3ed9849bd118970e5bc1 Mon Sep 17 00:00:00 2001
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Mon, 11 Sep 2023 15:53:04 +0000
+Subject: [PATCH 134/184] panic: Mark emergency section in warn
+
+Mark the full contents of __warn() as an emergency section. In
+this section, the CPU will not perform console output for the
+printk() calls. Instead, the console output will be flushed
+when exiting the emergency section.
+
+Co-developed-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Thomas Gleixner (Intel) <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/panic.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 58754f615429..2cc5f002033d 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -655,6 +655,8 @@ struct warn_args {
+ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 	    struct pt_regs *regs, struct warn_args *args)
+ {
++	nbcon_cpu_emergency_enter();
++
+ 	disable_trace_on_warning();
+ 
+ 	if (file)
+@@ -685,6 +687,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 
+ 	/* Just a warning, don't kill lockdep. */
+ 	add_taint(taint, LOCKDEP_STILL_OK);
++
++	nbcon_cpu_emergency_exit();
+ }
+ 
+ #ifdef CONFIG_BUG
+-- 
+2.34.1
+

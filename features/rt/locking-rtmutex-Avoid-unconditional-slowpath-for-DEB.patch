@@ -1,7 +1,7 @@
-From 65f23fac36146bfc4c655aa648a50c394ad7929f Mon Sep 17 00:00:00 2001
+From 097276727255075294b37c61a3404d566f425c4b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:49 +0200
-Subject: [PATCH 02/83] locking/rtmutex: Avoid unconditional slowpath for
+Subject: [PATCH 002/184] locking/rtmutex: Avoid unconditional slowpath for
  DEBUG_RT_MUTEXES
 
 With DEBUG_RT_MUTEXES enabled the fast-path rt_mutex_cmpxchg_acquire()

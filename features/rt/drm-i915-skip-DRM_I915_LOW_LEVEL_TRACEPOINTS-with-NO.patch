@@ -1,7 +1,7 @@
-From f55f83e2da641bd7a6698544f7788204eb9b333d Mon Sep 17 00:00:00 2001
+From 9fb9872ea7874db12f970cb41d7d096c5dd48b28 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 19 Dec 2018 10:47:02 +0100
-Subject: [PATCH 53/83] drm/i915: skip DRM_I915_LOW_LEVEL_TRACEPOINTS with
+Subject: [PATCH 156/184] drm/i915: skip DRM_I915_LOW_LEVEL_TRACEPOINTS with
  NOTRACE
 
 The order of the header files is important. If this header file is

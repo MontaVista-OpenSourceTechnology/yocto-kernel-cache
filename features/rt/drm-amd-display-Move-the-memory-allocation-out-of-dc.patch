@@ -1,7 +1,7 @@
-From 0cc71ef4727a23b009e502b0c290cb31a506e0f6 Mon Sep 17 00:00:00 2001
+From 64e39808feab77da173a1ee400b2e36bd7d7bbe4 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:16 +0200
-Subject: [PATCH 14/83] drm/amd/display: Move the memory allocation out of
+Subject: [PATCH 014/184] drm/amd/display: Move the memory allocation out of
  dcn20_validate_bandwidth_fp().
 
 dcn20_validate_bandwidth_fp() is invoked while FPU access has been

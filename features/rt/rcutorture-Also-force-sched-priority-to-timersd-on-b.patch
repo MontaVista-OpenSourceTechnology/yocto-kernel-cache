@@ -1,7 +1,7 @@
-From b72dd1eae01d9a9fe3649ad29b15a54edfaefa23 Mon Sep 17 00:00:00 2001
+From 2a5f7932502c6fc23944ccac18cd0ebbfc2f1cbc Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:51 +0200
-Subject: [PATCH 20/83] rcutorture: Also force sched priority to timersd on
+Subject: [PATCH 021/184] rcutorture: Also force sched priority to timersd on
  boosting test.
 
 ksoftirqd is statically boosted to the priority level right above the
@@ -34,10 +34,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  3 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 601877e01614..0c30cc307da9 100644
+index 0efba74a835c..f459b0f27c94 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -606,6 +606,7 @@ extern void raise_softirq_irqoff(unsigned int nr);
+@@ -610,6 +610,7 @@ extern void raise_softirq_irqoff(unsigned int nr);
  extern void raise_softirq(unsigned int nr);
  
  #ifdef CONFIG_PREEMPT_RT
