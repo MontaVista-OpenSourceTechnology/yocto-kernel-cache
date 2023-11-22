@@ -1,4 +1,4 @@
-From a62301b552d9d1c8076d680f4675c57fa552ead6 Mon Sep 17 00:00:00 2001
+From ca14e0ea8ac29797e9eedfda5456b818a83626e8 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Thu, 26 Nov 2009 07:32:09 -0800
 Subject: [PATCH] mount_root: clarify error messages for when no rootfs found
@@ -25,10 +25,10 @@ Signed-off-by: Darren Hart <dvhart@linux.intel.com>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 1aa015883519..eb43a590281d 100644
+index 5fdef94f0864..73d5b89d0c24 100644
 --- a/init/do_mounts.c
 +++ b/init/do_mounts.c
-@@ -205,7 +205,9 @@ void __init mount_root_generic(char *name, char *pretty_name, int flags)
+@@ -231,7 +231,9 @@ void __init mount_root_generic(char *name, char *pretty_name, int flags)
  			pr_err("\n");
  		}
  
@@ -39,12 +39,12 @@ index 1aa015883519..eb43a590281d 100644
  	}
  	if (!(flags & SB_RDONLY)) {
  		flags |= SB_RDONLY;
-@@ -218,7 +220,9 @@ void __init mount_root_generic(char *name, char *pretty_name, int flags)
+@@ -244,7 +246,9 @@ void __init mount_root_generic(char *name, char *pretty_name, int flags)
  	for (i = 0, p = fs_names; i < num_fs; i++, p += strlen(p)+1)
  		printk(" %s", p);
  	printk("\n");
--	panic("VFS: Unable to mount root fs on %s", b);
-+	printk(KERN_EMERG "VFS: Unable to mount root fs on %s\n", b);
+-	panic("VFS: Unable to mount root fs on \"%s\" or %s", pretty_name, b);
++	printk(KERN_EMERG "VFS: Unable to mount root fs on \"%s\" or %s\n", pretty_name, b);
 +	printk(KERN_EMERG "User configuration error - no valid root filesystem found\n");
 +	panic("Invalid configuration from end user prevents continuing");
  out:
