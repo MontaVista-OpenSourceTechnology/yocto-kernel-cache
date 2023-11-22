@@ -1,0 +1,144 @@
+From 35340163fed594434a42002cc041bd29941fb985 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 22 Nov 2023 12:06:29 -0500
+Subject: [PATCH] aufs: fix v6.7 kernel build compilation
+
+Adapting aufs to the following upstream commits:
+
+   commit 12cd44023651666bd44baa36a5c999698890debb
+   Author: Jeff Layton <jlayton@kernel.org>
+   Date:   Fri Sep 29 09:05:52 2023 -0400
+
+    fs: rename inode i_atime and i_mtime fields
+
+    Rename these two fields to discourage direct access (and to help ensure
+    that we mop up any leftover direct accesses).
+
+    Signed-off-by: Jeff Layton <jlayton@kernel.org>
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+   commit 3e15dcf77b23b8e9b9b7f3c0d4def8fe9c12c534
+   Author: Amir Goldstein <amir73il@gmail.com>
+   Date:   Fri Sep 8 16:28:59 2023 +0300
+
+    fs: rename __mnt_{want,drop}_write*() helpers
+
+    Before exporting these helpers to modules, make their names more
+    meaningful.
+
+    The names mnt_{get,put)_write_access*() were chosen, because they rhyme
+    with the inode {get,put)_write_access() helpers, which have a very close
+    meaning for the inode object.
+
+    Suggested-by: Christian Brauner <brauner@kernel.org>
+    Link: https://lore.kernel.org/r/20230817-anfechtbar-ruhelosigkeit-8c6cca8443fc@brauner/
+    Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+    Message-Id: <20230908132900.2983519-2-amir73il@gmail.com>
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/branch.c | 2 +-
+ fs/aufs/cpup.c   | 8 ++++----
+ fs/aufs/dir.c    | 2 +-
+ fs/aufs/i_op.c   | 4 ++--
+ fs/aufs/vfsub.h  | 2 +-
+ fs/namespace.c   | 2 +-
+ 6 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/fs/aufs/branch.c b/fs/aufs/branch.c
+index 2a85d744d2b5..3ecc05573cc0 100644
+--- a/fs/aufs/branch.c
++++ b/fs/aufs/branch.c
+@@ -1293,7 +1293,7 @@ static int au_br_mod_files_ro(struct super_block *sb, aufs_bindex_t bindex)
+ 			if (hf->f_mode & FMODE_READ)
+ 				i_readcount_inc(h_inode);
+ 			put_write_access(h_inode);
+-			__mnt_drop_write(hf->f_path.mnt);
++			mnt_put_write_access(hf->f_path.mnt);
+ 		}
+ 	}
+ 
+diff --git a/fs/aufs/cpup.c b/fs/aufs/cpup.c
+index 8c8bd5f7b28d..3f09876a3bd5 100644
+--- a/fs/aufs/cpup.c
++++ b/fs/aufs/cpup.c
+@@ -133,8 +133,8 @@ void au_dtime_store(struct au_dtime *dt, struct dentry *dentry,
+ 	dt->dt_dentry = dentry;
+ 	dt->dt_h_path = *h_path;
+ 	h_inode = d_inode(h_path->dentry);
+-	dt->dt_atime = h_inode->i_atime;
+-	dt->dt_mtime = h_inode->i_mtime;
++	dt->dt_atime = h_inode->__i_atime;
++	dt->dt_mtime = h_inode->__i_mtime;
+ 	/* smp_mb(); */
+ }
+ 
+@@ -200,8 +200,8 @@ int cpup_iattr(struct dentry *dst, aufs_bindex_t bindex, struct path *h_src,
+ 	} else {
+ 		ia.ia_uid = h_isrc->i_uid;
+ 		ia.ia_gid = h_isrc->i_gid;
+-		ia.ia_atime = h_isrc->i_atime;
+-		ia.ia_mtime = h_isrc->i_mtime;
++		ia.ia_atime = h_isrc->__i_atime;
++		ia.ia_mtime = h_isrc->__i_mtime;
+ 		if (h_idst->i_mode != h_isrc->i_mode
+ 		    && !S_ISLNK(h_idst->i_mode)) {
+ 			ia.ia_valid |= ATTR_MODE;
+diff --git a/fs/aufs/dir.c b/fs/aufs/dir.c
+index ee900ea3264b..e986deffef5e 100644
+--- a/fs/aufs/dir.c
++++ b/fs/aufs/dir.c
+@@ -145,7 +145,7 @@ static void au_do_dir_ts(void *arg)
+ 	au_hn_inode_lock_nested(hdir, AuLsc_I_PARENT);
+ 	h_dir = au_h_iptr(dir, btop);
+ 	if (h_dir->i_nlink
+-	    && timespec64_compare(&h_dir->i_mtime, &dt.dt_mtime) < 0) {
++	    && timespec64_compare(&h_dir->__i_mtime, &dt.dt_mtime) < 0) {
+ 		dt.dt_h_path = h_path;
+ 		au_dtime_revert(&dt);
+ 	}
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index 993d57633393..8700b9e46b44 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -1167,8 +1167,8 @@ static void au_refresh_iattr(struct inode *inode, struct kstat *st,
+ 	/* don't i_[ug]id_write() here */
+ 	inode->i_uid = st->uid;
+ 	inode->i_gid = st->gid;
+-	inode->i_atime = st->atime;
+-	inode->i_mtime = st->mtime;
++	inode->__i_atime = st->atime;
++	inode->__i_mtime = st->mtime;
+ 	inode_set_ctime_to_ts( inode, st->ctime );
+ 
+ 	au_cpup_attr_nlink(inode, /*force*/0);
+diff --git a/fs/aufs/vfsub.h b/fs/aufs/vfsub.h
+index ed218d95770d..b45603c2d651 100644
+--- a/fs/aufs/vfsub.h
++++ b/fs/aufs/vfsub.h
+@@ -33,7 +33,7 @@
+ 
+ /* copied from linux/fs/internal.h */
+ /* todo: BAD approach!! */
+-extern void __mnt_drop_write(struct vfsmount *);
++extern void mnt_put_write_access(struct vfsmount *);
+ extern struct file *alloc_empty_file(int, const struct cred *);
+ 
+ /* ---------------------------------------------------------------------- */
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 1b942a6b72fa..e5d02ed749c4 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -489,7 +489,7 @@ void mnt_put_write_access_file(struct file *file)
+ 	if (!(file->f_mode & FMODE_WRITER))
+ 		mnt_put_write_access(file->f_path.mnt);
+ }
+-EXPORT_SYMBOL_GPL(__mnt_drop_write);
++EXPORT_SYMBOL_GPL(mnt_put_write_access_file);
+ 
+ void mnt_drop_write_file(struct file *file)
+ {
+-- 
+2.34.1
+
