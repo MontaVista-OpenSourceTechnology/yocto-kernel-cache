@@ -1,0 +1,65 @@
+From 7614fa80bc6abefd1450b5c4c3839386ac2b92cc Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 22 Nov 2023 12:04:28 -0500
+Subject: [PATCH] yaffs: fix mtime/itime field access
+
+Adapting our inode field access to the following upstream
+commit:
+
+  commit 12cd44023651666bd44baa36a5c999698890debb
+  Author: Jeff Layton <jlayton@kernel.org>
+  Date:   Fri Sep 29 09:05:52 2023 -0400
+
+    fs: rename inode i_atime and i_mtime fields
+
+    Rename these two fields to discourage direct access (and to help ensure
+    that we mop up any leftover direct accesses).
+
+    Signed-off-by: Jeff Layton <jlayton@kernel.org>
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 8a9738de8906..ec4016cfeedf 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");
+ 	} while (0)
+ #else
+ #define update_dir_time(dir) do {\
+-		(dir)->i_mtime = inode_set_ctime_to_ts( dir, current_time(dir) ); \
++		(dir)->__i_mtime = inode_set_ctime_to_ts( dir, current_time(dir) ); \
+ 	} while (0)
+ #endif
+ 
+@@ -2075,17 +2075,17 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
+ #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
+ 
+ 		inode->i_rdev = old_decode_dev(obj->yst_rdev);
+-		inode->i_atime.tv_sec = (time64_t) (obj->yst_atime);
+-		inode->i_atime.tv_nsec = 0;
+-		inode->i_mtime.tv_sec = (time64_t) obj->yst_mtime;
+-		inode->i_mtime.tv_nsec = 0;
++		inode->__i_atime.tv_sec = (time64_t) (obj->yst_atime);
++		inode->__i_atime.tv_nsec = 0;
++		inode->__i_mtime.tv_sec = (time64_t) obj->yst_mtime;
++		inode->__i_mtime.tv_nsec = 0;
+ 		//inode->i_ctime.tv_sec = (time64_t) obj->yst_ctime;
+ 		inode->__i_ctime.tv_sec = (time64_t) obj->yst_ctime;
+ 		inode->__i_ctime.tv_nsec = 0;
+ #else
+ 		inode->i_rdev = obj->yst_rdev;
+-		inode->i_atime = obj->yst_atime;
+-		inode->i_mtime = obj->yst_mtime;
++		inode->__i_atime = obj->yst_atime;
++		inode->__i_mtime = obj->yst_mtime;
+ 		inode->i_ctime = obj->yst_ctime;
+ #endif
+ 		inode->i_size = yaffs_get_obj_length(obj);
+-- 
+2.34.1
+
