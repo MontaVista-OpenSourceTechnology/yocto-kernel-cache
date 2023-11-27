@@ -1,4 +1,5 @@
 define KMACHINE marvell-cn106xx
+define KMACHINE marvell-cn10xxx
 define KTYPE preempt-rt
 define KARCH arm64
 
