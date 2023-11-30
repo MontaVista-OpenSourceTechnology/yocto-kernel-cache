@@ -16,6 +16,3 @@ include features/scsi/cdrom.scc
 include cfg/virtio.scc
 
 include qemu-ppc64.scc
-
-# default policy for standard kernels
-include features/latencytop/latencytop.scc

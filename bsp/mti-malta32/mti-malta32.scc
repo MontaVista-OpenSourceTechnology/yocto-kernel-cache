@@ -3,7 +3,6 @@ kconf hardware mti-malta32-common.cfg
 kconf hardware mti-malta32-gfx.cfg
 
 include features/profiling/profiling.scc
-include features/latencytop/latencytop.scc
 
 include features/usb/ehci-hcd.scc
 include features/usb/uhci-hcd.scc

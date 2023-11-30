@@ -9,5 +9,4 @@ include ktypes/preempt-rt/preempt-rt.scc
 include fsl-mpc8315e-rdb.scc
 
 # default policy for preempt-rt kernels
-include features/latencytop/latencytop.scc
 include features/profiling/profiling.scc
