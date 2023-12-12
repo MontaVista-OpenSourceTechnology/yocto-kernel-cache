@@ -238,6 +238,7 @@ drivers/bus/Kconfig
 drivers/bus/mhi/ep/Kconfig
 drivers/bus/mhi/host/Kconfig
 drivers/bus/mhi/Kconfig
+drivers/cache/Kconfig
 drivers/cdx/controller/Kconfig
 drivers/cdx/Kconfig
 drivers/char/agp/Kconfig
@@ -262,6 +263,7 @@ drivers/clk/meson/Kconfig
 drivers/clk/microchip/Kconfig
 drivers/clk/mstar/Kconfig
 drivers/clk/mvebu/Kconfig
+drivers/clk/nuvoton/Kconfig
 drivers/clk/pistachio/Kconfig
 drivers/clk/qcom/Kconfig
 drivers/clk/ralink/Kconfig
@@ -311,6 +313,7 @@ drivers/crypto/intel/qat/Kconfig
 drivers/crypto/Kconfig
 drivers/crypto/marvell/Kconfig
 drivers/crypto/nx/Kconfig
+drivers/crypto/starfive/Kconfig
 drivers/crypto/stm32/Kconfig
 drivers/crypto/virtio/Kconfig
 drivers/crypto/vmx/Kconfig
@@ -352,6 +355,7 @@ drivers/firmware/smccc/Kconfig
 drivers/firmware/tegra/Kconfig
 drivers/firmware/xilinx/Kconfig
 drivers/fpga/Kconfig
+drivers/fpga/tests/Kconfig
 drivers/fsi/Kconfig
 drivers/gnss/Kconfig
 drivers/gpio/Kconfig
@@ -393,6 +397,7 @@ drivers/gpu/drm/Kconfig
 drivers/gpu/drm/kmb/Kconfig
 drivers/gpu/drm/lima/Kconfig
 drivers/gpu/drm/logicvc/Kconfig
+drivers/gpu/drm/loongson/Kconfig
 drivers/gpu/drm/mcde/Kconfig
 drivers/gpu/drm/mediatek/Kconfig
 drivers/gpu/drm/meson/Kconfig
@@ -406,9 +411,10 @@ drivers/gpu/drm/panfrost/Kconfig
 drivers/gpu/drm/pl111/Kconfig
 drivers/gpu/drm/qxl/Kconfig
 drivers/gpu/drm/radeon/Kconfig
-drivers/gpu/drm/rcar-du/Kconfig
+drivers/gpu/drm/renesas/Kconfig
+drivers/gpu/drm/renesas/rcar-du/Kconfig
+drivers/gpu/drm/renesas/shmobile/Kconfig
 drivers/gpu/drm/rockchip/Kconfig
-drivers/gpu/drm/shmobile/Kconfig
 drivers/gpu/drm/solomon/Kconfig
 drivers/gpu/drm/sprd/Kconfig
 drivers/gpu/drm/sti/Kconfig
@@ -471,6 +477,7 @@ drivers/iio/cdc/Kconfig
 drivers/iio/chemical/Kconfig
 drivers/iio/common/cros_ec_sensors/Kconfig
 drivers/iio/common/hid-sensors/Kconfig
+drivers/iio/common/inv_sensors/Kconfig
 drivers/iio/common/Kconfig
 drivers/iio/common/ms_sensors/Kconfig
 drivers/iio/common/scmi_sensors/Kconfig
@@ -607,6 +614,8 @@ drivers/media/pci/ddbridge/Kconfig
 drivers/media/pci/dm1105/Kconfig
 drivers/media/pci/dt3155/Kconfig
 drivers/media/pci/intel/ipu3/Kconfig
+drivers/media/pci/intel/ivsc/Kconfig
+drivers/media/pci/intel/Kconfig
 drivers/media/pci/ivtv/Kconfig
 drivers/media/pci/Kconfig
 drivers/media/pci/mantis/Kconfig
@@ -750,6 +759,7 @@ drivers/misc/genwqe/Kconfig
 drivers/misc/Kconfig
 drivers/misc/lis3lv02d/Kconfig
 drivers/misc/mchp_pci1xxxx/Kconfig
+drivers/misc/mei/gsc_proxy/Kconfig
 drivers/misc/mei/hdcp/Kconfig
 drivers/misc/mei/Kconfig
 drivers/misc/mei/pxp/Kconfig
@@ -1089,6 +1099,7 @@ drivers/phy/renesas/Kconfig
 drivers/phy/rockchip/Kconfig
 drivers/phy/samsung/Kconfig
 drivers/phy/socionext/Kconfig
+drivers/phy/starfive/Kconfig
 drivers/phy/st/Kconfig
 drivers/phy/sunplus/Kconfig
 drivers/phy/tegra/Kconfig
@@ -1101,6 +1112,7 @@ drivers/pinctrl/berlin/Kconfig
 drivers/pinctrl/cirrus/Kconfig
 drivers/pinctrl/freescale/Kconfig
 drivers/pinctrl/intel/Kconfig
+drivers/pinctrl/intel/Kconfig.tng
 drivers/pinctrl/Kconfig
 drivers/pinctrl/mediatek/Kconfig
 drivers/pinctrl/meson/Kconfig
@@ -1110,6 +1122,7 @@ drivers/pinctrl/nuvoton/Kconfig
 drivers/pinctrl/nxp/Kconfig
 drivers/pinctrl/pxa/Kconfig
 drivers/pinctrl/qcom/Kconfig
+drivers/pinctrl/qcom/Kconfig.msm
 drivers/pinctrl/renesas/Kconfig
 drivers/pinctrl/samsung/Kconfig
 drivers/pinctrl/spear/Kconfig
@@ -1134,6 +1147,7 @@ drivers/platform/olpc/Kconfig
 drivers/platform/surface/aggregator/Kconfig
 drivers/platform/surface/Kconfig
 drivers/platform/x86/amd/Kconfig
+drivers/platform/x86/amd/pmc/Kconfig
 drivers/platform/x86/amd/pmf/Kconfig
 drivers/platform/x86/dell/Kconfig
 drivers/platform/x86/hp/Kconfig
@@ -1149,6 +1163,7 @@ drivers/platform/x86/intel/telemetry/Kconfig
 drivers/platform/x86/intel/uncore-frequency/Kconfig
 drivers/platform/x86/intel/wmi/Kconfig
 drivers/platform/x86/Kconfig
+drivers/platform/x86/siemens/Kconfig
 drivers/platform/x86/x86-android-tablets/Kconfig
 drivers/pnp/isapnp/Kconfig
 drivers/pnp/Kconfig
@@ -1217,7 +1232,6 @@ drivers/soc/amlogic/Kconfig
 drivers/soc/apple/Kconfig
 drivers/soc/aspeed/Kconfig
 drivers/soc/atmel/Kconfig
-drivers/soc/bcm/bcm63xx/Kconfig
 drivers/soc/bcm/brcmstb/Kconfig
 drivers/soc/bcm/Kconfig
 drivers/soc/canaan/Kconfig
@@ -1225,6 +1239,7 @@ drivers/soc/fsl/Kconfig
 drivers/soc/fsl/qbman/Kconfig
 drivers/soc/fsl/qe/Kconfig
 drivers/soc/fujitsu/Kconfig
+drivers/soc/hisilicon/Kconfig
 drivers/soc/imx/Kconfig
 drivers/soc/ixp4xx/Kconfig
 drivers/soc/Kconfig
@@ -1350,6 +1365,7 @@ drivers/usb/gadget/Kconfig
 drivers/usb/gadget/legacy/Kconfig
 drivers/usb/gadget/udc/aspeed-vhub/Kconfig
 drivers/usb/gadget/udc/bdc/Kconfig
+drivers/usb/gadget/udc/cdns2/Kconfig
 drivers/usb/gadget/udc/Kconfig
 drivers/usb/host/Kconfig
 drivers/usb/image/Kconfig
@@ -1373,17 +1389,20 @@ drivers/usb/typec/tipd/Kconfig
 drivers/usb/typec/ucsi/Kconfig
 drivers/usb/usbip/Kconfig
 drivers/vdpa/Kconfig
+drivers/vfio/cdx/Kconfig
 drivers/vfio/fsl-mc/Kconfig
 drivers/vfio/Kconfig
 drivers/vfio/mdev/Kconfig
 drivers/vfio/pci/hisilicon/Kconfig
 drivers/vfio/pci/Kconfig
 drivers/vfio/pci/mlx5/Kconfig
+drivers/vfio/pci/pds/Kconfig
 drivers/vfio/platform/Kconfig
 drivers/vfio/platform/reset/Kconfig
 drivers/vhost/Kconfig
 drivers/video/backlight/Kconfig
 drivers/video/console/Kconfig
+drivers/video/fbdev/core/Kconfig
 drivers/video/fbdev/geode/Kconfig
 drivers/video/fbdev/Kconfig
 drivers/video/fbdev/mmp/fb/Kconfig
@@ -1415,7 +1434,6 @@ drivers/zorro/Kconfig
 mm/damon/Kconfig
 mm/Kconfig
 mm/Kconfig.debug
-net/atm/Kconfig
 net/can/j1939/Kconfig
 net/can/Kconfig
 net/iucv/Kconfig
@@ -1456,6 +1474,7 @@ sound/soc/codecs/Kconfig
 sound/soc/dwc/Kconfig
 sound/soc/fsl/Kconfig
 sound/soc/generic/Kconfig
+sound/soc/google/Kconfig
 sound/soc/hisilicon/Kconfig
 sound/soc/img/Kconfig
 sound/soc/intel/avs/boards/Kconfig
@@ -1464,6 +1483,7 @@ sound/soc/intel/Kconfig
 sound/soc/jz4740/Kconfig
 sound/soc/Kconfig
 sound/soc/kirkwood/Kconfig
+sound/soc/loongson/Kconfig
 sound/soc/mediatek/Kconfig
 sound/soc/meson/Kconfig
 sound/soc/mxs/Kconfig
@@ -1480,6 +1500,7 @@ sound/soc/sof/mediatek/Kconfig
 sound/soc/sof/xtensa/Kconfig
 sound/soc/spear/Kconfig
 sound/soc/sprd/Kconfig
+sound/soc/starfive/Kconfig
 sound/soc/sti/Kconfig
 sound/soc/stm/Kconfig
 sound/soc/sunxi/Kconfig
