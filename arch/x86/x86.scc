@@ -1,2 +1,4 @@
 # SPDX-License-Identifier: MIT
 patch x86_64_defconfig-Fix-warnings.patch
+patch x86-alternatives-Sync-core-before-enabling-interrupt.patch
+patch x86-alternatives-Disable-interrupts-and-sync-when-op.patch
