@@ -6,3 +6,4 @@ patch aufs6-base.patch
 patch aufs6-mmap.patch
 patch aufs6-standalone.patch
 patch aufs6-core.patch
+patch aufs-i_op-Add-handling-for-au_pin_hdir_set_owner-wit.patch
