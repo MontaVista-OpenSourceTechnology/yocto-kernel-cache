@@ -1,0 +1,4 @@
+define KFEATURE_DESCRIPTION "Use 64KB pages"
+define KFEATURE_COMPATIBILITY arch
+
+kconf hardware arm64-64kb-pages.cfg
