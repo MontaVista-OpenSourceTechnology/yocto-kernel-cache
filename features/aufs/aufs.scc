@@ -9,3 +9,4 @@ patch aufs6-core.patch
 patch aufs6-adapt-to-v6.6.patch
 patch aufs6-fix-magic.mk-include-path.patch
 patch aufs6-adapt-to-v6.6-i_op-ctime-changes.patch
+patch aufs-i_op-Add-handling-for-au_pin_hdir_set_owner-wit.patch
