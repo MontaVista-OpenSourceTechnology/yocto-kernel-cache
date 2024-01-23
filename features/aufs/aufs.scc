@@ -11,3 +11,4 @@ patch aufs6-fix-magic.mk-include-path.patch
 patch aufs6-adapt-to-v6.6-i_op-ctime-changes.patch
 patch aufs-fix-v6.7-kernel-build-compilation.patch
 patch aufs-i_op-Add-handling-for-au_pin_hdir_set_owner-wit.patch
+patch aufs-update-remove_page-to-remove_folio.patch
