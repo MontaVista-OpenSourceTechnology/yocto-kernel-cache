@@ -42,6 +42,9 @@
 	config = cfg/timer/hz_250.scc
 	config = cfg/timer/hz_100.scc
 	config = cfg/efi-ext.scc
+	config = arch/arm/arm64-4kb-pages.scc
+	config = arch/arm/arm64-64kb-pages.scc
+	config = arch/arm/arm64-16kb-pages.scc
 	config = cgl/cfg/scsi_dh_hpsw.scc
 	config = cgl/cfg/fs/ocfs2.scc
 	config = cgl/cfg/drbd.scc
