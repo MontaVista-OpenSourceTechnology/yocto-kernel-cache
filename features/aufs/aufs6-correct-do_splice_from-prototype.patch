@@ -1,0 +1,26 @@
+From c76e5c498001148b22148fadc86611fd1874caa9 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 25 Jan 2024 11:17:19 -0500
+Subject: [PATCH] aufs6: correct do_splice_from prototype
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ include/linux/splice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/splice.h b/include/linux/splice.h
+index 8024911403e9..727e61a98c49 100644
+--- a/include/linux/splice.h
++++ b/include/linux/splice.h
+@@ -109,7 +109,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
+ extern const struct pipe_buf_operations page_cache_pipe_buf_ops;
+ extern const struct pipe_buf_operations default_pipe_buf_ops;
+ 
+-extern long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
++extern ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			   loff_t *ppos, size_t len, unsigned int flags);
+ extern long do_splice_to(struct file *in, loff_t *ppos,
+ 			 struct pipe_inode_info *pipe, size_t len,
+-- 
+2.39.2
+
