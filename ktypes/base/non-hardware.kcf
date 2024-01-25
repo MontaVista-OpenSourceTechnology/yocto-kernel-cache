@@ -53,6 +53,8 @@ drivers/staging/media/max96712/Kconfig
 drivers/staging/media/meson/vdec/Kconfig
 drivers/staging/media/omap4iss/Kconfig
 drivers/staging/media/rkvdec/Kconfig
+drivers/staging/media/starfive/camss/Kconfig
+drivers/staging/media/starfive/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
 drivers/staging/media/sunxi/sun6i-isp/Kconfig
@@ -118,7 +120,6 @@ fs/ext4/Kconfig
 fs/f2fs/Kconfig
 fs/fat/Kconfig
 fs/freevxfs/Kconfig
-fs/fscache/Kconfig
 fs/fuse/Kconfig
 fs/gfs2/Kconfig
 fs/hfs/Kconfig
@@ -215,7 +216,6 @@ net/bluetooth/cmtp/Kconfig
 net/bluetooth/hidp/Kconfig
 net/bluetooth/Kconfig
 net/bluetooth/rfcomm/Kconfig
-net/bpfilter/Kconfig
 net/bridge/Kconfig
 net/bridge/netfilter/Kconfig
 net/caif/Kconfig
