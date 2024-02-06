@@ -1,6 +1,4 @@
 # SPDX-License-Identifier: MIT
-patch powerpc-Add-unwind-information-for-SPE-registers-of-.patch
-patch powerpc-kexec-fix-for-powerpc64.patch
 patch powerpc-Disable-attribute-alias-warnings-from-gcc8.patch
 patch powerpc-ptrace-Disable-array-bounds-warning-with-gcc.patch
 # crtsavres is fixed in 6.3+
