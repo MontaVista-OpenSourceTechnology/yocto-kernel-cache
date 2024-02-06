@@ -1,4 +1,1 @@
 # SPDX-License-Identifier: MIT
-# crtsavres is fixed in 6.3+
-# patch powerpc-add-crtsavres.o-to-archprepare-for-kbuild.patch
-# patch crtsavres-fixups-for-5.4.patch
