@@ -4,7 +4,7 @@
 Patches to the kernel meta data should be submitted to the linux-yocto
 mailing list (subscripion only) and should cc' the maintainer.
 
-  list: https://lists.yoctoproject.org/listinfo/linux-yocto
+  list: https://lists.yoctoproject.org/g/linux-yocto
   Maintainers: Bruce Ashfield <bruce.ashfield@gmail.com>
 
 When sending single patches, please using something like:
