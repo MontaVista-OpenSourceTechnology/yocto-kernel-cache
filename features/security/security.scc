@@ -7,3 +7,7 @@ kconf non-hardware security.cfg
 if [ "$KARCH" = "x86_64" ]; then
     kconf non-hardware security-x86_64.cfg
 fi
+
+if [ "$KARCH" = "arm64" ]; then
+    kconf non-hardware security-arm64.cfg
+fi
