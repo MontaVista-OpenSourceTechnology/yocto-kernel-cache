@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable squashfs filesystem support"
+define KFEATURE_COMPATIBILITY all
+
+kconf non-hardware squashfs.cfg
