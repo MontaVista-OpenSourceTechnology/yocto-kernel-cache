@@ -4,5 +4,7 @@ include cfg/fs/flash_fs.cfg
 include features/hugetlb/hugetlb.scc
 # Enable the ability to run 32 bit apps
 include arch/arm/32bit-compat.scc
+# Enable optee
+include features/optee/optee.scc
 
 kconf hardware ti-am62.cfg
