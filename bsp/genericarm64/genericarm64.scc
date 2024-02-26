@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: MIT
+kconf hardware genericarm64.cfg
+
+include cfg/8250.scc
+include cfg/boot-live.scc
+include cfg/efi-ext.scc
+include cfg/net/mdio.scc
+include cfg/sound.scc
+include cfg/timer/no_hz.scc
+include cfg/timer/rtc.scc
+include cfg/usb-mass-storage.scc
+include cfg/virtio.scc
+include cfg/fs/flash_fs.cfg
+
+include features/bluetooth/bluetooth.scc
+include features/input/input.scc
+include features/hid/hid.scc
+include features/leds/leds.scc
+include features/mmc/mmc-block.scc
+include features/mmc/mmc-sdhci.scc
+include features/mtd/mtd.scc
+include features/net/net.scc
+include features/netfilter/netfilter.scc
+include features/numa/numa.scc
+include features/pci-iov/pci-iov.scc
+include features/pci/pci.scc
+include features/power/arm.scc
+include features/usb-net/usb-net.scc
+include features/usb/ehci-hcd.scc
+include features/usb/ohci-hcd.scc
+include features/usb/uhci-hcd.scc
+include features/usb/xhci-hcd.scc
+include features/wifi/wifi-all.scc
+include features/optee/optee.cfg
+include features/security/security.scc
+include features/spi/spi.cfg
