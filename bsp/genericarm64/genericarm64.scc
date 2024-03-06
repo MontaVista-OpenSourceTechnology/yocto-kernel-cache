@@ -1,5 +1,14 @@
 # SPDX-License-Identifier: MIT
 kconf hardware genericarm64.cfg
+kconf hardware genericarm64-arch.cfg
+kconf hardware genericarm64-clock.cfg
+kconf hardware genericarm64-i2c.cfg
+kconf hardware genericarm64-gpio.cfg
+kconf hardware genericarm64-mmc.cfg
+kconf hardware genericarm64-pinctrl.cfg
+kconf hardware genericarm64-regulator.cfg
+kconf hardware genericarm64-remoteproc.cfg
+kconf hardware genericarm64-serial.cfg
 
 include cfg/8250.scc
 include cfg/boot-live.scc
@@ -14,6 +23,7 @@ include cfg/fs/flash_fs.cfg
 
 include features/bluetooth/bluetooth.scc
 include features/input/input.scc
+include features/input/keyboard-gpio.scc
 include features/hid/hid.scc
 include features/leds/leds.scc
 include features/mmc/mmc-block.scc
