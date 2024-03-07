@@ -3,3 +3,9 @@ kconf hardware qemuriscv64.cfg
 
 # Graphics support
 include features/drm-bochs/drm-bochs.scc
+
+# XHCI USB
+include features/usb/xhci-hcd.scc
+include features/net/net.scc
+include features/pci/pci.scc
+include cfg/net/mdio.scc
