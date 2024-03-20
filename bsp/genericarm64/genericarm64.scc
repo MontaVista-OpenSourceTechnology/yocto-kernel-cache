@@ -19,7 +19,7 @@ include cfg/timer/no_hz.scc
 include cfg/timer/rtc.scc
 include cfg/usb-mass-storage.scc
 include cfg/virtio.scc
-include cfg/fs/flash_fs.cfg
+include cfg/fs/flash_fs.scc
 
 include features/bluetooth/bluetooth.scc
 include features/input/input.scc
@@ -41,6 +41,6 @@ include features/usb/ohci-hcd.scc
 include features/usb/uhci-hcd.scc
 include features/usb/xhci-hcd.scc
 include features/wifi/wifi-all.scc
-include features/optee/optee.cfg
+include features/optee/optee.scc
 include features/security/security.scc
-include features/spi/spi.cfg
+include features/spi/spi.scc
