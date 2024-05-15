@@ -68,6 +68,7 @@
 	config = features/tmpfs/tmpfs-posix-acl.scc
 	config = features/lxc/lxc-enable.scc
 	config = features/intel-tco/intel-tco.scc
+	config = features/intel-npu/intel-npu.scc
 	config = features/ftrace/ftrace-function-tracer-disable.scc
 	config = features/ftrace/ftrace.scc
 	config = features/vxlan/vxlan-enable.scc
