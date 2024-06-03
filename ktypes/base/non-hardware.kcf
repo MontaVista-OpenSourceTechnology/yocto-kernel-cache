@@ -21,14 +21,13 @@ drivers/cpuidle/Kconfig.riscv
 drivers/firewire/Kconfig
 drivers/hv/Kconfig
 drivers/md/bcache/Kconfig
+drivers/md/dm-vdo/Kconfig
 drivers/md/Kconfig
 drivers/md/persistent-data/Kconfig
 drivers/mtd/ubi/Kconfig
 drivers/remoteproc/Kconfig
 drivers/rpmsg/Kconfig
 drivers/staging/axis-fifo/Kconfig
-drivers/staging/board/Kconfig
-drivers/staging/emxx_udc/Kconfig
 drivers/staging/fbtft/Kconfig
 drivers/staging/fieldbus/anybuss/Kconfig
 drivers/staging/fieldbus/Kconfig
@@ -67,7 +66,6 @@ drivers/staging/most/video/Kconfig
 drivers/staging/nvec/Kconfig
 drivers/staging/octeon/Kconfig
 drivers/staging/olpc_dcon/Kconfig
-drivers/staging/pi433/Kconfig
 drivers/staging/rtl8192e/Kconfig
 drivers/staging/rtl8192e/rtl8192e/Kconfig
 drivers/staging/rtl8712/Kconfig
@@ -81,7 +79,6 @@ drivers/staging/vc04_services/vchiq-mmal/Kconfig
 drivers/staging/vme_user/Kconfig
 drivers/staging/vt6655/Kconfig
 drivers/staging/vt6656/Kconfig
-drivers/staging/wlan-ng/Kconfig
 drivers/vhost/Kconfig
 drivers/virt/acrn/Kconfig
 drivers/virt/coco/efi_secret/Kconfig
@@ -143,7 +140,6 @@ fs/notify/fanotify/Kconfig
 fs/notify/inotify/Kconfig
 fs/notify/Kconfig
 fs/ntfs3/Kconfig
-fs/ntfs/Kconfig
 fs/ocfs2/Kconfig
 fs/omfs/Kconfig
 fs/orangefs/Kconfig
