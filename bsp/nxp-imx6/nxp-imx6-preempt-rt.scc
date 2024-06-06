@@ -1,0 +1,7 @@
+define KMACHINE nxp-imx6
+define KTYPE preempt-rt
+define KARCH arm
+
+include ktypes/preempt-rt
+
+include nxp-imx6.scc
