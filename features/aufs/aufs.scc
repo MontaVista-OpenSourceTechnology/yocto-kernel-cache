@@ -15,3 +15,4 @@ patch aufs-i_op-Add-handling-for-au_pin_hdir_set_owner-wit.patch
 patch aufs-update-remove_page-to-remove_folio.patch
 patch aufs6-correct-do_splice_from-prototype.patch
 patch aufs-adjust-for-v6.9.patch
+patch aufs6-match-exports-to-functions.patch
