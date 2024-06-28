@@ -1,0 +1,57 @@
+From f71bb11887bae80ab718b3f38f1c1e80c07676a3 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 28 Jun 2024 12:55:18 -0400
+Subject: [PATCH] cpu/amd: inhibit SMP check for qemux86
+
+When booting with kvm enabled on a AMD host, the following
+trace is thrown:
+
+  [    0.084519] ------------[ cut here ]------------
+  [    0.084519] WARNING: This combination of AMD processors is not suitable for SMP.
+  [    0.084519] WARNING: CPU: 1 PID: 0 at /arch/x86/kernel/cpu/amd.c:341 init_amd+0xaee/0xbcc
+  [    0.084519] Modules linked in:
+  [    0.084519] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.6.32-yocto-standard #1
+  [    0.084519] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+
+This warning is not valid in our configuration and is unnecesarily
+causing issue with debug.
+
+This has been know for some time (10+ years), but no acceptable
+solutioon has been found upstream:
+
+   https://lists.gnu.org/archive/html/qemu-devel/2010-03/msg01428.html
+   https://lkml.org/lkml/2010/3/30/397
+
+We have a configuration CONFIG_QEMUX86 that has been added for
+situations like this. When that value is defined, we inhibit the
+warning, but leave it as-is for other BSPs.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ arch/x86/kernel/cpu/amd.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 9fd91022d92d..904c4bb7e3b5 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -338,9 +338,13 @@ static void init_amd_k7(struct cpuinfo_x86 *c)
+ 	 * Don't taint if we are running SMP kernel on a single non-MP
+ 	 * approved Athlon
+ 	 */
+-	WARN_ONCE(1, "WARNING: This combination of AMD"
+-		" processors is not suitable for SMP.\n");
+-	add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_NOW_UNRELIABLE);
++	/* disable the warning if qemux86 is configured, since the warning
++	   is not accurate for the virtualized cpu and host combination */
++	if (!IS_ENABLED(CONFIG_QEMUX86)) {
++		WARN_ONCE(1, "WARNING: This combination of AMD"
++			" processors is not suitable for SMP.\n");
++		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_NOW_UNRELIABLE);
++	}
+ #endif
+ }
+ 
+-- 
+2.39.2
+
