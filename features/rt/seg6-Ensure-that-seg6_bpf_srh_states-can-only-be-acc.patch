@@ -1,0 +1,135 @@
+From b711597929f0295eec8b2e2aef98b131efddcebc Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Fri, 5 Jul 2024 12:41:33 +0200
+Subject: [PATCH 105/125] seg6: Ensure that seg6_bpf_srh_states can only be
+ accessed from input_action_end_bpf()
+
+Initially I assumed that the per-CPU variable is `seg6_bpf_srh_states'
+is first initialized in input_action_end_bpf() and then accessed during
+the bpf_prog_run_save_cb() invocation by the eBPF via the BPF callbacks.
+syzbot demonstrated that is possible to invoke the BPF callbacks (and
+access `seg6_bpf_srh_states') without entering input_action_end_bpf()
+first.
+
+The valid path via input_action_end_bpf() is invoked within NAPI
+context which means it has bpf_net_context set. This can be used to
+identify the "valid" calling path.
+
+Set in input_action_end_bpf() the BPF_RI_F_SEG6_STATE bit to signal the
+valid calling path and clear it at the end. Check for the context and
+the bit in bpf_lwt_seg6.*() and abort if missing.
+
+Reported-by: syzbot+608a2acde8c5a101d07d@syzkaller.appspotmail.com
+Fixes: d1542d4ae4dfd ("seg6: Use nested-BH locking for seg6_bpf_srh_states.")
+Link: https://lore.kernel.org/r/20240705104133.NU9AwKDS@linutronix.de
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/filter.h | 24 ++++++++++++++++++++++++
+ net/core/filter.c      |  6 ++++++
+ net/ipv6/seg6_local.c  |  3 +++
+ 3 files changed, 33 insertions(+)
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index b1d9bc714c98..2b8503fecd02 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -739,6 +739,7 @@ struct bpf_nh_params {
+ #define BPF_RI_F_CPU_MAP_INIT	BIT(2)
+ #define BPF_RI_F_DEV_MAP_INIT	BIT(3)
+ #define BPF_RI_F_XSK_MAP_INIT	BIT(4)
++#define BPF_RI_F_SEG6_STATE	BIT(5)
+ 
+ struct bpf_redirect_info {
+ 	u64 tgt_index;
+@@ -856,6 +857,29 @@ static inline void bpf_net_ctx_get_all_used_flush_lists(struct list_head **lh_ma
+ 		*lh_xsk = lh;
+ }
+ 
++static inline bool bpf_net_ctx_seg6_state_avail(void)
++{
++	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
++
++	if (!bpf_net_ctx)
++		return false;
++	return bpf_net_ctx->ri.kern_flags & BPF_RI_F_SEG6_STATE;
++}
++
++static inline void bpf_net_ctx_seg6_state_set(void)
++{
++	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
++
++	bpf_net_ctx->ri.kern_flags |= BPF_RI_F_SEG6_STATE;
++}
++
++static inline void bpf_net_ctx_seg6_state_clr(void)
++{
++	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
++
++	bpf_net_ctx->ri.kern_flags &= ~BPF_RI_F_SEG6_STATE;
++}
++
+ /* Compute the linear packet data range [data, data_end) which
+  * will be accessed by various program types (cls_bpf, act_bpf,
+  * lwt, ...). Subsystems allowing direct data access must (!)
+diff --git a/net/core/filter.c b/net/core/filter.c
+index cdba7a307e57..9556453a8b56 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -6459,6 +6459,8 @@ BPF_CALL_4(bpf_lwt_seg6_store_bytes, struct sk_buff *, skb, u32, offset,
+ 	void *srh_tlvs, *srh_end, *ptr;
+ 	int srhoff = 0;
+ 
++	if (!bpf_net_ctx_seg6_state_avail())
++		return -EINVAL;
+ 	lockdep_assert_held(&srh_state->bh_lock);
+ 	if (srh == NULL)
+ 		return -EINVAL;
+@@ -6516,6 +6518,8 @@ BPF_CALL_4(bpf_lwt_seg6_action, struct sk_buff *, skb,
+ 	int hdroff = 0;
+ 	int err;
+ 
++	if (!bpf_net_ctx_seg6_state_avail())
++		return -EINVAL;
+ 	lockdep_assert_held(&srh_state->bh_lock);
+ 	switch (action) {
+ 	case SEG6_LOCAL_ACTION_END_X:
+@@ -6593,6 +6597,8 @@ BPF_CALL_3(bpf_lwt_seg6_adjust_srh, struct sk_buff *, skb, u32, offset,
+ 	int srhoff = 0;
+ 	int ret;
+ 
++	if (!bpf_net_ctx_seg6_state_avail())
++		return -EINVAL;
+ 	lockdep_assert_held(&srh_state->bh_lock);
+ 	if (unlikely(srh == NULL))
+ 		return -EINVAL;
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index c74705ead984..3e3a48b7266b 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -1429,6 +1429,7 @@ static int input_action_end_bpf(struct sk_buff *skb,
+ 	 * bpf_prog_run_save_cb().
+ 	 */
+ 	local_lock_nested_bh(&seg6_bpf_srh_states.bh_lock);
++	bpf_net_ctx_seg6_state_set();
+ 	srh_state = this_cpu_ptr(&seg6_bpf_srh_states);
+ 	srh_state->srh = srh;
+ 	srh_state->hdrlen = srh->hdrlen << 3;
+@@ -1452,6 +1453,7 @@ static int input_action_end_bpf(struct sk_buff *skb,
+ 
+ 	if (srh_state->srh && !seg6_bpf_has_valid_srh(skb))
+ 		goto drop;
++	bpf_net_ctx_seg6_state_clr();
+ 	local_unlock_nested_bh(&seg6_bpf_srh_states.bh_lock);
+ 
+ 	if (ret != BPF_REDIRECT)
+@@ -1460,6 +1462,7 @@ static int input_action_end_bpf(struct sk_buff *skb,
+ 	return dst_input(skb);
+ 
+ drop:
++	bpf_net_ctx_seg6_state_clr();
+ 	local_unlock_nested_bh(&seg6_bpf_srh_states.bh_lock);
+ 	kfree_skb(skb);
+ 	return -EINVAL;
+-- 
+2.39.2
+

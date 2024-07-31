@@ -1,0 +1,47 @@
+From a26dd675a403520e044c4b40a25b5ad44b503e52 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Mon, 23 Oct 2023 15:11:23 +0200
+Subject: [PATCH 088/125] net: Use __napi_alloc_frag_align() instead of open
+ coding it.
+
+The else condition within __netdev_alloc_frag_align() is an open coded
+__napi_alloc_frag_align().
+
+Use __napi_alloc_frag_align() instead of open coding it.
+Move fragsz assignment before page_frag_alloc_align() invocation because
+__napi_alloc_frag_align() also contains this statement.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/core/skbuff.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 466999a7515e..dda13fdffb69 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -318,19 +318,15 @@ void *__netdev_alloc_frag_align(unsigned int fragsz, unsigned int align_mask)
+ {
+ 	void *data;
+ 
+-	fragsz = SKB_DATA_ALIGN(fragsz);
+ 	if (in_hardirq() || irqs_disabled()) {
+ 		struct page_frag_cache *nc = this_cpu_ptr(&netdev_alloc_cache);
+ 
++		fragsz = SKB_DATA_ALIGN(fragsz);
+ 		data = __page_frag_alloc_align(nc, fragsz, GFP_ATOMIC,
+ 					       align_mask);
+ 	} else {
+-		struct napi_alloc_cache *nc;
+-
+ 		local_bh_disable();
+-		nc = this_cpu_ptr(&napi_alloc_cache);
+-		data = __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
+-					       align_mask);
++		data = __napi_alloc_frag_align(fragsz, align_mask);
+ 		local_bh_enable();
+ 	}
+ 	return data;
+-- 
+2.39.2
+

@@ -1,0 +1,26 @@
+From 749af561b3fbdbaa4fd58e7880473afc43575d89 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Thu, 7 Nov 2019 17:49:20 +0100
+Subject: [PATCH 063/125] x86: Enable RT also on 32bit
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index d3acd7794d43..02ea21798667 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -123,6 +123,7 @@ config X86
+ 	select ARCH_USES_CFI_TRAPS		if X86_64 && CFI_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
++	select ARCH_SUPPORTS_RT
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CMPXCHG64
+ 	select ARCH_USE_MEMTEST
+-- 
+2.39.2
+
