@@ -22,3 +22,4 @@ patch yaffs2-Fix-miscalculation-of-devname-buffer-length.patch
 patch yaffs2-v6.5-fixups.patch
 patch 0001-yaffs2-update-VFS-ctime-operations-to-6.6.patch
 patch yaffs-fix-mtime-itime-field-access.patch
+patch 0001-yaffs2-adapt-to-v6.10-i_time-changes.patch

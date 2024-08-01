@@ -1,0 +1,72 @@
+From 2148ffb48f4968952dfac13ae09bb4c54aa996dd Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 1 Aug 2024 15:14:33 -0400
+Subject: [PATCH] yaffs2: adapt to v6.10 i_time changes
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index ec4016cfeedf..eafa1e5d8ce7 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");
+ 	} while (0)
+ #else
+ #define update_dir_time(dir) do {\
+-		(dir)->__i_mtime = inode_set_ctime_to_ts( dir, current_time(dir) ); \
++		(dir)->i_atime_sec = inode_set_ctime_to_ts( dir, current_time(dir) ).tv_sec; \
+ 	} while (0)
+ #endif
+ 
+@@ -1565,7 +1565,7 @@ static int yaffs_link(struct dentry *old_dentry, struct inode *dir,
+ }
+ 
+ static int yaffs_symlink(struct mnt_idmap *ns,
+-		         struct inode *dir, struct dentry *dentry,
++                         struct inode *dir, struct dentry *dentry,
+ 			 const char *symname)
+ {
+ 	struct yaffs_obj *obj;
+@@ -2075,18 +2075,18 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
+ #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
+ 
+ 		inode->i_rdev = old_decode_dev(obj->yst_rdev);
+-		inode->__i_atime.tv_sec = (time64_t) (obj->yst_atime);
+-		inode->__i_atime.tv_nsec = 0;
+-		inode->__i_mtime.tv_sec = (time64_t) obj->yst_mtime;
+-		inode->__i_mtime.tv_nsec = 0;
++		inode->i_atime_sec = (time64_t) (obj->yst_atime);
++		inode->i_atime_nsec = 0;
++		inode->i_mtime_sec = (time64_t) obj->yst_mtime;
++		inode->i_mtime_nsec = 0;
+ 		//inode->i_ctime.tv_sec = (time64_t) obj->yst_ctime;
+-		inode->__i_ctime.tv_sec = (time64_t) obj->yst_ctime;
+-		inode->__i_ctime.tv_nsec = 0;
++		inode->i_ctime_sec = (time64_t) obj->yst_ctime;
++		inode->i_ctime_nsec = 0;
+ #else
+ 		inode->i_rdev = obj->yst_rdev;
+-		inode->__i_atime = obj->yst_atime;
+-		inode->__i_mtime = obj->yst_mtime;
+-		inode->i_ctime = obj->yst_ctime;
++		inode->i_atime_sec = obj->yst_atime;
++		inode->i_mtime_sec = obj->yst_mtime;
++		inode->i_ctime_sec = obj->yst_ctime;
+ #endif
+ 		inode->i_size = yaffs_get_obj_length(obj);
+ 		inode->i_blocks = (inode->i_size + 511) >> 9;
+@@ -2246,7 +2246,7 @@ static int yaffs_bg_thread_fn(void *data)
+ 				else
+ 					next_gc = now + HZ * 2;
+ 			} else	{
+-			        /*
++                                /*
+ 				 * gc not running so set to next_dir_update
+ 				 * to cut down on wake ups
+ 				 */
+-- 
+2.39.2
+
