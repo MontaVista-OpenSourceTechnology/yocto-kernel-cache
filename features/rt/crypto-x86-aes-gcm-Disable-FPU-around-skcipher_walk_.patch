@@ -1,0 +1,37 @@
+From 0d94e8ec61978c43ea9c9a556db5f2785a93cfc5 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Fri, 2 Aug 2024 09:24:33 +0200
+Subject: [PATCH 02/92] crypto: x86/aes-gcm: Disable FPU around
+ skcipher_walk_done().
+
+kernel_fpu_begin() disables preemption. gcm_crypt() has a
+skcipher_walk_done() invocation within a preempt disabled section.
+skcipher_walk_done() can invoke kfree() which requires sleeping locks on
+PREEMPT_RT and must not be invoked with disabled preemption.
+
+Keep FPU access enabled while skcipher_walk_done() is invoked.
+
+Fixes: b06affb1cb580 ("crypto: x86/aes-gcm - add VAES and AVX512 / AVX10 optimized AES-GCM")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/20240802102333.itejxOsJ@linutronix.de
+---
+ arch/x86/crypto/aesni-intel_glue.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/crypto/aesni-intel_glue.c b/arch/x86/crypto/aesni-intel_glue.c
+index cd37de5ec404..be92e4c3f9c7 100644
+--- a/arch/x86/crypto/aesni-intel_glue.c
++++ b/arch/x86/crypto/aesni-intel_glue.c
+@@ -1403,7 +1403,9 @@ gcm_crypt(struct aead_request *req, int flags)
+ 			aes_gcm_update(key, le_ctr, ghash_acc,
+ 				       walk.src.virt.addr, walk.dst.virt.addr,
+ 				       nbytes, flags);
++			kernel_fpu_end();
+ 			err = skcipher_walk_done(&walk, 0);
++			kernel_fpu_begin();
+ 			/*
+ 			 * The low word of the counter isn't used by the
+ 			 * finalize, so there's no need to increment it here.
+-- 
+2.39.2
+

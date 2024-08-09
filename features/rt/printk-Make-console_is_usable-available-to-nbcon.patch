@@ -1,0 +1,110 @@
+From a06e1d557c2006d891c8cfb8bd8a7f831bcec839 Mon Sep 17 00:00:00 2001
+From: John Ogness <john.ogness@linutronix.de>
+Date: Tue, 12 Sep 2023 13:25:41 +0000
+Subject: [PATCH 16/92] printk: Make console_is_usable() available to nbcon
+
+Move console_is_usable() as-is into internal.h so that it can
+be used by nbcon printing functions as well.
+
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/printk/internal.h | 32 ++++++++++++++++++++++++++++++++
+ kernel/printk/printk.c   | 30 ------------------------------
+ 2 files changed, 32 insertions(+), 30 deletions(-)
+
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 33b920f1395b..3be58117a82b 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -85,6 +85,36 @@ bool nbcon_alloc(struct console *con);
+ void nbcon_init(struct console *con, u64 init_seq);
+ void nbcon_free(struct console *con);
+ 
++/*
++ * Check if the given console is currently capable and allowed to print
++ * records.
++ *
++ * Requires the console_srcu_read_lock.
++ */
++static inline bool console_is_usable(struct console *con)
++{
++	short flags = console_srcu_read_flags(con);
++
++	if (!(flags & CON_ENABLED))
++		return false;
++
++	if ((flags & CON_SUSPENDED))
++		return false;
++
++	if (!con->write)
++		return false;
++
++	/*
++	 * Console drivers may assume that per-cpu resources have been
++	 * allocated. So unless they're explicitly marked as being able to
++	 * cope (CON_ANYTIME) don't call them until this CPU is officially up.
++	 */
++	if (!cpu_online(raw_smp_processor_id()) && !(flags & CON_ANYTIME))
++		return false;
++
++	return true;
++}
++
+ #else
+ 
+ #define PRINTK_PREFIX_MAX	0
+@@ -106,6 +136,8 @@ static inline bool nbcon_alloc(struct console *con) { return false; }
+ static inline void nbcon_init(struct console *con, u64 init_seq) { }
+ static inline void nbcon_free(struct console *con) { }
+ 
++static inline bool console_is_usable(struct console *con) { return false; }
++
+ #endif /* CONFIG_PRINTK */
+ 
+ extern struct printk_buffers printk_shared_pbufs;
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 851aaf290c89..1026045bdbcc 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2767,36 +2767,6 @@ int is_console_locked(void)
+ }
+ EXPORT_SYMBOL(is_console_locked);
+ 
+-/*
+- * Check if the given console is currently capable and allowed to print
+- * records.
+- *
+- * Requires the console_srcu_read_lock.
+- */
+-static inline bool console_is_usable(struct console *con)
+-{
+-	short flags = console_srcu_read_flags(con);
+-
+-	if (!(flags & CON_ENABLED))
+-		return false;
+-
+-	if ((flags & CON_SUSPENDED))
+-		return false;
+-
+-	if (!con->write)
+-		return false;
+-
+-	/*
+-	 * Console drivers may assume that per-cpu resources have been
+-	 * allocated. So unless they're explicitly marked as being able to
+-	 * cope (CON_ANYTIME) don't call them until this CPU is officially up.
+-	 */
+-	if (!cpu_online(raw_smp_processor_id()) && !(flags & CON_ANYTIME))
+-		return false;
+-
+-	return true;
+-}
+-
+ static void __console_unlock(void)
+ {
+ 	console_locked = 0;
+-- 
+2.39.2
+
