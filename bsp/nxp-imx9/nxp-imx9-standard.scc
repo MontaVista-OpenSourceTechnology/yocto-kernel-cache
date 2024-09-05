@@ -1,0 +1,9 @@
+define KMACHINE nxp-imx9
+define KTYPE standard
+define KARCH arm64
+
+include ktypes/standard
+include features/tsn/tsn.scc
+include features/net/xdp/xdp.scc
+
+include nxp-imx9.scc
