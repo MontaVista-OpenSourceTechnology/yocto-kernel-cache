@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
 #
 
-patch aufs6-kbuild.patch
-patch aufs6-base.patch
-patch aufs6-mmap.patch
-patch aufs6-core.patch
-patch aufs6-aufs.patch
-patch aufs-adjust-for-v6.11.patch
+# patch aufs6-kbuild.patch
+# patch aufs6-base.patch
+# patch aufs6-mmap.patch
+# patch aufs6-core.patch
+# patch aufs6-aufs.patch
+# patch aufs-adjust-for-v6.11.patch
