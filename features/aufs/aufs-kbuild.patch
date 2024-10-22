@@ -1,12 +1,14 @@
-From 8db85cba7292df936ddd8d4408382b420e84a66b Mon Sep 17 00:00:00 2001
+From ece87abe8e7dfbdbf343612f676d7e4bcdddab07 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Fri, 9 Aug 2024 15:19:33 -0400
-Subject: [PATCH 2/6] aufs6: base
+Date: Tue, 22 Oct 2024 14:13:31 -0400
+Subject: [PATCH 1/4] aufs: kbuild
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
  MAINTAINERS                   | 13 +++++++++++++
  drivers/block/loop.c          | 20 ++++++++++++++++++++
+ fs/Kconfig                    |  1 +
+ fs/Makefile                   |  1 +
  fs/dcache.c                   |  5 ++++-
  fs/fcntl.c                    |  4 +++-
  fs/namespace.c                |  6 ++++++
@@ -16,13 +18,13 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  include/linux/mnt_namespace.h |  3 +++
  include/linux/splice.h        |  3 +++
  kernel/locking/lockdep.c      |  3 ++-
- 11 files changed, 59 insertions(+), 4 deletions(-)
+ 13 files changed, 61 insertions(+), 4 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 42decde38320..e6208e51073f 100644
+index e9659a5a7fb3..4637937d87cc 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3565,6 +3565,19 @@ F:	kernel/audit*
+@@ -3665,6 +3665,19 @@ F:	kernel/audit*
  F:	lib/*audit.c
  K:	\baudit_[a-z_0-9]\+\b
  
@@ -73,11 +75,32 @@ index 78a7bb28defe..479480f25a6c 100644
  /* loop sysfs attributes */
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 3211debeb27d..cf7176170af9 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -342,6 +342,7 @@ source "fs/sysv/Kconfig"
+ source "fs/ufs/Kconfig"
+ source "fs/erofs/Kconfig"
+ source "fs/vboxsf/Kconfig"
++source "fs/aufs/Kconfig"
+ 
+ endif # MISC_FILESYSTEMS
+ 
+diff --git a/fs/Makefile b/fs/Makefile
+index 9cb0bce32cae..1b81c21e7582 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -131,3 +131,4 @@ obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
+ obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
+ obj-$(CONFIG_YAFFS_FS)		+= yaffs2/
+ obj-$(CONFIG_BPF_LSM)		+= bpf_fs_kfuncs.o
++obj-$(CONFIG_AUFS_FS)           += aufs/
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 3d8daaecb6d1..61f1e85afed1 100644
+index 0f6b16ba30d0..1ab11cad60e8 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1218,6 +1218,9 @@ enum d_walk_ret {
+@@ -1223,6 +1223,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -87,7 +110,7 @@ index 3d8daaecb6d1..61f1e85afed1 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1226,7 +1229,7 @@ enum d_walk_ret {
+@@ -1231,7 +1234,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -97,10 +120,10 @@ index 3d8daaecb6d1..61f1e85afed1 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 300e5d9ad913..3f927cbf63b3 100644
+index 22dd9dcce7ec..460791727fd9 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
-@@ -35,7 +35,7 @@
+@@ -37,7 +37,7 @@
  
  #define SETFL_MASK (O_APPEND | O_NONBLOCK | O_NDELAY | O_DIRECT | O_NOATIME)
  
@@ -109,7 +132,7 @@ index 300e5d9ad913..3f927cbf63b3 100644
  {
  	struct inode * inode = file_inode(filp);
  	int error = 0;
-@@ -65,6 +65,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
+@@ -67,6 +67,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
  
  	if (filp->f_op->check_flags)
  		error = filp->f_op->check_flags(arg);
@@ -119,7 +142,7 @@ index 300e5d9ad913..3f927cbf63b3 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 328087a4df8a..e033b3d72b00 100644
+index 93c377816d75..95a223a378f1 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
@@ -136,7 +159,7 @@ index 328087a4df8a..e033b3d72b00 100644
   * vfsmount lock must be held for write
   */
 diff --git a/fs/splice.c b/fs/splice.c
-index 60aed8de21f8..04af758d332c 100644
+index 06232d7e505f..b15fd6073b6d 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -933,7 +933,7 @@ static int warn_unsupported(struct file *file, const char *op)
@@ -149,10 +172,10 @@ index 60aed8de21f8..04af758d332c 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index fd34b5755c0b..34cb4763f8d1 100644
+index 3559446279c1..51b64b2ad82c 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1120,6 +1120,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1160,6 +1160,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -160,7 +183,7 @@ index fd34b5755c0b..34cb4763f8d1 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2041,6 +2042,7 @@ struct file_operations {
+@@ -2082,6 +2083,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -182,10 +205,10 @@ index 217f7abf2cbf..0e17b8c23f10 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 8f882f5881e8..6b9808f09843 100644
+index 70b366b64816..08cfdabb2721 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
-@@ -7,12 +7,15 @@ struct mnt_namespace;
+@@ -10,6 +10,7 @@ struct mnt_namespace;
  struct fs_struct;
  struct user_namespace;
  struct ns_common;
@@ -193,7 +216,8 @@ index 8f882f5881e8..6b9808f09843 100644
  
  extern struct mnt_namespace *copy_mnt_ns(unsigned long, struct mnt_namespace *,
  		struct user_namespace *, struct fs_struct *);
- extern void put_mnt_ns(struct mnt_namespace *ns);
+@@ -17,6 +18,8 @@ extern void put_mnt_ns(struct mnt_namespace *ns);
+ DEFINE_FREE(put_mnt_ns, struct mnt_namespace *, if (!IS_ERR_OR_NULL(_T)) put_mnt_ns(_T))
  extern struct ns_common *from_mnt_ns(struct mnt_namespace *);
  
 +extern int is_current_mnt_ns(struct vfsmount *mnt);
@@ -214,10 +238,10 @@ index 9dec4861d09f..14583d846864 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 58c88220a478..f6af298bfab5 100644
+index 536bd471557f..34b378cf7a95 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -217,7 +217,7 @@ unsigned long max_lock_class_idx;
+@@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
  
@@ -226,7 +250,7 @@ index 58c88220a478..f6af298bfab5 100644
  {
  	unsigned int class_idx = hlock->class_idx;
  
-@@ -238,6 +238,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+@@ -239,6 +239,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
