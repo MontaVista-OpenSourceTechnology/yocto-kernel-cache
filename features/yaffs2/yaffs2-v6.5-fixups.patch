@@ -1,4 +1,4 @@
-From e9ca040537fb905d7a55ee9d20ce0414eed5f10e Mon Sep 17 00:00:00 2001
+From 14f785cfacc63043c03a405724f651c5d378f995 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 27 Jul 2023 18:17:32 -0400
 Subject: [PATCH] yaffs2: v6.5 fixups
@@ -22,5 +22,5 @@ index 32864c715545..04abeee99ff5 100644
  	.splice_write = iter_file_splice_write,
  #else
 -- 
-2.34.1
+2.39.2
 

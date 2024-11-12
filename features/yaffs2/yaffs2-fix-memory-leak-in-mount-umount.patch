@@ -1,7 +1,7 @@
-From f9bda02740198b18f283c8f59a41843fe97320b6 Mon Sep 17 00:00:00 2001
+From 4adb74948355847c5b6d92bf1bf244400de64a82 Mon Sep 17 00:00:00 2001
 From: czou <cao.zou@windriver.com>
 Date: Mon, 13 Jul 2015 09:48:03 +0800
-Subject: [PATCH 4/7] yaffs2: fix memory leak in mount/umount
+Subject: [PATCH] yaffs2: fix memory leak in mount/umount
 
 when using yaffs2 filesystem, after umounting, yaffs_put_super
 function doesn't free the context_os memory, it is malloced in
@@ -45,5 +45,5 @@ index 611ef43d9825..b0e3fd977c4a 100644
  
  	yaffs_put_mtd_device(mtd);
 -- 
-2.19.1
+2.39.2
 

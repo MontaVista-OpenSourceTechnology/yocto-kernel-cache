@@ -1,4 +1,4 @@
-From 0b07d2478b6baf627d000f7f1901b148f2a6dfc2 Mon Sep 17 00:00:00 2001
+From 359a33e641fc11e1c0153bc1b09f6eb4d54d73e9 Mon Sep 17 00:00:00 2001
 From: Kevin Hao <kexin.hao@windriver.com>
 Date: Fri, 7 Apr 2023 21:03:41 +0800
 Subject: [PATCH] fat: Replace prandom_u32() with get_random_u32()
@@ -14,7 +14,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index ef5cf74789ca..ef79a242751d 100644
+index 32cb0030556f..ac5b18d7d43f 100644
 --- a/fs/fat/namei_vfat.c
 +++ b/fs/fat/namei_vfat.c
 @@ -616,7 +616,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
@@ -36,5 +36,5 @@ index ef5cf74789ca..ef79a242751d 100644
  	}
  }
 -- 
-2.34.1
+2.39.2
 

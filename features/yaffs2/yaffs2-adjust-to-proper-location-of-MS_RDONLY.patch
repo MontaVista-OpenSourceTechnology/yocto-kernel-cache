@@ -1,7 +1,7 @@
-From ca8626eb7ae99fc212704196242b05b1bf2c2663 Mon Sep 17 00:00:00 2001
+From 789e57e63549a54170b1d21c42dd1fe502fe72cb Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 14 Jan 2020 13:53:11 -0500
-Subject: [PATCH 1/2] yaffs2: adjust to proper location of MS_RDONLY
+Subject: [PATCH] yaffs2: adjust to proper location of MS_RDONLY
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
@@ -22,5 +22,5 @@ index a36d9bfaa9d2..34cdc58339a8 100644
  #include "yaffs_trace.h"
  #include "yaffs_guts.h"
 -- 
-2.19.1
+2.39.2
 

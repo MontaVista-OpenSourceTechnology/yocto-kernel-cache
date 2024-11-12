@@ -1,7 +1,7 @@
-From 0a1709f766bbc8a143e3ee9098327e815ea7e47d Mon Sep 17 00:00:00 2001
+From bb800432d979a373a63f939106cb1c43db141740 Mon Sep 17 00:00:00 2001
 From: Quanyang Wang <quanyang.wang@windriver.com>
 Date: Tue, 3 Dec 2019 17:01:17 +0800
-Subject: [PATCH 6/7] yaffs: repair yaffs_get_mtd_device
+Subject: [PATCH] yaffs: repair yaffs_get_mtd_device
 
 The function yaffs_get_mtd_device use wrong function to retrieve
 mtd_info structure (using yaffs_get_mtd_device itself will cause
@@ -48,5 +48,5 @@ index 2d34b017d08e..ecc53f6814b6 100644
  	}
  
 -- 
-2.19.1
+2.39.2
 

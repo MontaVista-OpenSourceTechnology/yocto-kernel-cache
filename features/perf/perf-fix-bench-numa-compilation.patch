@@ -1,4 +1,4 @@
-From d55d4872d65ad14efca644405812bf506805c7bf Mon Sep 17 00:00:00 2001
+From 33e77e9172d3e08969f3d4d709287095a7afe448 Mon Sep 17 00:00:00 2001
 From: Riccardo Magliocchetti <riccardo.magliocchetti@gmail.com>
 Date: Thu, 17 Oct 2013 15:11:25 -0700
 Subject: [PATCH] perf: fix bench numa compilation
@@ -21,10 +21,10 @@ Signed-off-by: Yang Shi <yang.shi@windriver.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index f7f530081aa9..8c11141cf799 100644
+index 1fbd7c947abc..283304cf585f 100644
 --- a/tools/perf/bench/numa.c
 +++ b/tools/perf/bench/numa.c
-@@ -25,6 +25,7 @@
+@@ -23,6 +23,7 @@
  #include <string.h>
  #include <unistd.h>
  #include <sys/mman.h>
@@ -32,7 +32,7 @@ index f7f530081aa9..8c11141cf799 100644
  #include <sys/time.h>
  #include <sys/resource.h>
  #include <sys/wait.h>
-@@ -1136,7 +1137,7 @@ static void *worker_thread(void *__tdata)
+@@ -1259,7 +1260,7 @@ static void *worker_thread(void *__tdata)
  		/* Check whether our max runtime timed out: */
  		if (g->p.nr_secs) {
  			timersub(&stop, &start0, &diff);
@@ -42,5 +42,5 @@ index f7f530081aa9..8c11141cf799 100644
  				break;
  			}
 -- 
-2.5.0
+2.39.2
 

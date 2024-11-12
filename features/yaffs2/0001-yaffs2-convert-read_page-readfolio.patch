@@ -1,4 +1,4 @@
-From a10fa57649a96e7cd87ec4b93badc2b441b06ec5 Mon Sep 17 00:00:00 2001
+From 0b3ffde5874ea5749eae79de45ca205465585147 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 29 Jun 2022 10:51:56 -0400
 Subject: [PATCH] yaffs2: convert read_page -> readfolio
@@ -72,5 +72,5 @@ index 8ceb66c0d070..52f2d13c7126 100644
  #if (YAFFS_USE_WRITE_BEGIN_END > 0)
  	.write_begin = yaffs_write_begin,
 -- 
-2.19.1
+2.39.2
 

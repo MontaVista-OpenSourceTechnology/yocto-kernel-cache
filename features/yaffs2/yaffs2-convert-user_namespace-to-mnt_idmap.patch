@@ -1,4 +1,4 @@
-From 5440769b1bbff51e64557c2a981a6cdfece8adec Mon Sep 17 00:00:00 2001
+From f21308cd07da6e8796f9e56c5873fd1a92cc52c6 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 17 Mar 2023 22:31:42 -0400
 Subject: [PATCH] yaffs2: convert user_namespace to mnt_idmap
@@ -92,5 +92,5 @@ index 140f7aa7a1a1..3844d542608e 100644
  #else
  static int yaffs_rename(struct inode *old_dir, struct dentry *old_dentry,
 -- 
-2.34.1
+2.39.2
 

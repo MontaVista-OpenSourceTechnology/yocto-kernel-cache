@@ -1,4 +1,4 @@
-From 70f40841c195a81a8ef8290862adeb86fe264b24 Mon Sep 17 00:00:00 2001
+From 3d186e8932d05a94794d4df87716e8e06c385a1c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 21 Sep 2023 17:04:31 -0400
 Subject: [PATCH] yaffs2: update VFS ctime operations to 6.6+
@@ -60,5 +60,5 @@ index 04abeee99ff5..8a9738de8906 100644
  		inode->i_rdev = obj->yst_rdev;
  		inode->i_atime = obj->yst_atime;
 -- 
-2.34.1
+2.39.2
 

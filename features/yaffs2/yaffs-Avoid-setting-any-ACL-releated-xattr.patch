@@ -1,7 +1,7 @@
-From 2ee5199a51c48eb4441431de9634d681cc7f2022 Mon Sep 17 00:00:00 2001
+From 5f804de694308375146f6bb56a6883b0872e8025 Mon Sep 17 00:00:00 2001
 From: Zhang Xiao <xiao.zhang@windriver.com>
 Date: Wed, 27 Aug 2014 13:34:15 +0800
-Subject: [PATCH 3/7] yaffs: Avoid setting any ACL releated xattr
+Subject: [PATCH] yaffs: Avoid setting any ACL releated xattr
 
 YAFFS doesn't sopport ACL yet, it must refuse any related settings.
 
@@ -29,5 +29,5 @@ index f4c5ba95d51d..611ef43d9825 100644
  		int result;
  		dev = obj->my_dev;
 -- 
-2.19.1
+2.39.2
 

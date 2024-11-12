@@ -1,4 +1,4 @@
-From dded404c66bb87f08216afd1e3c9d84359e80012 Mon Sep 17 00:00:00 2001
+From 29190554517887dca0f5eacd39e5affe6de5220f Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Wed, 31 May 2023 14:01:07 +0800
 Subject: [PATCH] yaffs2: Fix miscalculation of devname buffer length
@@ -22,7 +22,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 140f7aa7a1a1..e9e29a41a680 100644
+index 3844d542608e..32864c715545 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -118,8 +118,8 @@
@@ -61,5 +61,5 @@ index 140f7aa7a1a1..e9e29a41a680 100644
  
  	mtd = yaffs_get_mtd_device(sb->s_dev);
 -- 
-2.34.1
+2.39.2
 

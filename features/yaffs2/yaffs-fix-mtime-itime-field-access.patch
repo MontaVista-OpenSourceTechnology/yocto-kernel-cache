@@ -1,4 +1,4 @@
-From 7614fa80bc6abefd1450b5c4c3839386ac2b92cc Mon Sep 17 00:00:00 2001
+From 870da4bfc23025dfb10ed7724f7770c795de5182 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 22 Nov 2023 12:04:28 -0500
 Subject: [PATCH] yaffs: fix mtime/itime field access
@@ -61,5 +61,5 @@ index 8a9738de8906..ec4016cfeedf 100644
  #endif
  		inode->i_size = yaffs_get_obj_length(obj);
 -- 
-2.34.1
+2.39.2
 

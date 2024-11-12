@@ -1,4 +1,4 @@
-From 50d3d656dd37c9af5d908e0dbd5ea6e170b38f80 Mon Sep 17 00:00:00 2001
+From 5b8a30add7509ad6cd1ffb6d6cfc8f60f9f6c80b Mon Sep 17 00:00:00 2001
 From: Yang Shi <yang.shi@windriver.com>
 Date: Fri, 25 Oct 2013 12:17:50 -0700
 Subject: [PATCH] perf: mips64: Convert __u64 to unsigned long long
@@ -10,13 +10,18 @@ Convert __u64 to unsigned long long in those sprintf calls to avoid the build
 error.
 
 Signed-off-by: Yang Shi <yang.shi@windriver.com>
+---
+ tools/perf/tests/attr.c               | 20 ++++++++++----------
+ tools/perf/tests/bp_signal.c          |  2 +-
+ tools/perf/tests/bp_signal_overflow.c |  2 +-
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
-index 28d1605b0338..6cc1407422e2 100644
+index 97e1bdd6ec0e..2c2319ba50d6 100644
 --- a/tools/perf/tests/attr.c
 +++ b/tools/perf/tests/attr.c
-@@ -64,7 +64,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, int cpu,
- 	char path[PATH_MAX];
+@@ -75,7 +75,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
+ 		return 0;
  
  	snprintf(path, PATH_MAX, "%s/event-%d-%llu-%d", dir,
 -		 attr->type, attr->config, fd);
@@ -24,7 +29,7 @@ index 28d1605b0338..6cc1407422e2 100644
  
  	file = fopen(path, "w+");
  	if (!file) {
-@@ -73,7 +73,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, int cpu,
+@@ -84,7 +84,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
  	}
  
  	if (fprintf(file, "[event-%d-%llu-%d]\n",
@@ -33,7 +38,7 @@ index 28d1605b0338..6cc1407422e2 100644
  		perror("test attr - failed to write event file");
  		fclose(file);
  		return -1;
-@@ -89,10 +89,10 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, int cpu,
+@@ -100,10 +100,10 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
  	/* struct perf_event_attr */
  	WRITE_ASS(type,   PRIu32);
  	WRITE_ASS(size,   PRIu32);
@@ -48,8 +53,8 @@ index 28d1605b0338..6cc1407422e2 100644
  	WRITE_ASS(disabled,       "d");
  	WRITE_ASS(inherit,        "d");
  	WRITE_ASS(pinned,         "d");
-@@ -117,10 +117,10 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, int cpu,
- 	WRITE_ASS(exclude_callchain_user, "d");
+@@ -134,10 +134,10 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
+ 	WRITE_ASS(use_clockid,    "d");
  	WRITE_ASS(wakeup_events, PRIu32);
  	WRITE_ASS(bp_type, PRIu32);
 -	WRITE_ASS(config1, "llu");
@@ -64,10 +69,10 @@ index 28d1605b0338..6cc1407422e2 100644
  
  	fclose(file);
 diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index e7664fe3bd33..8fd2dabcb393 100644
+index 3faeb5b6fe0b..db33f1d72e48 100644
 --- a/tools/perf/tests/bp_signal.c
 +++ b/tools/perf/tests/bp_signal.c
-@@ -128,7 +128,7 @@ static int __event(bool is_x, void *addr, int sig)
+@@ -125,7 +125,7 @@ static int __event(bool is_x, void *addr, int sig)
  	fd = sys_perf_event_open(&pe, 0, -1, -1,
  				 perf_event_open_cloexec_flag());
  	if (fd < 0) {
@@ -77,10 +82,10 @@ index e7664fe3bd33..8fd2dabcb393 100644
  	}
  
 diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
-index 89f92fa67cc4..0dce85a2f323 100644
+index ee560e156be6..9c730d2c233f 100644
 --- a/tools/perf/tests/bp_signal_overflow.c
 +++ b/tools/perf/tests/bp_signal_overflow.c
-@@ -95,7 +95,7 @@ int test__bp_signal_overflow(int subtest __maybe_unused)
+@@ -102,7 +102,7 @@ static int test__bp_signal_overflow(struct test_suite *test __maybe_unused, int
  	fd = sys_perf_event_open(&pe, 0, -1, -1,
  				 perf_event_open_cloexec_flag());
  	if (fd < 0) {
@@ -90,5 +95,5 @@ index 89f92fa67cc4..0dce85a2f323 100644
  	}
  
 -- 
-2.10.1
+2.39.2
 

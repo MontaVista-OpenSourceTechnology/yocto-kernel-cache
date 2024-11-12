@@ -1,7 +1,7 @@
-From d6913ff1d8bc6eee0d8b075637040f00042d3ad2 Mon Sep 17 00:00:00 2001
+From 010d2eec05c3a71374548d9a0cf89eb8c525ae89 Mon Sep 17 00:00:00 2001
 From: Jiang Lu <lu.jiang@windriver.com>
 Date: Fri, 13 Dec 2013 11:18:18 +0800
-Subject: [PATCH 2/7] Yaffs:check oob size before auto selecting Yaffs1
+Subject: [PATCH] Yaffs:check oob size before auto selecting Yaffs1
 
 Yaffs will select Yaffs1 for deives with 512 byte writing size.
 Moreover, it will enable inband_tags automatically for devices with
@@ -42,5 +42,5 @@ index c1c80f7a33a0..f4c5ba95d51d 100644
  		return NULL;
  
 -- 
-2.19.1
+2.39.2
 

@@ -1,7 +1,7 @@
-From 9ad5defd90591efb015c9a6c59b47108fe68e961 Mon Sep 17 00:00:00 2001
+From f4b98a4fc9f58a2992d7ec0ef3f73956732c5bc8 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Wed, 16 Dec 2020 12:22:58 -0500
-Subject: [PATCH 3/3] clear_warn_once: add a clear_warn_once= boot parameter
+Subject: [PATCH] clear_warn_once: add a clear_warn_once= boot parameter
 
 In the event debugfs is not mounted, or if built with the .config
 setting DEBUG_FS_ALLOW_NONE chosen, this gives the sysadmin access
@@ -16,10 +16,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  2 files changed, 29 insertions(+)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 74ba077e99e5..b0c5a7458c03 100644
+index 1666576acc0e..2f9fbb3efdc8 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5352,6 +5352,14 @@
+@@ -7450,6 +7450,14 @@
  	vt.underline=	[VT] Default color for underlined text; 0-15.
  			Default: 3 = cyan.
  
@@ -35,10 +35,10 @@ index 74ba077e99e5..b0c5a7458c03 100644
  			see Documentation/watchdog/watchdog-parameters.rst
  			or other driver-specific files in the
 diff --git a/kernel/panic.c b/kernel/panic.c
-index e3a462e39062..f4f3633f4f69 100644
+index 8962ce0fb2f6..cfba91f5726c 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -697,10 +697,31 @@ static __init int register_warn_debugfs(void)
+@@ -865,10 +865,31 @@ static __init int register_warn_debugfs(void)
  	/* Don't care about failure */
  	debugfs_create_file_unsafe("clear_warn_once", 0600, NULL,
  				   &clear_warn_once, &clear_warn_once_fops);
@@ -71,5 +71,5 @@ index e3a462e39062..f4f3633f4f69 100644
  
  #ifdef CONFIG_STACKPROTECTOR
 -- 
-2.19.1
+2.39.2
 

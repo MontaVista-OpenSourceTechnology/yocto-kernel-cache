@@ -1,4 +1,4 @@
-From 046fe0a1215486fa81327553215eca8acab9d546 Mon Sep 17 00:00:00 2001
+From f4174ad267f3dcf323c9d171581389c5f3e8b2a1 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 16 Mar 2020 23:20:57 -0400
 Subject: [PATCH] yaffs2: v5.6 build fixups
@@ -46,5 +46,5 @@ index 4fbd0a42ff3d..598ecd57a0ed 100644
  
  static int yaffs_procfs_init(void)
 -- 
-2.19.1
+2.39.2
 

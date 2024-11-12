@@ -1,4 +1,4 @@
-From d16f6eab238d58479a7140507a2eb32573c1a106 Mon Sep 17 00:00:00 2001
+From bf198eefa502fce22b9a096bcd2776c26693ab90 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 19 Mar 2021 12:13:36 -0400
 Subject: [PATCH] yaffs2: v5.12+ build fixups (not runtime tested)
@@ -101,5 +101,5 @@ index a9cf8edc2245..ee9d6955ed79 100644
  #else
  static int yaffs_rename(struct inode *old_dir, struct dentry *old_dentry,
 -- 
-2.19.1
+2.39.2
 
