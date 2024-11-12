@@ -3,7 +3,9 @@ define KMACHINE ti-am335x
 define KTYPE standard
 define KARCH arm
 
+## BSP has no patches and is not typically
+## used, so branching is commented out.
 include ktypes/standard/standard.scc
-branch ti-am335x
+## branch ti-am335x
 
 include ti-am335x.scc

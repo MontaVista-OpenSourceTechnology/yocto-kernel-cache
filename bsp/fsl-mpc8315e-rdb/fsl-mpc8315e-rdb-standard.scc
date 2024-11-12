@@ -4,10 +4,13 @@ define KMACHINE mpc8315e-rdb
 define KTYPE standard
 define KARCH powerpc
 
-include ktypes/standard/standard.scc
-branch fsl-mpc8315e-rdb
+## Nov 2024
+## BSP is no longer supported, branching is commented
+## out.
+# include ktypes/standard/standard.scc
+# branch fsl-mpc8315e-rdb
 
-include fsl-mpc8315e-rdb.scc
+# include fsl-mpc8315e-rdb.scc
 
 # default policy for standard kernels
-include features/profiling/profiling.scc
+# include features/profiling/profiling.scc

@@ -4,9 +4,13 @@ define KMACHINE mpc8315e-rdb
 define KTYPE preempt-rt
 define KARCH powerpc
 
+## Nov 2024
+## BSP is no longer supported, branching is commented
+## out.
+
 # no new branch required, re-use the ktypes/preempt-rt/preempt-rt.scc branch
-include ktypes/preempt-rt/preempt-rt.scc
-include fsl-mpc8315e-rdb.scc
+## include ktypes/preempt-rt/preempt-rt.scc
+## include fsl-mpc8315e-rdb.scc
 
 # default policy for preempt-rt kernels
-include features/profiling/profiling.scc
+## include features/profiling/profiling.scc

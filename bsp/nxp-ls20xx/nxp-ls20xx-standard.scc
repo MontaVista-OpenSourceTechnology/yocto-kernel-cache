@@ -3,7 +3,10 @@ define KMACHINE nxp-ls20xx
 define KTYPE standard
 define KARCH arm64
 
-include ktypes/standard/standard.scc
-branch nxp-ls20xx
+## BSP is not supported by default, so remove
+## branching, but keep configuration
+#
+## include ktypes/standard/standard.scc
+## branch nxp-ls20xx
 
-include nxp-ls20xx.scc
+## include nxp-ls20xx.scc
