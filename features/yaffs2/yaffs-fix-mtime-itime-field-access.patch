@@ -1,4 +1,4 @@
-From 870da4bfc23025dfb10ed7724f7770c795de5182 Mon Sep 17 00:00:00 2001
+From e998f095d2b6d7dca756ebc8bdc058b8b8e3f8ef Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 22 Nov 2023 12:04:28 -0500
 Subject: [PATCH] yaffs: fix mtime/itime field access
@@ -24,7 +24,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 8a9738de8906..ec4016cfeedf 100644
+index e428957cbd9a..4f1a9401e657 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");
@@ -36,7 +36,7 @@ index 8a9738de8906..ec4016cfeedf 100644
  	} while (0)
  #endif
  
-@@ -2075,17 +2075,17 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
+@@ -2076,17 +2076,17 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
  #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
  
  		inode->i_rdev = old_decode_dev(obj->yst_rdev);

@@ -1,4 +1,4 @@
-From c0342eb5a14b7bf2947a14ac432a6e1d67a29843 Mon Sep 17 00:00:00 2001
+From cc0fe97abb9a9dc62f46d9d63fd856f4cc0e87c2 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 1 Aug 2024 15:14:33 -0400
 Subject: [PATCH] yaffs2: adapt to v6.10 i_time changes
@@ -9,7 +9,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index ec4016cfeedf..eafa1e5d8ce7 100644
+index 4f1a9401e657..26e97bd3994c 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");
@@ -30,7 +30,7 @@ index ec4016cfeedf..eafa1e5d8ce7 100644
  			 const char *symname)
  {
  	struct yaffs_obj *obj;
-@@ -2075,18 +2075,18 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
+@@ -2076,18 +2076,18 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
  #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
  
  		inode->i_rdev = old_decode_dev(obj->yst_rdev);
@@ -58,7 +58,7 @@ index ec4016cfeedf..eafa1e5d8ce7 100644
  #endif
  		inode->i_size = yaffs_get_obj_length(obj);
  		inode->i_blocks = (inode->i_size + 511) >> 9;
-@@ -2246,7 +2246,7 @@ static int yaffs_bg_thread_fn(void *data)
+@@ -2247,7 +2247,7 @@ static int yaffs_bg_thread_fn(void *data)
  				else
  					next_gc = now + HZ * 2;
  			} else	{

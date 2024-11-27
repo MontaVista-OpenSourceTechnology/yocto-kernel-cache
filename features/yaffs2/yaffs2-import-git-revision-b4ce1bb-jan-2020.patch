@@ -1,4 +1,4 @@
-From e2dd614c85625fbeb36a286fab1caba47ef06437 Mon Sep 17 00:00:00 2001
+From f7c310ab78fc8c1cccb22193fe9fa38a2aeede0d Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 13 Jan 2020 12:19:30 -0500
 Subject: [PATCH] yaffs2: import git revision b4ce1bb (jan, 2020)

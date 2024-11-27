@@ -1,4 +1,4 @@
-From 0b3ffde5874ea5749eae79de45ca205465585147 Mon Sep 17 00:00:00 2001
+From 78d8f95b8a87581d19902c49c8b28809b90a7202 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 29 Jun 2022 10:51:56 -0400
 Subject: [PATCH] yaffs2: convert read_page -> readfolio
@@ -13,7 +13,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 8ceb66c0d070..52f2d13c7126 100644
+index ba66574620b4..c9301f587aea 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -367,13 +367,13 @@ static int yaffs_readpage_unlock(struct file *f, struct page *pg)

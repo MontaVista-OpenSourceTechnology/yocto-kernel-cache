@@ -1,4 +1,4 @@
-From bb800432d979a373a63f939106cb1c43db141740 Mon Sep 17 00:00:00 2001
+From 21b6f6ab9343dbed9c1ef9c7582d65a8d209fb85 Mon Sep 17 00:00:00 2001
 From: Quanyang Wang <quanyang.wang@windriver.com>
 Date: Tue, 3 Dec 2019 17:01:17 +0800
 Subject: [PATCH] yaffs: repair yaffs_get_mtd_device

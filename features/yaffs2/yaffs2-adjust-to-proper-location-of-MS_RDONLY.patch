@@ -1,4 +1,4 @@
-From 789e57e63549a54170b1d21c42dd1fe502fe72cb Mon Sep 17 00:00:00 2001
+From c35281a67e3a9e053468fd2b6c4175831ee3692c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 14 Jan 2020 13:53:11 -0500
 Subject: [PATCH] yaffs2: adjust to proper location of MS_RDONLY

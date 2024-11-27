@@ -1,4 +1,4 @@
-From 3d186e8932d05a94794d4df87716e8e06c385a1c Mon Sep 17 00:00:00 2001
+From 569679f34366bacc136ff856e0f04574fce87d3b Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 21 Sep 2023 17:04:31 -0400
 Subject: [PATCH] yaffs2: update VFS ctime operations to 6.6+
@@ -17,7 +17,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 04abeee99ff5..8a9738de8906 100644
+index 279be14981f5..e428957cbd9a 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");
@@ -29,7 +29,7 @@ index 04abeee99ff5..8a9738de8906 100644
  	} while (0)
  #endif
  
-@@ -1901,7 +1901,7 @@ static int yaffs_iterate(struct file *f, struct dir_context *dc)
+@@ -1902,7 +1902,7 @@ static int yaffs_iterate(struct file *f, struct dir_context *dc)
  
  	return ret_val;
  }
@@ -38,7 +38,7 @@ index 04abeee99ff5..8a9738de8906 100644
  #else
  
  static int yaffs_readdir(struct file *f, void *dirent, filldir_t filldir)
-@@ -2018,7 +2018,7 @@ static int yaffs_readdir(struct file *f, void *dirent, filldir_t filldir)
+@@ -2019,7 +2019,7 @@ static int yaffs_readdir(struct file *f, void *dirent, filldir_t filldir)
  static const struct file_operations yaffs_dir_operations = {
  	.read = generic_read_dir,
  #ifdef YAFFS_USE_DIR_ITERATE
@@ -47,7 +47,7 @@ index 04abeee99ff5..8a9738de8906 100644
  #else
  	.readdir = yaffs_readdir,
  #endif
-@@ -2079,8 +2079,9 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
+@@ -2080,8 +2080,9 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,
  		inode->i_atime.tv_nsec = 0;
  		inode->i_mtime.tv_sec = (time64_t) obj->yst_mtime;
  		inode->i_mtime.tv_nsec = 0;
