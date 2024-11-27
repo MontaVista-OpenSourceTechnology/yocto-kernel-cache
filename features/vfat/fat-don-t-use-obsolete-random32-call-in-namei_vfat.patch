@@ -1,4 +1,4 @@
-From b131af890f6d5f0c7d15fa040b0a87e7f9d72d4f Mon Sep 17 00:00:00 2001
+From a4102db1ec04cdbf8b173545eecdd700798d6298 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Sat, 27 Sep 2014 12:01:21 -0400
 Subject: [PATCH] fat: don't use obsolete random32 call in namei_vfat

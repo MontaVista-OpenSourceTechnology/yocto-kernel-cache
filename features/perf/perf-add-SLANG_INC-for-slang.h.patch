@@ -1,4 +1,4 @@
-From 06535e75f00b14482df02d3baca04dcfd277fd10 Mon Sep 17 00:00:00 2001
+From 7c3cf186b107d8b60954e742f6f9f4ec8fa06709 Mon Sep 17 00:00:00 2001
 From: Liang Li <liang.li@windriver.com>
 Date: Wed, 22 Aug 2012 16:04:50 +0800
 Subject: [PATCH] perf: add SLANG_INC for slang.h

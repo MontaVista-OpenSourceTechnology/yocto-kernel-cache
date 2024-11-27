@@ -1,4 +1,4 @@
-From f4b98a4fc9f58a2992d7ec0ef3f73956732c5bc8 Mon Sep 17 00:00:00 2001
+From 96e8353d9d26159c3af466444455fd0689952ac7 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Wed, 16 Dec 2020 12:22:58 -0500
 Subject: [PATCH] clear_warn_once: add a clear_warn_once= boot parameter
@@ -16,10 +16,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  2 files changed, 29 insertions(+)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 1666576acc0e..2f9fbb3efdc8 100644
+index d401577b5a6a..bf3aacb1ceb7 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7450,6 +7450,14 @@
+@@ -7459,6 +7459,14 @@
  	vt.underline=	[VT] Default color for underlined text; 0-15.
  			Default: 3 = cyan.
  
