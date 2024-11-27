@@ -1,6 +1,7 @@
 block/Kconfig
 block/Kconfig.iosched
 block/partitions/Kconfig
+certs/Kconfig
 crypto/asymmetric_keys/Kconfig
 crypto/async_tx/Kconfig
 crypto/Kconfig
@@ -11,13 +12,20 @@ drivers/base/Kconfig
 drivers/base/regmap/Kconfig
 drivers/base/test/Kconfig
 drivers/block/drbd/Kconfig
+drivers/block/null_blk/Kconfig
 drivers/block/zram/Kconfig
 drivers/connector/Kconfig
+drivers/cpufreq/Kconfig
+drivers/cpufreq/Kconfig.arm
+drivers/cpufreq/Kconfig.powerpc
+drivers/cpufreq/Kconfig.x86
 drivers/cpuidle/Kconfig
 drivers/cpuidle/Kconfig.arm
 drivers/cpuidle/Kconfig.mips
 drivers/cpuidle/Kconfig.powerpc
 drivers/cpuidle/Kconfig.riscv
+drivers/dma-buf/heaps/Kconfig
+drivers/dma-buf/Kconfig
 drivers/firewire/Kconfig
 drivers/hv/Kconfig
 drivers/md/bcache/Kconfig
@@ -25,6 +33,8 @@ drivers/md/dm-vdo/Kconfig
 drivers/md/Kconfig
 drivers/md/persistent-data/Kconfig
 drivers/mtd/ubi/Kconfig
+drivers/net/hyperv/Kconfig
+drivers/of/Kconfig
 drivers/remoteproc/Kconfig
 drivers/rpmsg/Kconfig
 drivers/staging/axis-fifo/Kconfig
@@ -40,7 +50,6 @@ drivers/staging/iio/frequency/Kconfig
 drivers/staging/iio/impedance-analyzer/Kconfig
 drivers/staging/iio/Kconfig
 drivers/staging/Kconfig
-drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
 drivers/staging/media/av7110/Kconfig
@@ -83,6 +92,7 @@ drivers/vhost/Kconfig
 drivers/virt/acrn/Kconfig
 drivers/virt/coco/efi_secret/Kconfig
 drivers/virt/coco/Kconfig
+drivers/virt/coco/pkvm-guest/Kconfig
 drivers/virt/coco/sev-guest/Kconfig
 drivers/virt/coco/tdx-guest/Kconfig
 drivers/virtio/Kconfig
@@ -94,7 +104,6 @@ fs/9p/Kconfig
 fs/adfs/Kconfig
 fs/affs/Kconfig
 fs/afs/Kconfig
-fs/aufs/Kconfig
 fs/autofs/Kconfig
 fs/bcachefs/Kconfig
 fs/befs/Kconfig
@@ -282,6 +291,7 @@ security/apparmor/Kconfig
 security/integrity/evm/Kconfig
 security/integrity/ima/Kconfig
 security/integrity/Kconfig
+security/ipe/Kconfig
 security/Kconfig
 security/Kconfig.hardening
 security/keys/Kconfig

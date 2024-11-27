@@ -322,6 +322,7 @@ drivers/dax/Kconfig
 drivers/dca/Kconfig
 drivers/devfreq/event/Kconfig
 drivers/devfreq/Kconfig
+drivers/dma/amd/Kconfig
 drivers/dma/bestcomm/Kconfig
 drivers/dma-buf/heaps/Kconfig
 drivers/dma-buf/Kconfig
@@ -345,6 +346,8 @@ drivers/extcon/Kconfig
 drivers/firewire/Kconfig
 drivers/firmware/arm_ffa/Kconfig
 drivers/firmware/arm_scmi/Kconfig
+drivers/firmware/arm_scmi/transports/Kconfig
+drivers/firmware/arm_scmi/vendors/imx/Kconfig
 drivers/firmware/broadcom/Kconfig
 drivers/firmware/cirrus/Kconfig
 drivers/firmware/efi/Kconfig
@@ -595,6 +598,7 @@ drivers/md/persistent-data/Kconfig
 drivers/media/cec/i2c/Kconfig
 drivers/media/cec/Kconfig
 drivers/media/cec/platform/Kconfig
+drivers/media/cec/usb/extron-da-hd-4k-plus/Kconfig
 drivers/media/cec/usb/Kconfig
 drivers/media/cec/usb/pulse8/Kconfig
 drivers/media/cec/usb/rainshadow/Kconfig
@@ -825,6 +829,7 @@ drivers/net/can/m_can/Kconfig
 drivers/net/can/mscan/Kconfig
 drivers/net/can/peak_canfd/Kconfig
 drivers/net/can/rcar/Kconfig
+drivers/net/can/rockchip/Kconfig
 drivers/net/can/sja1000/Kconfig
 drivers/net/can/softing/Kconfig
 drivers/net/can/spi/Kconfig
@@ -918,7 +923,9 @@ drivers/net/ethernet/mellanox/mlxfw/Kconfig
 drivers/net/ethernet/mellanox/mlxsw/Kconfig
 drivers/net/ethernet/meta/Kconfig
 drivers/net/ethernet/micrel/Kconfig
+drivers/net/ethernet/microchip/fdma/Kconfig
 drivers/net/ethernet/microchip/Kconfig
+drivers/net/ethernet/microchip/lan865x/Kconfig
 drivers/net/ethernet/microchip/lan966x/Kconfig
 drivers/net/ethernet/microchip/sparx5/Kconfig
 drivers/net/ethernet/microchip/vcap/Kconfig
@@ -1124,6 +1131,7 @@ drivers/phy/mediatek/Kconfig
 drivers/phy/microchip/Kconfig
 drivers/phy/motorola/Kconfig
 drivers/phy/mscc/Kconfig
+drivers/phy/nuvoton/Kconfig
 drivers/phy/qualcomm/Kconfig
 drivers/phy/ralink/Kconfig
 drivers/phy/realtek/Kconfig
@@ -1158,6 +1166,7 @@ drivers/pinctrl/qcom/Kconfig.msm
 drivers/pinctrl/realtek/Kconfig
 drivers/pinctrl/renesas/Kconfig
 drivers/pinctrl/samsung/Kconfig
+drivers/pinctrl/sophgo/Kconfig
 drivers/pinctrl/spear/Kconfig
 drivers/pinctrl/sprd/Kconfig
 drivers/pinctrl/starfive/Kconfig
@@ -1289,6 +1298,7 @@ drivers/soc/atmel/Kconfig
 drivers/soc/bcm/brcmstb/Kconfig
 drivers/soc/bcm/Kconfig
 drivers/soc/canaan/Kconfig
+drivers/soc/cirrus/Kconfig
 drivers/soc/fsl/Kconfig
 drivers/soc/fsl/qbman/Kconfig
 drivers/soc/fsl/qe/Kconfig
@@ -1330,7 +1340,6 @@ drivers/staging/iio/frequency/Kconfig
 drivers/staging/iio/impedance-analyzer/Kconfig
 drivers/staging/iio/Kconfig
 drivers/staging/Kconfig
-drivers/staging/ks7010/Kconfig
 drivers/staging/media/atomisp/i2c/Kconfig
 drivers/staging/media/atomisp/Kconfig
 drivers/staging/media/av7110/Kconfig
@@ -1471,6 +1480,7 @@ drivers/video/logo/Kconfig
 drivers/virt/acrn/Kconfig
 drivers/virt/coco/efi_secret/Kconfig
 drivers/virt/coco/Kconfig
+drivers/virt/coco/pkvm-guest/Kconfig
 drivers/virt/coco/sev-guest/Kconfig
 drivers/virt/coco/tdx-guest/Kconfig
 drivers/virtio/Kconfig
@@ -1486,6 +1496,7 @@ drivers/zorro/Kconfig
 mm/damon/Kconfig
 mm/Kconfig
 mm/Kconfig.debug
+net/atm/Kconfig
 net/can/j1939/Kconfig
 net/can/Kconfig
 net/iucv/Kconfig
@@ -1543,6 +1554,7 @@ sound/soc/pxa/Kconfig
 sound/soc/qcom/Kconfig
 sound/soc/rockchip/Kconfig
 sound/soc/samsung/Kconfig
+sound/soc/sdw_utils/Kconfig
 sound/soc/sh/Kconfig
 sound/soc/sof/amd/Kconfig
 sound/soc/sof/imx/Kconfig
