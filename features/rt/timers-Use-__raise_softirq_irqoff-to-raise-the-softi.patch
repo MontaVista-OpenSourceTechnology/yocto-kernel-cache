@@ -1,0 +1,34 @@
+From 2b1abe84def211dedcd6e37ef2580b4d9b8ec4f7 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Wed, 23 Oct 2024 13:02:37 +0200
+Subject: [PATCH 02/42] timers: Use __raise_softirq_irqoff() to raise the
+ softirq.
+
+As an optimisation use __raise_softirq_irqoff() to raise the softirq.
+This is always called from an interrupt handler, interrupts are already
+disabled so it can be reduced to just or set softirq flag and let
+softirq be invoked on return from interrupt.
+
+Use __raise_softirq_irqoff() to raise the softirq.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/time/timer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 0fc9d066a7be..1759de934284 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -2499,7 +2499,7 @@ static void run_local_timers(void)
+ 		 */
+ 		if (time_after_eq(jiffies, READ_ONCE(base->next_expiry)) ||
+ 		    (i == BASE_DEF && tmigr_requires_handle_remote())) {
+-			raise_softirq(TIMER_SOFTIRQ);
++			__raise_softirq_irqoff(TIMER_SOFTIRQ);
+ 			return;
+ 		}
+ 	}
+-- 
+2.39.2
+
