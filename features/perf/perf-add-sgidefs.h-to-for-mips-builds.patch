@@ -1,4 +1,4 @@
-From f947db9ffa99da1d583d9c9d1c05d46e322f6e62 Mon Sep 17 00:00:00 2001
+From a9c0a44002997c9c708460c1a4a900365f5d84af Mon Sep 17 00:00:00 2001
 From: Tom Zanussi <tom.zanussi@intel.com>
 Date: Tue, 10 Jul 2012 09:37:56 -0500
 Subject: [PATCH] perf: add sgidefs.h to for mips builds
@@ -13,7 +13,7 @@ Signed-off-by: Tom Zanussi <tom.zanussi@intel.com>
  2 files changed, 8 insertions(+)
 
 diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-index 3954bd1587ce..8228c2c51f0b 100644
+index 01f54d6724a5..3b6e975949b9 100644
 --- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
 +++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
 @@ -11,6 +11,10 @@
@@ -25,10 +25,10 @@ index 3954bd1587ce..8228c2c51f0b 100644
 +#endif
 +
  #include <Python.h>
+ #include "../../../util/config.h"
  #include "../../../util/trace-event.h"
- #include "../../../util/event.h"
 diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index d7183134b669..5ae16d09b1a3 100644
+index 8bdae066e839..2eb0dae791b5 100644
 --- a/tools/perf/util/scripting-engines/trace-event-python.c
 +++ b/tools/perf/util/scripting-engines/trace-event-python.c
 @@ -19,6 +19,10 @@

@@ -1,4 +1,4 @@
-From 478759cf4e0b8246c07d7bbbc1b44722680264dd Mon Sep 17 00:00:00 2001
+From 741e69198c53bf489b9890d0adbfbc791666e385 Mon Sep 17 00:00:00 2001
 From: czou <cao.zou@windriver.com>
 Date: Mon, 13 Jul 2015 09:48:03 +0800
 Subject: [PATCH] yaffs2: fix memory leak in mount/umount

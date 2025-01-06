@@ -1,4 +1,4 @@
-From ed2293c4ef299317ed25d63c24850dcaa31718bc Mon Sep 17 00:00:00 2001
+From eee3b4e1a857355ccae17be6b34b206bacdffcd9 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Sat, 5 Oct 2024 01:06:00 -0400
 Subject: [PATCH] yaffs2: update to v6.12 folio changes

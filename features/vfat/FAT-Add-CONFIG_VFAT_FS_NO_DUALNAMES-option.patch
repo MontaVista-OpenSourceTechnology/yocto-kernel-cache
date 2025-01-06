@@ -1,4 +1,4 @@
-From 1348d52c862ffff5a6e2e955d505a32dbc0660ae Mon Sep 17 00:00:00 2001
+From eb4e710891285d22c5aedf8823a73c4cebf4a1d3 Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Tue, 21 Jul 2009 09:59:29 +1000
 Subject: [PATCH] FAT: Add CONFIG_VFAT_FS_NO_DUALNAMES option

@@ -1,4 +1,4 @@
-From 6e855c0b8e6f08b82d50eac56afe2aab02a34946 Mon Sep 17 00:00:00 2001
+From d99ceea5b5df826a7a631a075966fe72cba633d3 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Sat, 29 Aug 2020 10:25:04 -0400
 Subject: [PATCH] yaffs: include blkdev.h

@@ -1,4 +1,4 @@
-From fc2ecbc7c065389bc22bcfbecdab5a64a88c6984 Mon Sep 17 00:00:00 2001
+From 6bc56b97b3df0c60fe132d75f2b9ce6af1d3b5a5 Mon Sep 17 00:00:00 2001
 From: Charles Manning <cdhmanning@gmail.com>
 Date: Mon, 16 Mar 2020 16:52:51 +0800
 Subject: [PATCH] yaffs2: fix memory leak when /proc/yaffs is read

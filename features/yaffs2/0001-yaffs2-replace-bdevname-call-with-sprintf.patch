@@ -1,4 +1,4 @@
-From 05275943a48f94c1df1dd5e4961f7ba2fdcfa808 Mon Sep 17 00:00:00 2001
+From d7d47146cad515a7b6b8136a6ebbd8b19123402c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 3 Oct 2022 15:16:27 -0400
 Subject: [PATCH] yaffs2: replace bdevname call with sprintf

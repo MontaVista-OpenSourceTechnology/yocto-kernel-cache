@@ -1,4 +1,4 @@
-From 0e24921c54343f4c380fcd9d9dee24409ffbeab4 Mon Sep 17 00:00:00 2001
+From a7c648a1b7624f9a6ac96f63e8c8464e08c472df Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Wed, 15 Jul 2009 10:14:59 +1000
 Subject: [PATCH] FAT: Add CONFIG_VFAT_NO_CREATE_WITH_LONGNAMES option

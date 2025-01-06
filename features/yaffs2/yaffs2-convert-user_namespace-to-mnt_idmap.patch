@@ -1,4 +1,4 @@
-From 48f21f79218fe5e6df4575e02d620d1ab8628bae Mon Sep 17 00:00:00 2001
+From 7e143e8763d9532aeaf471caae9f2044f1cf4a7a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 17 Mar 2023 22:31:42 -0400
 Subject: [PATCH] yaffs2: convert user_namespace to mnt_idmap

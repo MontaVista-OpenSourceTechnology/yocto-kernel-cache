@@ -1,4 +1,4 @@
-From 5dd72ab1575125d0a7a3a9bc0d1247660f6e7d81 Mon Sep 17 00:00:00 2001
+From 8d892302397adb0be734a0e5188d707565fcc23c Mon Sep 17 00:00:00 2001
 From: Jiang Lu <lu.jiang@windriver.com>
 Date: Fri, 13 Dec 2013 11:18:18 +0800
 Subject: [PATCH] Yaffs:check oob size before auto selecting Yaffs1
