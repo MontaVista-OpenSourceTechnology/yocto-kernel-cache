@@ -1,0 +1,41 @@
+From 807165b1ec1c73b5c1c30e9dd376e9b568e354bd Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 28 Jan 2025 19:39:32 -0800
+Subject: [PATCH] tools/power/x86/intel-speed-select: Prefix header search path
+ with sysroot
+
+This helps when using a cross-compiler for building intel-speed-select,
+currently, its hardcoded to pick libnl3 headers from build host which may
+not be same as build target when cross compiling.
+
+cc -print-sysroot will print nothing if compiler is configured without
+a sysroot and result in same string as it is now.
+
+Fixes errors with gcc configured with host include poisoning e.g.
+
+cc1: error: include location "/usr/include/libnl3" is unsafe for cross-compilation [-Werror=poison-system-directories]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <len.brown@intel.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ tools/power/x86/intel-speed-select/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
+index 7221f2f55e8b..8d3a02a20f3d 100644
+--- a/tools/power/x86/intel-speed-select/Makefile
++++ b/tools/power/x86/intel-speed-select/Makefile
+@@ -13,7 +13,7 @@ endif
+ # Do not use make's built-in rules
+ # (this improves performance and avoids hard-to-debug behaviour);
+ MAKEFLAGS += -r
+-override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I/usr/include/libnl3
++override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I$(shell $(CC) -print-sysroot)/usr/include/libnl3
+ override LDFLAGS += -lnl-genl-3 -lnl-3
+ 
+ ALL_TARGETS := intel-speed-select
+-- 
+2.39.2
+
