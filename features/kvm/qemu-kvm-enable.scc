@@ -3,3 +3,8 @@ define KFEATURE_DESCRIPTION "Enable KVM host support"
 define KFEATURE_COMPATIBILITY board
 
 kconf non-hardware qemu-kvm.cfg
+if [ "$KARCH" = "x86_64" ] || [ "$KARCH" = "x86" ] || [ "$KARCH" = "i386" ]; then
+	kconf non-hardware qemu-kvm-x86.cfg
+elif [ "$KARCH" = "arm64" ]; then
+	kconf non-hardware qemu-kvm-arm64.cfg
+fi
