@@ -1,4 +1,4 @@
-From 3e7a2ca72d99a2277ac42c578bd8f55ef9ef9141 Mon Sep 17 00:00:00 2001
+From 3319566500937ce09eaa3e793dbffbb03e9ca9d7 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Tue, 22 Aug 2017 09:50:50 +0100
 Subject: [PATCH] linux-yocto: Handle /bin/awk issues
@@ -39,7 +39,7 @@ index 6d7c2d8eaf55..2a4a42a6d70c 100644
  #
  # Awk script to generate include/generated/machtypes.h
 diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index af38469afd14..21a7a5db887e 100644
+index 5770c8097f32..d84b2ee13c60 100644
 --- a/arch/x86/tools/gen-insn-attr-x86.awk
 +++ b/arch/x86/tools/gen-insn-attr-x86.awk
 @@ -1,4 +1,4 @@
@@ -49,7 +49,7 @@ index af38469afd14..21a7a5db887e 100644
  # gen-insn-attr-x86.awk: Instruction attribute table generator
  # Written by Masami Hiramatsu <mhiramat@redhat.com>
 diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index af38469afd14..21a7a5db887e 100644
+index 5770c8097f32..d84b2ee13c60 100644
 --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
 +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
 @@ -1,4 +1,4 @@
@@ -69,5 +69,5 @@ index 1a29f6379bde..6285ff7158a5 100644
  # gen-insn-x86-dat.awk: script to convert data for the insn-x86 test
  # Copyright (c) 2015, Intel Corporation.
 -- 
-2.34.1
+2.39.2
 

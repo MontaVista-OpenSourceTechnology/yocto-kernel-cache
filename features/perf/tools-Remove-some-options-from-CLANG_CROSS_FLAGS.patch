@@ -1,4 +1,4 @@
-From 47c6267232834ca12dc62a124c617fbdf0261254 Mon Sep 17 00:00:00 2001
+From 9b4b0adf1d1e8d06f757e73b4522201a5f6a460a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 4 Dec 2022 18:33:48 -0800
 Subject: [PATCH] tools: Remove some options from CLANG_CROSS_FLAGS

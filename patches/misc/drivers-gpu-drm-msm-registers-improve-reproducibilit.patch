@@ -1,4 +1,4 @@
-From c4386c5293aa875217e4b735b1804ad7b60c5685 Mon Sep 17 00:00:00 2001
+From 75c6cbfb060f547f385643a52b710e7a9814555b Mon Sep 17 00:00:00 2001
 From: Ryan Eatmon <reatmon@ti.com>
 Date: Wed, 17 Jul 2024 16:19:20 -0500
 Subject: [PATCH] drivers: gpu: drm: msm: registers: improve reproducibility

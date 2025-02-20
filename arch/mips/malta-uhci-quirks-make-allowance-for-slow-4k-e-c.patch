@@ -1,4 +1,4 @@
-From 69ae0833cd9e4d51d62c9d37eceebe87335b52d5 Mon Sep 17 00:00:00 2001
+From 60bb4f438a3b410c267c13ae5a9412fe86e454d8 Mon Sep 17 00:00:00 2001
 From: Weixing Shi <weixing.shil@windriver.com>
 Date: Mon, 12 Apr 2010 14:58:03 +0800
 Subject: [PATCH] malta uhci quirks: make allowance for slow 4k(e)c
@@ -16,10 +16,10 @@ Signed-off-by: <bruce.ashfield@windriver.com> Bruce Ashfield
  2 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index 161536717025..cf819d2a5b34 100644
+index 0404489c2f6a..0aabb4517551 100644
 --- a/drivers/usb/host/pci-quirks.c
 +++ b/drivers/usb/host/pci-quirks.c
-@@ -518,6 +518,9 @@ EXPORT_SYMBOL_GPL(usb_amd_dev_put);
+@@ -650,6 +650,9 @@ static inline int io_type_enabled(struct pci_dev *pdev, unsigned int mask)
   */
  void uhci_reset_hc(struct pci_dev *pdev, unsigned long base)
  {
@@ -29,7 +29,7 @@ index 161536717025..cf819d2a5b34 100644
  	/* Turn off PIRQ enable and SMI enable.  (This also turns off the
  	 * BIOS's USB Legacy Support.)  Turn off all the R/WC bits too.
  	 */
-@@ -531,9 +534,16 @@ void uhci_reset_hc(struct pci_dev *pdev, unsigned long base)
+@@ -663,9 +666,16 @@ void uhci_reset_hc(struct pci_dev *pdev, unsigned long base)
  	outw(UHCI_USBCMD_HCRESET, base + UHCI_USBCMD);
  	mb();
  	udelay(5);
@@ -64,5 +64,5 @@ index 35fcb826152c..1cd2808eb455 100644
  }
  
 -- 
-2.5.0
+2.39.2
 

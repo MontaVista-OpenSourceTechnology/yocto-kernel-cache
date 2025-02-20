@@ -1,4 +1,4 @@
-From 6867771b02347a5c0709a293be6c0225e924a9a3 Mon Sep 17 00:00:00 2001
+From 14e36e930e8c4730beaf626f99944ee62be15fb3 Mon Sep 17 00:00:00 2001
 From: Tom Zanussi <tom.zanussi@intel.com>
 Date: Tue, 3 Jul 2012 13:07:22 -0500
 Subject: [PATCH] perf: add 'libperl not found' warning
@@ -12,10 +12,10 @@ Signed-off-by: Tom Zanussi <tom.zanussi@intel.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 2916d59c88cd..18cdab0af7c7 100644
+index a148ca9efca9..39c5852391d9 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -837,6 +837,7 @@ else
+@@ -825,6 +825,7 @@ else
    FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
  
    ifneq ($(feature-libperl), 1)

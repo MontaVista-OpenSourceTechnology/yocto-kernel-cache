@@ -1,4 +1,4 @@
-From eb4e710891285d22c5aedf8823a73c4cebf4a1d3 Mon Sep 17 00:00:00 2001
+From ecf104e2831b74405f74d869cd4065d4c6838f9b Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Tue, 21 Jul 2009 09:59:29 +1000
 Subject: [PATCH] FAT: Add CONFIG_VFAT_FS_NO_DUALNAMES option
@@ -48,7 +48,7 @@ index 25fae1c83725..ae82dcfad982 100644
  	int "Default codepage for FAT"
  	depends on FAT_FS
 diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index 15bf32c21ac0..b342e40c8d34 100644
+index 926c26e90ef8..f3341efeb208 100644
 --- a/fs/fat/namei_vfat.c
 +++ b/fs/fat/namei_vfat.c
 @@ -22,6 +22,7 @@
@@ -59,7 +59,7 @@ index 15bf32c21ac0..b342e40c8d34 100644
  #include "fat.h"
  
  static inline unsigned long vfat_d_version(struct dentry *dentry)
-@@ -336,6 +337,17 @@ static int vfat_create_shortname(struct inode *dir, struct nls_table *nls,
+@@ -333,6 +334,17 @@ static int vfat_create_shortname(struct inode *dir, struct nls_table *nls,
  	int sz = 0, extlen, baselen, i, numtail_baselen, numtail2_baselen;
  	int is_shortname;
  	struct shortname_info base_info, ext_info;
@@ -77,7 +77,7 @@ index 15bf32c21ac0..b342e40c8d34 100644
  
  	is_shortname = 1;
  	INIT_SHORTNAME_INFO(&base_info);
-@@ -448,9 +460,9 @@ static int vfat_create_shortname(struct inode *dir, struct nls_table *nls,
+@@ -445,9 +457,9 @@ static int vfat_create_shortname(struct inode *dir, struct nls_table *nls,
  		if (vfat_find_form(dir, name_res) == 0)
  			return -EEXIST;
  
@@ -89,7 +89,7 @@ index 15bf32c21ac0..b342e40c8d34 100644
  			if ((base_info.upper || base_info.lower) &&
  			    (ext_info.upper || ext_info.lower)) {
  				if (!base_info.upper && base_info.lower)
-@@ -576,6 +588,66 @@ xlate_to_uni(const unsigned char *name, int len, unsigned char *outname,
+@@ -573,6 +585,66 @@ xlate_to_uni(const unsigned char *name, int len, unsigned char *outname,
  	return 0;
  }
  
@@ -156,7 +156,7 @@ index 15bf32c21ac0..b342e40c8d34 100644
  static int vfat_build_slots(struct inode *dir, const unsigned char *name,
  			    int len, int is_dir, int cluster,
  			    struct timespec64 *ts,
-@@ -618,6 +690,13 @@ static int vfat_build_slots(struct inode *dir, const unsigned char *name,
+@@ -615,6 +687,13 @@ static int vfat_build_slots(struct inode *dir, const unsigned char *name,
  		goto shortname;
  	}
  

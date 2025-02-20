@@ -1,4 +1,4 @@
-From 9eb613a0ebe3052009c5e05de67235f9e6f28bd3 Mon Sep 17 00:00:00 2001
+From 71bf80c6b2f49427c2fc2e2990a51f218fb22b2c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Tue, 10 Jun 2008 21:58:35 -0400
 Subject: [PATCH] arm: serialize build targets
@@ -8,12 +8,15 @@ dependencies. To do this we add .NOTPARALLEL and  ensure that
 the image targets are not built in parallel.
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+---
+ arch/arm/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 61f6ccc19cfa..4d2ea05c7394 100644
+index 00ca7886b18e..963c9896c309 100644
 --- a/arch/arm/Makefile
 +++ b/arch/arm/Makefile
-@@ -326,6 +326,9 @@ PHONY += bzImage $(BOOT_TARGETS) $(INSTALL_TARGETS)
+@@ -296,6 +296,9 @@ PHONY += bzImage $(BOOT_TARGETS) $(INSTALL_TARGETS)
  bootpImage uImage: zImage
  zImage: Image
  
@@ -21,8 +24,8 @@ index 61f6ccc19cfa..4d2ea05c7394 100644
 +.NOTPARALLEL: $(BOOT_TARGETS)
 +
  $(BOOT_TARGETS): vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
+ 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
  	@$(kecho) '  Kernel: $(boot)/$@ is ready'
 -- 
-2.10.1
+2.39.2
 

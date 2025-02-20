@@ -1,4 +1,4 @@
-From f71bb11887bae80ab718b3f38f1c1e80c07676a3 Mon Sep 17 00:00:00 2001
+From dd58af8078c9803186a8e9687f403784999cac93 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 28 Jun 2024 12:55:18 -0400
 Subject: [PATCH] cpu/amd: inhibit SMP check for qemux86
@@ -32,10 +32,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 9fd91022d92d..904c4bb7e3b5 100644
+index 54194f5995de..59c5d4f60236 100644
 --- a/arch/x86/kernel/cpu/amd.c
 +++ b/arch/x86/kernel/cpu/amd.c
-@@ -338,9 +338,13 @@ static void init_amd_k7(struct cpuinfo_x86 *c)
+@@ -266,9 +266,13 @@ static void init_amd_k7(struct cpuinfo_x86 *c)
  	 * Don't taint if we are running SMP kernel on a single non-MP
  	 * approved Athlon
  	 */

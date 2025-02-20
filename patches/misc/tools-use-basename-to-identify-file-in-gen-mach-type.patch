@@ -1,4 +1,4 @@
-From 6c085baf183868ed45d8c1d44408d7b24724cde5 Mon Sep 17 00:00:00 2001
+From 588b94792ef371b98bb0d8f463d808f1491daa27 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 13 Jul 2022 12:18:15 -0400
 Subject: [PATCH] tools: use basename to identify file in gen-mach-types
@@ -37,5 +37,5 @@ index cb2b69f2a39d..1fcdba948623 100644
  	  printf(" */\n\n");
  	  printf("#ifndef __ASM_ARM_MACH_TYPE_H\n");
 -- 
-2.19.1
+2.39.2
 

@@ -1,4 +1,4 @@
-From d95f84afeaf8fbb2fdc5a8c5b086bc9a5d9ce465 Mon Sep 17 00:00:00 2001
+From de2f4cbd70f6d63d9b688a08eaca08f5b5d339d0 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 19 Mar 2021 12:13:36 -0400
 Subject: [PATCH] yaffs2: v5.12+ build fixups (not runtime tested)

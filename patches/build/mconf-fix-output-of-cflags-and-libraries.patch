@@ -1,4 +1,4 @@
-From dee78ad1963cff9c063fba486d43fc9670285883 Mon Sep 17 00:00:00 2001
+From b62815976e9187fed045b441cb35db6a6cedfa4d Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 17 Jul 2023 17:17:55 -0400
 Subject: [PATCH] mconf: fix output of cflags and libraries
@@ -18,10 +18,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-index 38cf8304bb31..a5ae56e08b07 100755
+index 240bf64829a6..dde985a553aa 100755
 --- a/scripts/kconfig/mconf-cfg.sh
 +++ b/scripts/kconfig/mconf-cfg.sh
-@@ -8,9 +8,9 @@ PKG="ncursesw"
+@@ -10,9 +10,9 @@ PKG="ncursesw"
  PKG2="ncurses"
  
  if [ "$CROSS_CURSES_LIB" != "" ]; then
@@ -34,5 +34,5 @@ index 38cf8304bb31..a5ae56e08b07 100755
      exit 0
  fi
 -- 
-2.34.1
+2.39.2
 

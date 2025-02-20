@@ -1,4 +1,4 @@
-From e32edaac72fad719e2550325de949f45554732ee Mon Sep 17 00:00:00 2001
+From 9bb6719e0d9f919e084ef1e196c44dfda85912c3 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Thu, 19 Aug 2010 11:24:45 -0400
 Subject: [PATCH] perf: force include of <stdbool.h>
@@ -13,7 +13,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index c004dd4e65a3..4eb267e22b7a 100644
+index 3cb40965549f..e14f5efb09fc 100644
 --- a/tools/perf/perf.h
 +++ b/tools/perf/perf.h
 @@ -1,5 +1,7 @@

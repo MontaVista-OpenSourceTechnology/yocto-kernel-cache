@@ -1,4 +1,4 @@
-From 72bad8cd7540f07ab54e08b83ad106dec0df123c Mon Sep 17 00:00:00 2001
+From 8cc909d8fdc6b7250ad99d35b484b89bae992970 Mon Sep 17 00:00:00 2001
 From: Jon Mason <jon.mason@arm.com>
 Date: Tue, 8 Aug 2023 16:38:37 -0400
 Subject: [PATCH] drm/fb-helper: move zeroing code to drm_fb_helper_fill_var
@@ -42,10 +42,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 9 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index fd27f1978635..ddc12c080dcc 100644
+index fb3614a7ba44..272cb3bc88d4 100644
 --- a/drivers/gpu/drm/drm_fb_helper.c
 +++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -1548,8 +1548,6 @@ static void drm_fb_helper_fill_pixel_fmt(struct fb_var_screeninfo *var,
+@@ -1197,8 +1197,6 @@ static void drm_fb_helper_fill_pixel_fmt(struct fb_var_screeninfo *var,
  static void __fill_var(struct fb_var_screeninfo *var, struct fb_info *info,
  		       struct drm_framebuffer *fb)
  {
@@ -54,7 +54,7 @@ index fd27f1978635..ddc12c080dcc 100644
  	var->xres_virtual = fb->width;
  	var->yres_virtual = fb->height;
  	var->accel_flags = 0;
-@@ -1557,15 +1555,6 @@ static void __fill_var(struct fb_var_screeninfo *var, struct fb_info *info,
+@@ -1206,15 +1204,6 @@ static void __fill_var(struct fb_var_screeninfo *var, struct fb_info *info,
  
  	var->height = info->var.height;
  	var->width = info->var.width;
@@ -70,7 +70,7 @@ index fd27f1978635..ddc12c080dcc 100644
  }
  
  /**
-@@ -2059,6 +2048,7 @@ static void drm_fb_helper_fill_var(struct fb_info *info,
+@@ -1676,6 +1665,7 @@ static void drm_fb_helper_fill_var(struct fb_info *info,
  {
  	struct drm_framebuffer *fb = fb_helper->fb;
  	const struct drm_format_info *format = fb->format;
@@ -78,7 +78,7 @@ index fd27f1978635..ddc12c080dcc 100644
  
  	switch (format->format) {
  	case DRM_FORMAT_C1:
-@@ -2076,6 +2066,14 @@ static void drm_fb_helper_fill_var(struct fb_info *info,
+@@ -1693,6 +1683,14 @@ static void drm_fb_helper_fill_var(struct fb_info *info,
  	info->pseudo_palette = fb_helper->pseudo_palette;
  	info->var.xoffset = 0;
  	info->var.yoffset = 0;
@@ -94,5 +94,5 @@ index fd27f1978635..ddc12c080dcc 100644
  	info->var.activate = FB_ACTIVATE_NOW;
  
 -- 
-2.34.1
+2.39.2
 

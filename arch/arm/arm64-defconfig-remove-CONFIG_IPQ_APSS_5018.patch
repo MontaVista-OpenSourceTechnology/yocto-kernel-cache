@@ -1,4 +1,4 @@
-From b0dbb1ddc539b556ac1920ff704ec4099f8ca392 Mon Sep 17 00:00:00 2001
+From 11348bf087d061096a4f26d064b77f3ea8f5d04e Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Thu, 4 Jan 2024 13:32:41 +0000
 Subject: [PATCH] arm64: defconfig: remove CONFIG_IPQ_APSS_5018
@@ -13,17 +13,17 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 deletion(-)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 88c0cfdd5581..bd6b6be68d3f 100644
+index 32c0fd5622bc..2985eb5c35f6 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -1248,7 +1248,6 @@ CONFIG_QCOM_CLK_APCC_MSM8996=y
+@@ -1325,7 +1325,6 @@ CONFIG_QCOM_CLK_APCC_MSM8996=y
  CONFIG_QCOM_CLK_SMD_RPM=y
  CONFIG_QCOM_CLK_RPMH=y
  CONFIG_IPQ_APSS_6018=y
 -CONFIG_IPQ_APSS_5018=y
+ CONFIG_IPQ_CMN_PLL=m
  CONFIG_IPQ_GCC_5018=y
  CONFIG_IPQ_GCC_5332=y
- CONFIG_IPQ_GCC_6018=y
 -- 
 2.39.2
 

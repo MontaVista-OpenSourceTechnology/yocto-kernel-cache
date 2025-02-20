@@ -1,4 +1,4 @@
-From 72b5a8ac95c30db04cbc1ae10f96bc2b7e032608 Mon Sep 17 00:00:00 2001
+From 10a274b46a7d0cf3b254dec30ac6e64476564b98 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Sat, 27 Sep 2014 12:01:21 -0400
 Subject: [PATCH] fat: don't use obsolete random32 call in namei_vfat
@@ -25,10 +25,10 @@ Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index 22dd5dabe103..32cb0030556f 100644
+index e9e5e70d23fd..bca9db5a4fa5 100644
 --- a/fs/fat/namei_vfat.c
 +++ b/fs/fat/namei_vfat.c
-@@ -616,7 +616,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
+@@ -613,7 +613,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
  				     0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x22, 0x2a,
  				     0x3a, 0x3c, 0x3e, 0x3f, 0x5b, 0x5d, 0x7c };
  	int i, tilde_pos, slash_pos;
@@ -37,7 +37,7 @@ index 22dd5dabe103..32cb0030556f 100644
  
  	/* We need a '~' in the prefix to make Win98 happy. */
  	tilde_pos = rand_num % 8;
-@@ -651,7 +651,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
+@@ -648,7 +648,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,
  				invalidchar[rand_num % sizeof(invalidchar)];
  			rand_num /= sizeof(invalidchar);
  			if (rand_num < sizeof(invalidchar))

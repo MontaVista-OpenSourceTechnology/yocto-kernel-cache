@@ -1,4 +1,4 @@
-From 0fc0c0600ff5298e3b1ac458f121ef9c948ca793 Mon Sep 17 00:00:00 2001
+From a7039f03face27186d85e07e47d86988ba7b023a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 29 Jun 2022 10:51:56 -0400
 Subject: [PATCH] yaffs2: convert read_page -> readfolio

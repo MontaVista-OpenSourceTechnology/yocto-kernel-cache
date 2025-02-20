@@ -1,4 +1,4 @@
-From fccb988b8e9c37fb66da13f75aadbfb373382d4a Mon Sep 17 00:00:00 2001
+From 1338cfd55dd87d544bb96a00999d117e05493058 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Wed, 16 Dec 2020 12:22:56 -0500
 Subject: [PATCH] clear_warn_once: expand debugfs to include read support
@@ -27,7 +27,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/panic.c b/kernel/panic.c
-index fbc59b3b64d0..739c29e59bd1 100644
+index d8635d5cecb2..a77ced0e471d 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
 @@ -803,21 +803,36 @@ EXPORT_SYMBOL(__warn_printk);
