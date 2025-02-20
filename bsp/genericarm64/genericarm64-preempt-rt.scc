@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE genericarm64
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt/preempt-rt.scc
+
+include genericarm64.scc
+
+# default policy for preempt-rt kernels
+include cfg/boot-live.scc
+include cfg/usb-mass-storage.scc
+include features/latencytop/latencytop.scc
+include features/profiling/profiling.scc
+include cfg/virtio.scc
+
+kconf hardware genericarm64-preempt-rt.cfg
