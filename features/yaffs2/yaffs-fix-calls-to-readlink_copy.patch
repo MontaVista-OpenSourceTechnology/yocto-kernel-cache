@@ -1,0 +1,29 @@
+From 347b35a0da25369039382073fbb9150604746263 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 21 Feb 2025 22:13:10 -0500
+Subject: [PATCH] yaffs: fix calls to readlink_copy
+
+commit ea382199071931d19aac5f688b543e07360e2b64                                                                                                       Author: Mateusz Guzik <mjguzik@gmail.com>                                                                                                             Date:   Wed Nov 20 12:20:34 2024 +0100                                                                                                                                                                                                                                                                          vfs: support caching symlink lengths in inodes                                                                                                                                                                                                                                                              When utilized it dodges strlen() in vfs_readlink(), giving about 1.5%                                                                                 speed up when issuing readlink on /initrd.img on ext4.                                                                                                                                                                                                                                                      Filesystems opt in by calling inode_set_cached_link() when creating an                                                                                inode.                                                                                                                                                                                                                                                                                                      The size is stored in a new union utilizing the same space as i_devices,                                                                              thus avoiding growing the struct or taking up any more space.                                                                                                                                                                                                                                               Churn-wise the current readlink_copy() helper is patched to accept the
+    size instead of calculating it.                                                                                                                                                                                                                                                                             Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>                                                                                                      Link: https://lore.kernel.org/r/20241120112037.822078-2-mjguzik@gmail.com                                                                             Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index a2bed0980ca2..a4794ca07d50 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1118,7 +1118,7 @@ static int yaffs_readlink(struct dentry *dentry, char __user * buffer,
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 15, 0)
+ 	ret = vfs_readlink(dentry, buffer, buflen, alias);
+ #else
+-	ret = readlink_copy(buffer, buflen, alias);
++	ret = readlink_copy(buffer, buflen, alias, strlen(alias));
+ #endif
+ 	kfree(alias);
+ 	return ret;
+-- 
+2.39.2
+

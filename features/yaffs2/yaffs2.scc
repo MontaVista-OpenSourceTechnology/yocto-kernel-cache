@@ -24,3 +24,4 @@ patch 0001-yaffs2-update-VFS-ctime-operations-to-6.6.patch
 patch yaffs-fix-mtime-itime-field-access.patch
 patch 0001-yaffs2-adapt-to-v6.10-i_time-changes.patch
 patch yaffs2-update-to-v6.12-folio-changes.patch
+patch yaffs-fix-calls-to-readlink_copy.patch
