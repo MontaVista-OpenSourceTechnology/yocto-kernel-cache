@@ -13,7 +13,6 @@ arch/arm64/kvm/Kconfig
 arch/arm/common/Kconfig
 arch/arm/crypto/Kconfig
 arch/arm/Kconfig
-arch/arm/Kconfig.assembler
 arch/arm/Kconfig.debug
 arch/arm/Kconfig-nommu
 arch/arm/Kconfig.platforms
@@ -198,6 +197,7 @@ arch/x86/xen/Kconfig
 arch/xtensa/Kconfig
 arch/xtensa/Kconfig.debug
 crypto/async_tx/Kconfig
+drivers/accel/amdxdna/Kconfig
 drivers/accel/habanalabs/Kconfig
 drivers/accel/ivpu/Kconfig
 drivers/accel/Kconfig
@@ -332,7 +332,6 @@ drivers/dma/hsu/Kconfig
 drivers/dma/Kconfig
 drivers/dma/lgm/Kconfig
 drivers/dma/mediatek/Kconfig
-drivers/dma/ptdma/Kconfig
 drivers/dma/qcom/Kconfig
 drivers/dma/sf-pdma/Kconfig
 drivers/dma/sh/Kconfig
@@ -381,6 +380,7 @@ drivers/gpu/drm/bridge/cadence/Kconfig
 drivers/gpu/drm/bridge/imx/Kconfig
 drivers/gpu/drm/bridge/Kconfig
 drivers/gpu/drm/bridge/synopsys/Kconfig
+drivers/gpu/drm/clients/Kconfig
 drivers/gpu/drm/display/Kconfig
 drivers/gpu/drm/etnaviv/Kconfig
 drivers/gpu/drm/exynos/Kconfig
@@ -455,6 +455,7 @@ drivers/hid/amd-sfh-hid/Kconfig
 drivers/hid/bpf/Kconfig
 drivers/hid/i2c-hid/Kconfig
 drivers/hid/intel-ish-hid/Kconfig
+drivers/hid/intel-thc-hid/Kconfig
 drivers/hid/Kconfig
 drivers/hid/surface-hid/Kconfig
 drivers/hid/usbhid/Kconfig
@@ -729,7 +730,6 @@ drivers/media/platform/xilinx/Kconfig
 drivers/media/radio/Kconfig
 drivers/media/radio/si470x/Kconfig
 drivers/media/radio/si4713/Kconfig
-drivers/media/radio/wl128x/Kconfig
 drivers/media/rc/img-ir/Kconfig
 drivers/media/rc/Kconfig
 drivers/media/rc/keymaps/Kconfig
@@ -992,6 +992,7 @@ drivers/net/phy/aquantia/Kconfig
 drivers/net/phy/Kconfig
 drivers/net/phy/mediatek/Kconfig
 drivers/net/phy/qcom/Kconfig
+drivers/net/phy/realtek/Kconfig
 drivers/net/plip/Kconfig
 drivers/net/ppp/Kconfig
 drivers/net/pse-pd/Kconfig

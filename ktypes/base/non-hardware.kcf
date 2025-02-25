@@ -184,6 +184,8 @@ kernel/rcu/Kconfig.debug
 kernel/time/Kconfig
 kernel/trace/Kconfig
 kernel/trace/rv/Kconfig
+kernel/trace/rv/monitors/wip/Kconfig
+kernel/trace/rv/monitors/wwnr/Kconfig
 lib/crypto/Kconfig
 lib/fonts/Kconfig
 lib/Kconfig
@@ -275,6 +277,7 @@ net/wireless/Kconfig
 net/x25/Kconfig
 net/xdp/Kconfig
 net/xfrm/Kconfig
+samples/damon/Kconfig
 samples/Kconfig
 samples/rust/Kconfig
 security/apparmor/Kconfig
