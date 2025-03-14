@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Persistent memory support, e.g. RAM based block devices"
+define KFEATURE_COMPATIBILITY all
+
+kconf non-hardware pmem.cfg
+
+if [ "$KARCH" = "arm64" ]; then
+    kconf non-hardware pmem-arm64.cfg
+fi
