@@ -45,3 +45,4 @@ include features/wifi/wifi-all.scc
 include features/optee/optee.scc
 include features/security/security.scc
 include features/spi/spi.scc
+include features/pmem/pmem.scc
