@@ -1,4 +1,4 @@
-From f20adebe80a0d49c0538c1abc85309066ce8e945 Mon Sep 17 00:00:00 2001
+From ecbcadb42ed90830fe6dbd4b5fb67f37da21e24c Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Wed, 15 Jul 2009 10:14:59 +1000
 Subject: [PATCH] FAT: Add CONFIG_VFAT_NO_CREATE_WITH_LONGNAMES option
@@ -41,7 +41,7 @@ index ae82dcfad982..bbc8a319e930 100644
  	bool "Enable FAT UTF-8 option by default"
  	depends on VFAT_FS
 diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index f3341efeb208..e9e5e70d23fd 100644
+index fe51e558cbf9..603b904c8b5d 100644
 --- a/fs/fat/namei_vfat.c
 +++ b/fs/fat/namei_vfat.c
 @@ -453,6 +453,15 @@ static int vfat_create_shortname(struct inode *dir, struct nls_table *nls,

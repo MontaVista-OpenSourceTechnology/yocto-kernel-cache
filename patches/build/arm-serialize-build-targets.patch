@@ -1,4 +1,4 @@
-From 71bf80c6b2f49427c2fc2e2990a51f218fb22b2c Mon Sep 17 00:00:00 2001
+From 54558a9445a357297c20b0b6146f89d3b04aa689 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Tue, 10 Jun 2008 21:58:35 -0400
 Subject: [PATCH] arm: serialize build targets
@@ -13,10 +13,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 00ca7886b18e..963c9896c309 100644
+index 4808d3ed98e4..925d1e757b56 100644
 --- a/arch/arm/Makefile
 +++ b/arch/arm/Makefile
-@@ -296,6 +296,9 @@ PHONY += bzImage $(BOOT_TARGETS) $(INSTALL_TARGETS)
+@@ -297,6 +297,9 @@ PHONY += bzImage $(BOOT_TARGETS) $(INSTALL_TARGETS)
  bootpImage uImage: zImage
  zImage: Image
  

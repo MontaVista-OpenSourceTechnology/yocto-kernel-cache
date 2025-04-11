@@ -1,4 +1,4 @@
-From eb9207448b2a9d0f511c0849c4e49bcc8dfbaac7 Mon Sep 17 00:00:00 2001
+From a6d9f50eaac338b967524c7a2f6668f2c3f4e587 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Wed, 16 Dec 2020 12:22:58 -0500
 Subject: [PATCH] clear_warn_once: add a clear_warn_once= boot parameter
@@ -16,10 +16,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  2 files changed, 29 insertions(+)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8..a7c91e063c8f 100644
+index 76e538c77e31..4ec187f49ede 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7838,6 +7838,14 @@
+@@ -7905,6 +7905,14 @@
  	vt.underline=	[VT] Default color for underlined text; 0-15.
  			Default: 3 = cyan.
  
@@ -35,10 +35,10 @@ index fb8752b42ec8..a7c91e063c8f 100644
  			see Documentation/watchdog/watchdog-parameters.rst
  			or other driver-specific files in the
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 3a52b6a892c2..c99f0084ef9a 100644
+index b7191b185615..f2aafba51aaa 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -865,10 +865,31 @@ static __init int register_warn_debugfs(void)
+@@ -866,10 +866,31 @@ static __init int register_warn_debugfs(void)
  	/* Don't care about failure */
  	debugfs_create_file_unsafe("clear_warn_once", 0600, NULL,
  				   &clear_warn_once, &clear_warn_once_fops);

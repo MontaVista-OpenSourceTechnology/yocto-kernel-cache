@@ -1,4 +1,4 @@
-From 53a1e19b0822cb3d1368f8ecd6bda58487579621 Mon Sep 17 00:00:00 2001
+From edca6478325d154336e76c0abdc45da9721bc53d Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Tue, 10 Jun 2008 21:58:45 -0400
 Subject: [PATCH] powerpc: serialize image targets

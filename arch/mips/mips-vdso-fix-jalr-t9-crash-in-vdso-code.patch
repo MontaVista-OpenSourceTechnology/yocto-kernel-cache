@@ -1,4 +1,4 @@
-From 1fa6e8e88d99e193c0bf3cb7ec4604b7da5f28d2 Mon Sep 17 00:00:00 2001
+From 2aeb29939ce16a4c8c369d3d878434765fb52401 Mon Sep 17 00:00:00 2001
 From: Victor Kamensky <kamensky@cisco.com>
 Date: Fri, 31 Jan 2020 09:39:44 -0800
 Subject: [PATCH] mips: vdso: fix 'jalr $t9' crash in vdso code
@@ -31,7 +31,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index b289b2c1b294..578ce94a742f 100644
+index fb4c493aaffa..7191c4b31758 100644
 --- a/arch/mips/vdso/Makefile
 +++ b/arch/mips/vdso/Makefile
 @@ -30,7 +30,9 @@ cflags-vdso := $(ccflags-vdso) \

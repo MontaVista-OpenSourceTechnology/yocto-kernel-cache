@@ -1,4 +1,4 @@
-From 83f0a32adc6a93367950d188a43cf3660ea2fd86 Mon Sep 17 00:00:00 2001
+From ba7ca5ad0576f452527092c7f3c901c498c5a920 Mon Sep 17 00:00:00 2001
 From: Yang Shi <yang.shi@windriver.com>
 Date: Tue, 15 Jul 2014 21:19:34 -0700
 Subject: [PATCH] vexpress: Pass LOADADDR to Makefile

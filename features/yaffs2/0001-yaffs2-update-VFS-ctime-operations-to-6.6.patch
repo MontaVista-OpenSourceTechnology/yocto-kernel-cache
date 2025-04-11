@@ -1,4 +1,4 @@
-From b494570aaf3ab44cb9eff0548dc1016b3cb2022d Mon Sep 17 00:00:00 2001
+From 369bbe48fd938794561d2877fcb403bc23de5f07 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 21 Sep 2023 17:04:31 -0400
 Subject: [PATCH] yaffs2: update VFS ctime operations to 6.6+

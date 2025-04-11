@@ -1,4 +1,4 @@
-From f66039f08eb44a7905a84f4bf82a520c39ce5499 Mon Sep 17 00:00:00 2001
+From 7e4aebc0e4d252a5d671a05c7e5f35e5956864c6 Mon Sep 17 00:00:00 2001
 From: Jim Somerville <Jim.Somerville@windriver.com>
 Date: Thu, 8 Apr 2010 23:44:22 -0700
 Subject: [PATCH] nfs: Allow default io size to be configured.
@@ -38,7 +38,7 @@ index d3f76101ad4b..98ae1dd1f5f0 100644
  	tristate "NFS client support for NFS version 3"
  	depends on NFS_FS
 diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 9155a6ffc370..49328100837f 100644
+index 67f6632f723b..b95c584b91d9 100644
 --- a/include/linux/nfs_xdr.h
 +++ b/include/linux/nfs_xdr.h
 @@ -12,7 +12,7 @@

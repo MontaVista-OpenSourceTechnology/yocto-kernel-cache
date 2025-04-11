@@ -1,4 +1,4 @@
-From b62815976e9187fed045b441cb35db6a6cedfa4d Mon Sep 17 00:00:00 2001
+From 87cf922caf6f8e560b062f87b776acb438b935a9 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 17 Jul 2023 17:17:55 -0400
 Subject: [PATCH] mconf: fix output of cflags and libraries

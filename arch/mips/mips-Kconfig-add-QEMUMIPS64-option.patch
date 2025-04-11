@@ -1,4 +1,4 @@
-From 9feaba772d515c6ee4f0428ae3b4f12908cc77aa Mon Sep 17 00:00:00 2001
+From 47ed3e08a4e11147f38ac985249e580ee9a27db7 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 7 Jan 2020 03:34:12 +0000
 Subject: [PATCH] mips: Kconfig: add QEMUMIPS64 option
@@ -39,10 +39,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 1924f2d83932..87da7b6d9779 100644
+index fc0772c1bad4..d3a84559cc47 100644
 --- a/arch/mips/Kconfig
 +++ b/arch/mips/Kconfig
-@@ -135,6 +135,10 @@ config MACH_INGENIC
+@@ -136,6 +136,10 @@ config MACH_INGENIC
  	select CPU_SUPPORTS_CPUFREQ
  	select MIPS_EXTERNAL_TIMER
  
@@ -53,7 +53,7 @@ index 1924f2d83932..87da7b6d9779 100644
  menu "Machine selection"
  
  choice
-@@ -521,9 +525,9 @@ config MIPS_MALTA
+@@ -522,9 +526,9 @@ config MIPS_MALTA
  	select BOOT_RAW
  	select BUILTIN_DTB
  	select CEVT_R4K
@@ -65,7 +65,7 @@ index 1924f2d83932..87da7b6d9779 100644
  	select DMA_NONCOHERENT
  	select GENERIC_ISA_DMA
  	select HAVE_PCSPKR_PLATFORM
-@@ -586,17 +590,17 @@ config EYEQ
+@@ -587,17 +591,17 @@ config EYEQ
  	select BOOT_RAW
  	select BUILTIN_DTB
  	select CEVT_R4K

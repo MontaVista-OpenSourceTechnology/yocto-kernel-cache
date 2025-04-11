@@ -1,4 +1,4 @@
-From 9b4b0adf1d1e8d06f757e73b4522201a5f6a460a Mon Sep 17 00:00:00 2001
+From df9cadec953f1695edfa6d29ccec368dc761fbd6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 4 Dec 2022 18:33:48 -0800
 Subject: [PATCH] tools: Remove some options from CLANG_CROSS_FLAGS
@@ -16,10 +16,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 0aa4005017c7..38d622c4ce2f 100644
+index 5158250988ce..1f1f6333d10b 100644
 --- a/tools/scripts/Makefile.include
 +++ b/tools/scripts/Makefile.include
-@@ -101,9 +101,9 @@ ifeq ($(CLANG_CROSS_FLAGS),)
+@@ -104,9 +104,9 @@ ifeq ($(CLANG_CROSS_FLAGS),)
  CLANG_CROSS_FLAGS := --target=$(notdir $(CROSS_COMPILE:%-=%))
  GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)gcc 2>/dev/null))
  ifneq ($(GCC_TOOLCHAIN_DIR),)

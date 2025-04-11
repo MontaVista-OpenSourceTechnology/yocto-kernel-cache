@@ -1,4 +1,4 @@
-From 8a0e359e2e57d41264cb5787db4c25246752ac44 Mon Sep 17 00:00:00 2001
+From 748a8ae8785eb317af64a5acdfcb0ff1f6fb44bf Mon Sep 17 00:00:00 2001
 From: Li Wang <li.wang@windriver.com>
 Date: Tue, 15 Dec 2009 11:03:47 +0800
 Subject: [PATCH] Resolve jiffies wrapping about arp
@@ -12,7 +12,7 @@ Signed-off-by: Li Wang <li.wang@windriver.com>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
-index f23a1ec6694c..d9aa900b8ac3 100644
+index a648fff71ea7..c48beb39a85f 100644
 --- a/net/ipv4/arp.c
 +++ b/net/ipv4/arp.c
 @@ -921,7 +921,14 @@ static int arp_process(struct net *net, struct sock *sk, struct sk_buff *skb)

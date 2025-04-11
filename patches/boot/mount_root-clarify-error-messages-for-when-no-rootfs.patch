@@ -1,4 +1,4 @@
-From 93fca9ad410a8028c6a818d804d60ba738ccb35a Mon Sep 17 00:00:00 2001
+From 804f285e073c06f975a436e759462018aa95fea1 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Thu, 26 Nov 2009 07:32:09 -0800
 Subject: [PATCH] mount_root: clarify error messages for when no rootfs found

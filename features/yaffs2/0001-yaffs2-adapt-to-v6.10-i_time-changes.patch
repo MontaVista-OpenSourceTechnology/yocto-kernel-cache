@@ -1,4 +1,4 @@
-From d1d0ff23c2d4643cb4d2d346f7922dbcc7a28835 Mon Sep 17 00:00:00 2001
+From 45b3ed751e34ca156556742e16ad23544f9a08e2 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 1 Aug 2024 15:14:33 -0400
 Subject: [PATCH] yaffs2: adapt to v6.10 i_time changes

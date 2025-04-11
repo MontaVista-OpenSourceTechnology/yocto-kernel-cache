@@ -1,4 +1,4 @@
-From e06d0545035a2972d755054ccb06e421acf763ad Mon Sep 17 00:00:00 2001
+From 21e9ef2001f8b10fef25e675b4be3bc9f1af8cfc Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 5 Jan 2012 11:42:35 -0800
 Subject: [PATCH] compiler.h: Undef before redefining __attribute_const__

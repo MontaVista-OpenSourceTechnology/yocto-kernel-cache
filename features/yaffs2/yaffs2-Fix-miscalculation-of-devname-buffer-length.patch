@@ -1,4 +1,4 @@
-From bd75434f320949c4376d6abd872c6cf9c0495048 Mon Sep 17 00:00:00 2001
+From daedd08f3b097521c270214a2ebb31698edd5aa5 Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Wed, 31 May 2023 14:01:07 +0800
 Subject: [PATCH] yaffs2: Fix miscalculation of devname buffer length

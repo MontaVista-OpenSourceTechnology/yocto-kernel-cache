@@ -1,4 +1,4 @@
-From edc3977f956342ad904f9b07514317f196af0d55 Mon Sep 17 00:00:00 2001
+From d2bf4bec3b307c8726a59396a2b799e6e70a4848 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 16 Mar 2020 23:20:57 -0400
 Subject: [PATCH] yaffs2: v5.6 build fixups

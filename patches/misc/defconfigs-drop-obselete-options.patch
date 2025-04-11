@@ -1,4 +1,4 @@
-From 586b03db4fb17d8ca26b64ed79287f9a347102dd Mon Sep 17 00:00:00 2001
+From 2e85093b7c891095f07bacea17f0f5340c07f6f7 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 10 Aug 2020 22:40:22 -0400
 Subject: [PATCH] defconfigs: drop obselete options
@@ -49,7 +49,7 @@ index 3474e475373a..307b43f97023 100644
  CONFIG_MTD_NAND_DAVINCI=m
  CONFIG_MTD_SPI_NOR=m
 diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
-index 2849d17f5856..1e53153efea0 100644
+index b382a2e175fb..12cb692da277 100644
 --- a/arch/arm/configs/dove_defconfig
 +++ b/arch/arm/configs/dove_defconfig
 @@ -40,7 +40,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
@@ -73,7 +73,7 @@ index c1291ca290b2..b116e2700f55 100644
  CONFIG_MTD_NAND_DAVINCI=y
  CONFIG_MTD_SPI_NOR=y
 diff --git a/arch/arm/configs/mvebu_v5_defconfig b/arch/arm/configs/mvebu_v5_defconfig
-index 2467afd32146..26c5724c409d 100644
+index a518d4a2581e..7b4ed9e8b4f2 100644
 --- a/arch/arm/configs/mvebu_v5_defconfig
 +++ b/arch/arm/configs/mvebu_v5_defconfig
 @@ -63,7 +63,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
@@ -85,7 +85,7 @@ index 2467afd32146..26c5724c409d 100644
  CONFIG_MTD_NAND_ORION=y
  CONFIG_MTD_SPI_NOR=y
 diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index 43bc1255a5db..59e313968be9 100644
+index d8a6e43c401e..ca7f3f6dba06 100644
 --- a/arch/arm/configs/mxs_defconfig
 +++ b/arch/arm/configs/mxs_defconfig
 @@ -45,7 +45,6 @@ CONFIG_MTD=y

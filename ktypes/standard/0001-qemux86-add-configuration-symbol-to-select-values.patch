@@ -1,4 +1,4 @@
-From 383659fb6122e6883dee6a637405a75a6f88a728 Mon Sep 17 00:00:00 2001
+From 86bab0d986ef89d634bcca4d538867d708eeec59 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 22 Feb 2021 09:53:04 -0500
 Subject: [PATCH] qemux86: add configuration symbol to select values
@@ -14,10 +14,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 6 insertions(+)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index be2c311f5118..99157452e3ad 100644
+index 4b9f378e05f6..6d3a923d0f3b 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -3008,6 +3008,12 @@ config ISA_DMA_API
+@@ -2979,6 +2979,12 @@ config ISA_DMA_API
  	  Enables ISA-style DMA support for devices requiring such controllers.
  	  If unsure, say Y.
  

@@ -1,4 +1,4 @@
-From 5ad2643696f1d77e8179006908896141e49f8819 Mon Sep 17 00:00:00 2001
+From fba6d01a4cb8b0375ca815f8733fbeaeea8467f9 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Mon, 21 Feb 2022 13:20:08 -0500
 Subject: [PATCH] sched/isolation: really align nohz_full with rcu_nocbs

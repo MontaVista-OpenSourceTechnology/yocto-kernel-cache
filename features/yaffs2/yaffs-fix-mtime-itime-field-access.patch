@@ -1,4 +1,4 @@
-From 7d7528f444fa07514029d5dc6e46a312b7e1a0c1 Mon Sep 17 00:00:00 2001
+From 879481d49a22afc1a158b24397882c93ca777217 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 22 Nov 2023 12:04:28 -0500
 Subject: [PATCH] yaffs: fix mtime/itime field access

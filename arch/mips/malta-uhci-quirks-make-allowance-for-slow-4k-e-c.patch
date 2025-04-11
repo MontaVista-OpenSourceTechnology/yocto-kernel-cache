@@ -1,4 +1,4 @@
-From 60bb4f438a3b410c267c13ae5a9412fe86e454d8 Mon Sep 17 00:00:00 2001
+From 0eec26786d9c157418971e77054996d3594b8051 Mon Sep 17 00:00:00 2001
 From: Weixing Shi <weixing.shil@windriver.com>
 Date: Mon, 12 Apr 2010 14:58:03 +0800
 Subject: [PATCH] malta uhci quirks: make allowance for slow 4k(e)c
@@ -49,7 +49,7 @@ index 0404489c2f6a..0aabb4517551 100644
  	 * make sure the controller is stopped.
  	 */
 diff --git a/drivers/usb/host/uhci-q.c b/drivers/usb/host/uhci-q.c
-index 35fcb826152c..1cd2808eb455 100644
+index 45a8256a665f..6f7cf8ce93e1 100644
 --- a/drivers/usb/host/uhci-q.c
 +++ b/drivers/usb/host/uhci-q.c
 @@ -72,7 +72,9 @@ static void uhci_fsbr_off(struct uhci_hcd *uhci)
