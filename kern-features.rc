@@ -243,6 +243,7 @@
 	config = features/sound/snd_hda_intel.scc
 	config = features/optee/optee.scc
 	config = features/zram/zram.scc
+	config = features/pmem/pmem.scc
 	config = features/mgag200/mgag200.scc
 	config = features/taskstats/taskstats.scc
 	config = features/media/media-i2c.scc
