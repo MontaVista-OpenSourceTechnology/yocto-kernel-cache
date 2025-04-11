@@ -1,0 +1,75 @@
+From 541fb3be256b434b9a89ba13e243b8e734546fbe Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 11 Apr 2025 11:15:38 -0400
+Subject: [PATCH] yaffs: adjust for v6.15
+
+We adjust for two 6.15 commits:
+
+commit 8fa7292fee5c5240402371ea89ab285ec856c916
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Sat Apr 5 10:17:26 2025 +0200
+
+    treewide: Switch/rename to timer_delete[_sync]()
+
+    timer_delete[_sync]() replaces del_timer[_sync](). Convert the whole tree
+    over and remove the historical wrapper inlines.
+
+    Conversion was done with coccinelle plus manual fixups where necessary.
+
+    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+and
+
+commit c54b386969a58151765a9ffaaa0438e7b580283f
+Author: NeilBrown <neilb@suse.de>
+Date:   Thu Feb 27 12:32:58 2025 +1100
+
+    VFS: Change vfs_mkdir() to return the dentry.
+
+    vfs_mkdir() does not guarantee to leave the child dentry hashed or make
+    it positive on success, and in many such cases the filesystem had to use
+    a different dentry which it can now return.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index fd50f7db939b..5337301ac1c6 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1442,7 +1442,7 @@ static int yaffs_mknod(struct inode *dir, struct dentry *dentry, int mode,
+ }
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
+-static int yaffs_mkdir(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
++struct dentry* yaffs_mkdir(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
+ #else
+ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ #endif
+@@ -1450,7 +1450,10 @@ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ 	int ret_val;
+ 	yaffs_trace(YAFFS_TRACE_OS, "yaffs_mkdir");
+ 	ret_val = yaffs_mknod(ns, dir, dentry, mode | S_IFDIR, 0);
+-	return ret_val;
++	if ( ret_val )
++		return dentry;
++
++	return NULL;
+ }
+ 
+ 
+@@ -2272,7 +2275,7 @@ static int yaffs_bg_thread_fn(void *data)
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
+ 		add_timer(&timer.timer);
+ 		schedule();
+-		del_timer_sync(&timer.timer);
++		timer_delete_sync(&timer.timer);
+ #else
+ 		add_timer(&timer);
+ 		schedule();
+-- 
+2.39.2
+
