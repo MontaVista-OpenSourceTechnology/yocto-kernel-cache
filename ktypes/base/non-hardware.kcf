@@ -5,6 +5,7 @@ certs/Kconfig
 crypto/asymmetric_keys/Kconfig
 crypto/async_tx/Kconfig
 crypto/Kconfig
+crypto/krb5/Kconfig
 drivers/accessibility/Kconfig
 drivers/accessibility/speakup/Kconfig
 drivers/base/firmware_loader/Kconfig
@@ -155,7 +156,6 @@ fs/smb/Kconfig
 fs/smb/server/Kconfig
 fs/squashfs/Kconfig
 fs/sysfs/Kconfig
-fs/sysv/Kconfig
 fs/ubifs/Kconfig
 fs/udf/Kconfig
 fs/ufs/Kconfig
@@ -184,6 +184,13 @@ kernel/rcu/Kconfig.debug
 kernel/time/Kconfig
 kernel/trace/Kconfig
 kernel/trace/rv/Kconfig
+kernel/trace/rv/monitors/sched/Kconfig
+kernel/trace/rv/monitors/sco/Kconfig
+kernel/trace/rv/monitors/scpd/Kconfig
+kernel/trace/rv/monitors/sncid/Kconfig
+kernel/trace/rv/monitors/snep/Kconfig
+kernel/trace/rv/monitors/snroc/Kconfig
+kernel/trace/rv/monitors/tss/Kconfig
 kernel/trace/rv/monitors/wip/Kconfig
 kernel/trace/rv/monitors/wwnr/Kconfig
 lib/crypto/Kconfig

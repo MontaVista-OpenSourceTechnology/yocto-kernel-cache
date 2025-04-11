@@ -189,6 +189,7 @@ arch/x86/events/Kconfig
 arch/x86/Kconfig
 arch/x86/Kconfig.assembler
 arch/x86/Kconfig.cpu
+arch/x86/Kconfig.cpufeatures
 arch/x86/Kconfig.debug
 arch/x86/kvm/Kconfig
 arch/x86/ras/Kconfig
@@ -305,6 +306,7 @@ drivers/crypto/cavium/nitrox/Kconfig
 drivers/crypto/ccp/Kconfig
 drivers/crypto/chelsio/Kconfig
 drivers/crypto/hisilicon/Kconfig
+drivers/crypto/inside-secure/eip93/Kconfig
 drivers/crypto/intel/iaa/Kconfig
 drivers/crypto/intel/ixp4xx/Kconfig
 drivers/crypto/intel/Kconfig
@@ -356,14 +358,17 @@ drivers/firmware/meson/Kconfig
 drivers/firmware/microchip/Kconfig
 drivers/firmware/psci/Kconfig
 drivers/firmware/qcom/Kconfig
+drivers/firmware/samsung/Kconfig
 drivers/firmware/smccc/Kconfig
 drivers/firmware/tegra/Kconfig
 drivers/firmware/xilinx/Kconfig
 drivers/fpga/Kconfig
 drivers/fpga/tests/Kconfig
 drivers/fsi/Kconfig
+drivers/fwctl/Kconfig
 drivers/gnss/Kconfig
 drivers/gpio/Kconfig
+drivers/gpu/drm/adp/Kconfig
 drivers/gpu/drm/amd/acp/Kconfig
 drivers/gpu/drm/amd/amdgpu/Kconfig
 drivers/gpu/drm/amd/amdkfd/Kconfig
@@ -390,7 +395,6 @@ drivers/gpu/drm/gud/Kconfig
 drivers/gpu/drm/hisilicon/hibmc/Kconfig
 drivers/gpu/drm/hisilicon/Kconfig
 drivers/gpu/drm/hisilicon/kirin/Kconfig
-drivers/gpu/drm/i2c/Kconfig
 drivers/gpu/drm/i915/Kconfig
 drivers/gpu/drm/i915/Kconfig.debug
 drivers/gpu/drm/i915/Kconfig.profile
@@ -448,6 +452,7 @@ drivers/gpu/drm/xen/Kconfig
 drivers/gpu/drm/xlnx/Kconfig
 drivers/gpu/host1x/Kconfig
 drivers/gpu/ipu-v3/Kconfig
+drivers/gpu/nova-core/Kconfig
 drivers/gpu/trace/Kconfig
 drivers/gpu/vga/Kconfig
 drivers/greybus/Kconfig
@@ -588,7 +593,7 @@ drivers/leds/blink/Kconfig
 drivers/leds/flash/Kconfig
 drivers/leds/Kconfig
 drivers/leds/rgb/Kconfig
-drivers/leds/simple/Kconfig
+drivers/leds/simatic/Kconfig
 drivers/leds/trigger/Kconfig
 drivers/macintosh/Kconfig
 drivers/mailbox/Kconfig
@@ -687,6 +692,7 @@ drivers/media/platform/nxp/imx8-isi/Kconfig
 drivers/media/platform/nxp/imx-jpeg/Kconfig
 drivers/media/platform/nxp/Kconfig
 drivers/media/platform/qcom/camss/Kconfig
+drivers/media/platform/qcom/iris/Kconfig
 drivers/media/platform/qcom/Kconfig
 drivers/media/platform/qcom/venus/Kconfig
 drivers/media/platform/raspberrypi/Kconfig
@@ -719,6 +725,8 @@ drivers/media/platform/sunxi/sun6i-mipi-csi2/Kconfig
 drivers/media/platform/sunxi/sun8i-a83t-mipi-csi2/Kconfig
 drivers/media/platform/sunxi/sun8i-di/Kconfig
 drivers/media/platform/sunxi/sun8i-rotate/Kconfig
+drivers/media/platform/synopsys/hdmirx/Kconfig
+drivers/media/platform/synopsys/Kconfig
 drivers/media/platform/ti/am437x/Kconfig
 drivers/media/platform/ti/davinci/Kconfig
 drivers/media/platform/ti/Kconfig
@@ -781,7 +789,6 @@ drivers/misc/bcm-vk/Kconfig
 drivers/misc/c2port/Kconfig
 drivers/misc/cardreader/Kconfig
 drivers/misc/cb710/Kconfig
-drivers/misc/cxl/Kconfig
 drivers/misc/echo/Kconfig
 drivers/misc/eeprom/Kconfig
 drivers/misc/genwqe/Kconfig
@@ -853,6 +860,7 @@ drivers/net/ethernet/adaptec/Kconfig
 drivers/net/ethernet/adi/Kconfig
 drivers/net/ethernet/aeroflex/Kconfig
 drivers/net/ethernet/agere/Kconfig
+drivers/net/ethernet/airoha/Kconfig
 drivers/net/ethernet/alacritech/Kconfig
 drivers/net/ethernet/allwinner/Kconfig
 drivers/net/ethernet/alteon/Kconfig
@@ -1230,6 +1238,7 @@ drivers/pmdomain/starfive/Kconfig
 drivers/pmdomain/st/Kconfig
 drivers/pmdomain/sunxi/Kconfig
 drivers/pmdomain/tegra/Kconfig
+drivers/pmdomain/thead/Kconfig
 drivers/pmdomain/ti/Kconfig
 drivers/pmdomain/xilinx/Kconfig
 drivers/pnp/isapnp/Kconfig
@@ -1276,7 +1285,6 @@ drivers/scsi/csiostor/Kconfig
 drivers/scsi/cxgbi/cxgb3i/Kconfig
 drivers/scsi/cxgbi/cxgb4i/Kconfig
 drivers/scsi/cxgbi/Kconfig
-drivers/scsi/cxlflash/Kconfig
 drivers/scsi/device_handler/Kconfig
 drivers/scsi/elx/Kconfig
 drivers/scsi/esas2r/Kconfig
