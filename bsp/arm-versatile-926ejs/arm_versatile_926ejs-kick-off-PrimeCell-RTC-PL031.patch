@@ -1,4 +1,4 @@
-From 0befccd1e939e2fb89791bc6dfac0f279d97bbf7 Mon Sep 17 00:00:00 2001
+From 904907cd5fd7bed39bf00078edb6d53613279639 Mon Sep 17 00:00:00 2001
 From: Tony Liu <Bo.Liu@windriver.com>
 Date: Thu, 25 Feb 2010 16:23:42 +0800
 Subject: [PATCH] arm_versatile_926ejs: kick off PrimeCell RTC PL031
@@ -12,22 +12,22 @@ Signed-off-by: Tony Liu <Bo.Liu@windriver.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/rtc/rtc-pl031.c b/drivers/rtc/rtc-pl031.c
-index 30943d200c5e..0cb8cc2f17f8 100644
+index eab39dfa4e5f..890a1dcccf56 100644
 --- a/drivers/rtc/rtc-pl031.c
 +++ b/drivers/rtc/rtc-pl031.c
-@@ -397,8 +397,12 @@ static int pl031_probe(struct amba_device *adev, const struct amba_id *id)
+@@ -373,8 +373,12 @@ static int pl031_probe(struct amba_device *adev, const struct amba_id *id)
  				  vendor->irqflags, "rtc-pl031", ldata);
  		if (ret)
  			goto out;
 +                /*Set bit "RTC start" in register RTCCR to enable RTC */
 +                writel(0x1, ldata->base + RTC_CR);
 +
- 		dev_pm_set_wake_irq(&adev->dev, adev->irq[0]);
+ 		devm_pm_set_wake_irq(&adev->dev, adev->irq[0]);
  	}
 +
  	return 0;
  
  out:
 -- 
-2.5.0
+2.39.2
 

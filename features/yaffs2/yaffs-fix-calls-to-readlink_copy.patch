@@ -3,8 +3,24 @@ From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 21 Feb 2025 22:13:10 -0500
 Subject: [PATCH] yaffs: fix calls to readlink_copy
 
-commit ea382199071931d19aac5f688b543e07360e2b64                                                                                                       Author: Mateusz Guzik <mjguzik@gmail.com>                                                                                                             Date:   Wed Nov 20 12:20:34 2024 +0100                                                                                                                                                                                                                                                                          vfs: support caching symlink lengths in inodes                                                                                                                                                                                                                                                              When utilized it dodges strlen() in vfs_readlink(), giving about 1.5%                                                                                 speed up when issuing readlink on /initrd.img on ext4.                                                                                                                                                                                                                                                      Filesystems opt in by calling inode_set_cached_link() when creating an                                                                                inode.                                                                                                                                                                                                                                                                                                      The size is stored in a new union utilizing the same space as i_devices,                                                                              thus avoiding growing the struct or taking up any more space.                                                                                                                                                                                                                                               Churn-wise the current readlink_copy() helper is patched to accept the
-    size instead of calculating it.                                                                                                                                                                                                                                                                             Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>                                                                                                      Link: https://lore.kernel.org/r/20241120112037.822078-2-mjguzik@gmail.com                                                                             Signed-off-by: Christian Brauner <brauner@kernel.org>
+  commit ea382199071931d19aac5f688b543e07360e2b64
+  Author: Mateusz Guzik <mjguzik@gmail.com>
+  Date:   Wed Nov 20 12:20:34 2024 +0100
+
+      vfs: support caching symlink lengths in inodes
+
+      When utilized it dodges strlen() in vfs_readlink(), giving about
+      1.5% speed up when issuing readlink on /initrd.img on ext4.
+      Filesystems opt in by calling inode_set_cached_link() when
+      creating an inode.  The size is stored in a new union utilizing
+      the same space as i_devices, thus avoiding growing the struct or
+      taking up any more space.  Churn-wise the current readlink_copy()
+      helper is patched to accept the size instead of calculating it.
+
+      Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+
+      Link: https://lore.kernel.org/r/20241120112037.822078-2-mjguzik@gmail.com
+      Signed-off-by: Christian Brauner <brauner@kernel.org>
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
