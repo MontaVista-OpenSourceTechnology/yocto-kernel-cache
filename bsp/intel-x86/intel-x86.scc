@@ -36,7 +36,6 @@ include features/spi/spidev.scc
 include features/bluetooth/bluetooth.scc
 include features/input/input.scc
 include features/sound/snd_hda_intel.scc
-include features/iommu/iommu.scc
 include features/thermal/coretemp.scc
 include features/mac80211/mac80211.scc
 include features/tpm/tpm.scc
