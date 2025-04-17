@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "SDK v5.15 Feature: Overlay support of PCI devices"
+define KFEATURE_COMPATIBILITY board
+
+kconf hardware pci-of-overlay.cfg
