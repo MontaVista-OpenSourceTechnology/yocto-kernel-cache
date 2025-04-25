@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: MIT
+kconf hardware nvidia-orin.cfg
+
+include features/usb/ehci-hcd.scc
+include features/usb/ohci-hcd.scc
+include features/usb/designware-usb3.scc
+include features/usb/designware-usb2.scc
+include cfg/usb-mass-storage.scc
+include arch/arm/32bit-compat.scc
+include features/mac80211/mac80211.scc
+include features/hugetlb/hugetlb.scc
+include cfg/fs/ext2.scc
+include cfg/fs/ext3.scc
+include features/nf_tables/nf_tables.scc
+include features/bluetooth/bluetooth.scc
+include features/bluetooth/bluetooth-usb.scc
+include features/i2c/i2c.scc
+include features/input/touchscreen.scc
+include features/media/media.scc
+include features/media/media-platform.scc
+include features/media/media-usb-webcams.scc
+include features/usb/serial.scc
+include features/usb/serial-all.scc
+include features/usb/usb-raw-gadget.scc
+include features/usb/xhci-hcd.scc
+include features/can/can.scc
+include cfg/fs/flash_fs.scc
+include features/zram/zram.scc
+include features/input/input.scc
+include features/input/keyboard-gpio.scc
+include cfg/vesafb.scc
+include cfg/sound.scc
+include cfg/remoteproc.cfg
+include features/mmc/mmc-sdhci.scc
+include features/leds/leds.scc
+include features/spi/spi.scc
+include features/spi/spidev.scc
+include features/pci/pci.scc
+include features/pci-iov/pci-iov.scc
+include features/media/media-rc.scc
+include features/media/media.scc
+include features/cpufreq/cpufreq.scc
+include features/acpi/acpi.scc
+include features/cryptodev/arm64-crypto.scc
+include features/usb/usb-configfs.scc
