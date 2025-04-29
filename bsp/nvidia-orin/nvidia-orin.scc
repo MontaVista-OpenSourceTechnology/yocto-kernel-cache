@@ -3,6 +3,9 @@ kconf hardware nvidia-orin.cfg
 
 include features/profiling/profiling.scc
 include features/usb/ehci-hcd.scc
+include features/usb/ohci-hcd.scc
+include features/usb/designware-usb3.scc
+include features/usb/designware-usb2.scc
 include cfg/usb-mass-storage.scc
 include arch/arm/32bit-compat.scc
 include features/mac80211/mac80211.scc
@@ -18,6 +21,7 @@ include features/media/media.scc
 include features/media/media-platform.scc
 include features/media/media-usb-webcams.scc
 include features/usb/serial.scc
+include features/usb/serial-all.scc
 include features/usb/usb-raw-gadget.scc
 include features/usb/xhci-hcd.scc
 include features/can/can.scc
