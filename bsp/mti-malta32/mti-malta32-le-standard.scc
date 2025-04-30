@@ -8,4 +8,4 @@ include ktypes/standard/standard.scc
 branch mti-malta32
 
 include mti-malta32.scc
-kconf hardware mti-malta32-le.cfg
+include features/endian/little.scc
