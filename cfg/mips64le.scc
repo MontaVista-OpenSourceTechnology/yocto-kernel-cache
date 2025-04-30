@@ -1,2 +1,4 @@
 # SPDX-License-Identifier: MIT
-kconf non-hardware mips64le.cfg
+kconf non-hardware mips64.cfg
+
+include features/endian/little.scc
