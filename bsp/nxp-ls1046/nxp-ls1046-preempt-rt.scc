@@ -1,0 +1,7 @@
+define KMACHINE nxp-ls1046
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+
+include nxp-ls1046.scc
