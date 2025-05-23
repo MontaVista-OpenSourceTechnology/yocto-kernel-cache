@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: MIT
+kconf hardware nvidia-orin.cfg
+
+include cfg/usb-mass-storage.scc
+include features/profiling/profiling.scc
+include features/mac80211/mac80211.scc
+include features/bluetooth/bluetooth.scc
+include features/bluetooth/bluetooth-usb.scc
+include features/i2c/i2c.scc
+include features/input/touchscreen.scc
+include features/media/media.scc
+include features/media/media-platform.scc
+include features/media/media-usb-webcams.scc
+include features/usb/serial.scc
+include features/usb/usb-raw-gadget.scc
+include features/usb/xhci-hcd.scc
+include features/input/input.scc
+
+# enable the ability to run 32 bit apps
+include arch/arm/32bit-compat.scc
