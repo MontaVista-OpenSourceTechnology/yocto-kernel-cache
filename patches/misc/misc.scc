@@ -11,3 +11,4 @@ patch net-dccp-make-it-depend-on-CONFIG_BROKEN-CVE-2020-16.patch
 patch iwlwifi-select-MAC80211_LEDS-conditionally.patch
 patch tools-use-basename-to-identify-file-in-gen-mach-type.patch
 patch drivers-gpu-drm-msm-registers-improve-reproducibilit.patch
+patch libbpf-silence-maybe-uninitialized-warning-from-clan.patch
