@@ -1,5 +1,6 @@
 # Core arm configuration settings
 include cfg/remoteproc.cfg
+include features/tsn/tsn.scc
 kconf hardware nxp-imx9.cfg
 
 include features/profiling/profiling.scc
@@ -10,5 +11,4 @@ include features/mac80211/mac80211.scc
 include features/bluetooth/bluetooth.scc
 include features/hugetlb/hugetlb.scc
 include features/bpf/bpf.scc
-include features/tsn/tsn.scc
 include features/net/xdp/xdp.scc
