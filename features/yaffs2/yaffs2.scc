@@ -25,3 +25,7 @@ patch yaffs-fix-mtime-itime-field-access.patch
 patch 0001-yaffs2-adapt-to-v6.10-i_time-changes.patch
 patch yaffs2-update-to-v6.12-folio-changes.patch
 patch yaffs2-switch-from-readlink_copy-to-vfs_readlink.patch
+patch fs-yaffs2-fix-build-warnings-in-yaffs_vfs.c-when-run.patch
+patch fs-yaffs2-fix-a-build-warning-in-yaffs_tagsmarshall..patch
+patch fs-yaffs2-fix-a-build-warning-in-yaffs_yaffs2.c-when.patch
+patch fs-yaffs2-fix-a-build-warning-in-yaffs_mtdif.c-when-.patch

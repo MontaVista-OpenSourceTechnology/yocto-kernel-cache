@@ -1,0 +1,42 @@
+From e9d02fbe5c6e627e4ffbc41d1d7bfbd7121634de Mon Sep 17 00:00:00 2001
+From: Bin Lan <bin.lan.cn@windriver.com>
+Date: Mon, 9 Jun 2025 14:51:48 +0800
+Subject: [PATCH 2/4] fs/yaffs2: fix a build warning in yaffs_tagsmarshall.c
+ when running make allyesconfig
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When building linux yocto with allyesconfig, a build warning is found:
+
+fs/yaffs2/yaffs_tagsmarshall.c:188:6: error: no previous prototype for
+‘yaffs_tags_marshall_install’ [-Werror=missing-prototypes]
+  188 | void yaffs_tags_marshall_install(struct yaffs_dev *dev)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+Inspect the code that the function yaffs_tags_marshall_install() is
+declared in this header file yaffs_tagsmarshall.h. So include the
+header file in yaffs_tagsmarshall.c.
+
+Signed-off-by: Bin Lan <bin.lan.cn@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_tagsmarshall.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/yaffs2/yaffs_tagsmarshall.c b/fs/yaffs2/yaffs_tagsmarshall.c
+index cded165b367c..c80b42130b78 100644
+--- a/fs/yaffs2/yaffs_tagsmarshall.c
++++ b/fs/yaffs2/yaffs_tagsmarshall.c
+@@ -17,6 +17,7 @@
+ #include "yaffs_guts.h"
+ #include "yaffs_trace.h"
+ #include "yaffs_packedtags2.h"
++#include "yaffs_tagsmarshall.h"
+ 
+ static int yaffs_tags_marshall_write(struct yaffs_dev *dev,
+ 				    int nand_chunk, const u8 *data,
+-- 
+2.39.2
+
