@@ -1,0 +1,72 @@
+From fa975fc72940ad5f390c67ebe9d0b10aace88adc Mon Sep 17 00:00:00 2001
+From: Bin Lan <bin.lan.cn@windriver.com>
+Date: Mon, 9 Jun 2025 14:51:47 +0800
+Subject: [PATCH 1/4] fs/yaffs2: fix build warnings in yaffs_vfs.c when running
+ make allyesconfig
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When building linux yocto with allyesconfig, some build warnings are found:
+
+fs/yaffs2/yaffs_vfs.c:1292:15: error: no previous prototype for
+‘yaffs_get_inode’ [-Werror=missing-prototypes]
+ 1292 | struct inode *yaffs_get_inode(struct super_block *sb, int mode,
+      int dev,
+      |               ^~~~~~~~~~~~~~~
+fs/yaffs2/yaffs_vfs.c: In function ‘yaffs_iterate’:
+fs/yaffs2/yaffs_vfs.c:1841:13: error: unused variable ‘i_version’
+[-Werror=unused-variable]
+ 1841 |         u64 i_version;
+      |             ^~~~~~~~~
+fs/yaffs2/yaffs_vfs.c: At top level:
+fs/yaffs2/yaffs_vfs.c:2441:16: error: no previous prototype for
+‘yaffs2_get_parent’ [-Werror=missing-prototypes]
+ 2441 | struct dentry *yaffs2_get_parent(struct dentry *dentry)
+      |                ^~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+Inspect the code that the two functions yaffs_get_inode() and
+yaffs2_get_parent() are only used in the current file, i_version is not
+used in the function yaffs_iterate(). So add the static modifier to the
+two functions and remove the variable i_version.
+
+Signed-off-by: Bin Lan <bin.lan.cn@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index fd50f7db939b..5f31158523e2 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1289,7 +1289,7 @@ static void yaffs_read_inode(struct inode *inode)
+ 
+ 
+ 
+-struct inode *yaffs_get_inode(struct super_block *sb, int mode, int dev,
++static struct inode *yaffs_get_inode(struct super_block *sb, int mode, int dev,
+ 			      struct yaffs_obj *obj)
+ {
+ 	struct inode *inode;
+@@ -1838,7 +1838,6 @@ static int yaffs_iterate(struct file *f, struct dir_context *dc)
+ 	int ret_val = 0;
+ 
+ 	char name[YAFFS_MAX_NAME_LENGTH + 1];
+-	u64 i_version;
+ 
+ 	obj = yaffs_dentry_to_obj(Y_GET_DENTRY(f));
+ 	dev = obj->my_dev;
+@@ -2438,7 +2437,7 @@ static struct dentry *yaffs2_fh_to_parent(struct super_block *sb,
+ 				    yaffs2_nfs_get_inode);
+ }
+ 
+-struct dentry *yaffs2_get_parent(struct dentry *dentry)
++static struct dentry *yaffs2_get_parent(struct dentry *dentry)
+ {
+ 
+ 	struct super_block *sb = dentry->d_inode->i_sb;
+-- 
+2.39.2
+

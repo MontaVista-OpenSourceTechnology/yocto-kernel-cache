@@ -1,0 +1,44 @@
+From 23cdf9c0158f81818b03d23db66cc434b0ffb8b7 Mon Sep 17 00:00:00 2001
+From: Bin Lan <bin.lan.cn@windriver.com>
+Date: Mon, 9 Jun 2025 14:51:49 +0800
+Subject: [PATCH 3/4] fs/yaffs2: fix a build warning in yaffs_yaffs2.c when
+ running make allyesconfig
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When building linux yocto with allyesconfig, a build warning is
+found:
+
+fs/yaffs2/yaffs_yaffs2.c:557:21: error: no previous prototype for
+‘yaffs2_do_endian_tnode_copy’ [-Werror=missing-prototypes]
+  557 | struct yaffs_tnode *yaffs2_do_endian_tnode_copy(struct yaffs_dev
+      *dev,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+Inspect the code that the function yaffs2_do_endian_tnode_copy() is
+only used in the current file. So add the static modifier to it.
+
+Signed-off-by: Bin Lan <bin.lan.cn@windriver.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_yaffs2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_yaffs2.c b/fs/yaffs2/yaffs_yaffs2.c
+index 9eb42f7ff54d..8fc6d3d21951 100644
+--- a/fs/yaffs2/yaffs_yaffs2.c
++++ b/fs/yaffs2/yaffs_yaffs2.c
+@@ -554,7 +554,7 @@ static void yaffs2_do_endian_tnode(struct yaffs_dev *dev, struct yaffs_tnode *tn
+ 		as_u32[i] = swap_u32(as_u32[i]);
+ }
+ 
+-struct yaffs_tnode *yaffs2_do_endian_tnode_copy(struct yaffs_dev *dev,
++static struct yaffs_tnode *yaffs2_do_endian_tnode_copy(struct yaffs_dev *dev,
+ 					       struct yaffs_tnode *tn)
+ {
+ 	if (!dev->swap_endian)
+-- 
+2.39.2
+
