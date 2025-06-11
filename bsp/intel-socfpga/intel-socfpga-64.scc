@@ -1,0 +1,27 @@
+kconf hardware intel-socfpga-64.cfg
+
+# enable the ability to run 32 bit apps
+include arch/arm/32bit-compat.scc
+include features/drm-bochs/drm-bochs.scc
+include features/leds/leds.scc
+include features/net/stmicro/stmmac.scc
+include features/profiling/profiling.scc
+include features/pci/pci.scc
+include features/pci/pci-of-generic.scc
+include features/pci-iov/pci-iov.scc
+include features/power/arm.scc
+include features/scsi/disk.scc
+include features/scsi/scsi.scc
+include features/spi/spi.scc
+include features/spi/spidev.scc
+include features/usb/designware-usb2.scc
+include features/usb/ehci-hcd.scc
+include features/usb/usb-raw-gadget.cfg
+include features/usb/xhci-hcd.scc
+include features/xilinx/overlay_of/overlay_of.scc
+
+include cfg/8250.scc
+include cfg/dmaengine.scc
+include cfg/fs/flash_fs.scc
+include cfg/timer/rtc.scc
+include cfg/usb-mass-storage.scc
