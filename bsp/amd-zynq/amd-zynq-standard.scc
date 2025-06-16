@@ -1,0 +1,7 @@
+define KMACHINE amd-zynq
+define KTYPE standard
+define KARCH arm
+
+include ktypes/standard
+
+include amd-zynq.scc
