@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+
+# Select base rv64i ISA
+kconf hardware riscv-isa-rv64i.cfg
