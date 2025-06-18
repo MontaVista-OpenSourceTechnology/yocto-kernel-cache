@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+
+# Enabled 'Zbc' - Carry-less multiplication extension
+kconf hardware riscv-isa-zbc.cfg

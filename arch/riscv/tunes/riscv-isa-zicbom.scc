@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+
+# Enabled 'Zicbom' - Cache-block management extension
+kconf hardware riscv-isa-zicbom.cfg
