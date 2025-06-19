@@ -29,3 +29,4 @@ patch fs-yaffs2-fix-build-warnings-in-yaffs_vfs.c-when-run.patch
 patch fs-yaffs2-fix-a-build-warning-in-yaffs_tagsmarshall..patch
 patch fs-yaffs2-fix-a-build-warning-in-yaffs_yaffs2.c-when.patch
 patch fs-yaffs2-fix-a-build-warning-in-yaffs_mtdif.c-when-.patch
+patch yaffs-fix-aops-write_begin-to-work-on-folio-correctl.patch
