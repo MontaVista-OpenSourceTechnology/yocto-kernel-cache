@@ -15,6 +15,7 @@ include features/usb/serial.scc
 include features/usb/usb-raw-gadget.scc
 include features/usb/xhci-hcd.scc
 include features/input/input.scc
+include features/usb/usb-gadgets.scc
 
 # enable the ability to run 32 bit apps
 include arch/arm/32bit-compat.scc
