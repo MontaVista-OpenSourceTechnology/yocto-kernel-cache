@@ -2,3 +2,7 @@
 define KFEATURE_DESCRIPTION "Enable VFIO support"
 
 kconf hardware vfio.cfg
+if [ "$KARCH" = "x86_64" ] || [ "$KARCH" = "x86" ] || [ "$KARCH" = "i386" ]; then
+	kconf hardware vfio-x86.cfg
+fi
+
