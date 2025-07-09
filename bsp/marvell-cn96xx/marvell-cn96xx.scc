@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 kconf hardware marvell-cn96xx.cfg
-kconf hardware features/edac/edac.cfg
 
 include cfg/timer/rtc.scc
 include cfg/usb-mass-storage.scc
@@ -17,3 +16,4 @@ include features/mmc/mmc-base.scc
 include features/pci/pci.scc
 include features/pci-iov/pci-iov.scc
 include features/transparent-hugepage/transparent-hugepage.scc
+include features/edac/edac-enable.scc
