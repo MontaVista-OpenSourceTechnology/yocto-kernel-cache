@@ -4,4 +4,7 @@ define KFEATURE_COMPATIBILITY board
 
 if [ "$KARCH" != "mips" ] || [ "$KMACHINE" = "edgerouter" ]; then
     kconf hardware edac.cfg
+    if [ "$KARCH" = "x86_64" ] || [ "$KARCH" = "i386" ]; then
+        kconf hardware edac-x86.cfg
+    fi
 fi
