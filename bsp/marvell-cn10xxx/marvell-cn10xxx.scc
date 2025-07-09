@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 kconf hardware marvell-cn10xxx.cfg
-kconf hardware features/edac/edac.cfg
 
 include arch/arm/32bit-compat.scc
 
@@ -19,3 +18,4 @@ include features/mtd/mtd.scc
 include features/mmc/mmc-base.scc
 include features/pci/pci.scc
 include features/pci-iov/pci-iov.scc
+include features/edac/edac-enable.scc
