@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable options for GSC Proxy services of Intel Management Engine Interface"
+
+kconf hardware mei-gsc-proxy.cfg
