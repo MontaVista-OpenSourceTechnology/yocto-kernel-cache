@@ -17,5 +17,5 @@ patch bsp/mti-malta32/Revert-Input-i8042-io-fix-up-region-handling-on-MIPS.patch
 include features/ftrace/ftrace-function-tracer-disable.scc
 
 kconf hardware mti-malta64-common.cfg
-kconf hardware mti-malta64-gfx.cfg
+kconf hardware mti-malta-gfx.cfg
 

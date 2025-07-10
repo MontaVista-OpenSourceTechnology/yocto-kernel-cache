@@ -1,4 +1,6 @@
 # SPDX-License-Identifier: MIT
+define KMACHINE mti-malta32-le
+define KMACHINE qemumipsel
 define KMACHINE mti-malta64-le
 define KMACHINE qemumips64le
 define KMACHINE qemumips64el
@@ -6,7 +8,7 @@ define KTYPE standard
 define KARCH mips
 
 include ktypes/standard/standard.scc
-branch mti-malta64
+branch mti-malta
 
-include mti-malta64.scc
+include mti-malta.scc
 include features/endian/little.scc

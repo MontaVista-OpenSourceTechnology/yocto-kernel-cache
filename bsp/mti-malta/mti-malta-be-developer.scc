@@ -2,11 +2,14 @@
 define KMACHINE mti-malta64-be
 define KMACHINE qemumips-64
 define KMACHINE qemumips64
-define KTYPE standard
+define KTYPE developer
 define KARCH mips
 
 include ktypes/standard/standard.scc
-branch mti-malta64
+branch mti-malta
 
 include mti-malta64.scc
-include features/endian/big.scc
+
+include features/profiling/profiling.scc
+include cfg/tracing.scc
+

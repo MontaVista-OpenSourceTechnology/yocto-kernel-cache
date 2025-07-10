@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: MIT
+
+if [ "$KMACHINE" = "mti-malta32-le" ] || [ "$KMACHINE" = "qemumipsel" ] || [ "$KMACHINE" = "mti-malta32-be" ] || [ "$KMACHINE" = "qemumips" ]; then
+kconf hardware mti-malta32-common.cfg
+else
+include cfg/mips64.scc
+kconf hardware mti-malta64-common.cfg
+fi
+
+kconf hardware mti-malta-gfx.cfg
+
+include features/profiling/profiling.scc
+
+include features/usb/ehci-hcd.scc
+include features/usb/uhci-hcd.scc
+include features/usb/ohci-hcd.scc
+include features/usb/xhci-hcd.scc
+
+patch mti_malta32-fix-the-pci-resource-conflicts.patch
+patch mousedev-mousedev-patch-for-qemumips.patch
+patch Revert-Input-i8042-io-fix-up-region-handling-on-MIPS.patch
+
+# v3.8+ kernels have broken mips ftrace function tracing, disable it for now
+include features/ftrace/ftrace-function-tracer-disable.scc
+
+include cfg/net/mdio.scc

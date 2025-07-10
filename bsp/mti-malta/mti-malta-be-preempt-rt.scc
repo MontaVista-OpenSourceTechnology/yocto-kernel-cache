@@ -1,4 +1,6 @@
 # SPDX-License-Identifier: MIT
+define KMACHINE mti-malta32-be
+define KMACHINE qemumips
 define KMACHINE mti-malta64-be
 define KMACHINE qemumips-64
 define KMACHINE qemumips64
@@ -7,5 +9,6 @@ define KARCH mips
 
 # no new branch required, re-use the ktypes/preempt-rt/preempt-rt.scc branch
 include ktypes/preempt-rt/preempt-rt.scc
-include mti-malta64.scc
-kconf hardware mti-malta64-be.cfg
+include mti-malta.scc
+
+kconf non-hardware mti-malta-rt.cfg
