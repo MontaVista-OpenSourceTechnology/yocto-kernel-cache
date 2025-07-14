@@ -1,4 +1,4 @@
-From eadff0cee174a823d8702a9b5dd1da3e2ae7a737 Mon Sep 17 00:00:00 2001
+From 8f9796c161fdf19af4db4cd755ee5b02b99f6583 Mon Sep 17 00:00:00 2001
 From: Kevin Hao <kexin.hao@windriver.com>
 Date: Fri, 7 Apr 2023 21:03:41 +0800
 Subject: [PATCH] fat: Replace prandom_u32() with get_random_u32()

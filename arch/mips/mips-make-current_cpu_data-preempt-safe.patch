@@ -1,4 +1,4 @@
-From 28cc1969ec1c47b6dc34bf949f30da0acef3835d Mon Sep 17 00:00:00 2001
+From 16e80dcbaeec523706fe6ad7455f9e00d2362d93 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 29 Sep 2023 00:11:41 +0000
 Subject: [PATCH] mips: make current_cpu_data preempt safe

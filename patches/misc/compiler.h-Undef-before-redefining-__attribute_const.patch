@@ -1,4 +1,4 @@
-From 21e9ef2001f8b10fef25e675b4be3bc9f1af8cfc Mon Sep 17 00:00:00 2001
+From e7ca0654f08c1d4024c225b1c62dbe606cbb1a09 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 5 Jan 2012 11:42:35 -0800
 Subject: [PATCH] compiler.h: Undef before redefining __attribute_const__
@@ -12,10 +12,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
-index 9c05a59f0184..4dbb2a0404bb 100644
+index 33411ca0cc90..075db5a9041e 100644
 --- a/tools/include/linux/compiler.h
 +++ b/tools/include/linux/compiler.h
-@@ -92,6 +92,7 @@
+@@ -114,6 +114,7 @@
  #define __always_inline	inline
  #endif
  

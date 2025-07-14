@@ -1,4 +1,4 @@
-From c581dc4848431018f0b7d9fcdda0f322c157980b Mon Sep 17 00:00:00 2001
+From 03d6e28cecee11efc148e85700b807afad23651c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 21 Feb 2025 22:13:10 -0500
 Subject: [PATCH] yaffs: fix calls to readlink_copy

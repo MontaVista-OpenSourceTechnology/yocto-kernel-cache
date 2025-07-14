@@ -1,4 +1,4 @@
-From cd6555705f305a9391e3c066e2362d03f3501821 Mon Sep 17 00:00:00 2001
+From 86699e0987860570dcdaa8f4989cbfdd2fde08ba Mon Sep 17 00:00:00 2001
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 Date: Fri, 14 Mar 2025 10:33:42 +0200
 Subject: [PATCH] yaffs2: switch from readlink_copy() to vfs_readlink()

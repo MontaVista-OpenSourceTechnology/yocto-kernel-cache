@@ -1,4 +1,4 @@
-From 298aefdf4112e7c0a84522e4acf2c722e433c8a0 Mon Sep 17 00:00:00 2001
+From f4d64041ba7e37987d49021f324deb8ea3dbee78 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Wed, 4 Jun 2025 21:22:23 +0100
 Subject: [PATCH] libbpf: silence maybe-uninitialized warning from clang
@@ -27,10 +27,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 764fbda7762ed..a586c21c33b65 100644
+index 52e353368f58..00e67f05f8f0 100644
 --- a/tools/lib/bpf/libbpf.c
 +++ b/tools/lib/bpf/libbpf.c
-@@ -9976,7 +9976,7 @@ static int find_kernel_btf_id(struct bpf_object *obj, const char *attach_name,
+@@ -10085,7 +10085,7 @@ static int find_kernel_btf_id(struct bpf_object *obj, const char *attach_name,
  			      enum bpf_attach_type attach_type,
  			      int *btf_obj_fd, int *btf_type_id)
  {

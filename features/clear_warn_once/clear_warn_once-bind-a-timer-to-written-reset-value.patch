@@ -1,4 +1,4 @@
-From 5b413d923d14fe14c91c4d647f7063bf95847d3f Mon Sep 17 00:00:00 2001
+From d203efc53bfa9d41a1afab6a90e07e401466c5b8 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Wed, 16 Dec 2020 12:22:57 -0500
 Subject: [PATCH] clear_warn_once: bind a timer to written reset value
@@ -43,7 +43,7 @@ index 211fd926cf00..8d058bbc0859 100644
 +
 +Writing a value of zero (or one) will remove any previously set timer.
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 910da0d32c2e..4acd77236e32 100644
+index 910da0d32c2e..060b25607658 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
 @@ -833,6 +833,7 @@ EXPORT_SYMBOL(__warn_printk);
@@ -87,7 +87,7 @@ index 910da0d32c2e..4acd77236e32 100644
 +	}
 +
 +	if (warn_timer_active) {
-+		timer_delete_sync(&warn_reset_timer);
++		del_timer_sync(&warn_reset_timer);
 +		warn_timer_active = 0;
 +	}
 +	clear_warn_once = 0;

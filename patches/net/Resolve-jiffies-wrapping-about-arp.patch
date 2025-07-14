@@ -1,4 +1,4 @@
-From 748a8ae8785eb317af64a5acdfcb0ff1f6fb44bf Mon Sep 17 00:00:00 2001
+From 3d684d9e6f84e649cf72fab7e5a9cdfd925bc2d2 Mon Sep 17 00:00:00 2001
 From: Li Wang <li.wang@windriver.com>
 Date: Tue, 15 Dec 2009 11:03:47 +0800
 Subject: [PATCH] Resolve jiffies wrapping about arp

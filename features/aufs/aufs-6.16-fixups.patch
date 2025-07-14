@@ -1,7 +1,7 @@
 From cb1d8a6453697d69b3de81c9d6f325271dc06cbd Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 11 Jul 2025 13:20:03 -0400
-Subject: [PATCH 6/8] aufs: 6.16 fixups
+Subject: [PATCH] aufs: 6.16 fixups
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

@@ -1,4 +1,4 @@
-From f24baf240fce03b97901d7623ea838fc33d8773f Mon Sep 17 00:00:00 2001
+From e4a316df52b5c19248ace45912f20dbbcfb9fa9a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 27 Jul 2023 18:17:32 -0400
 Subject: [PATCH] yaffs2: v6.5 fixups

@@ -1,4 +1,4 @@
-From d06b4e2f2956d4a5ae471404eec3a0523a53f2b1 Mon Sep 17 00:00:00 2001
+From 059d464171d77b9283ccba54d2095c10fd24e1f8 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Mon, 2 Jul 2018 23:10:28 -0400
 Subject: [PATCH] menuconfig,mconf-cfg: Allow specification of ncurses location

@@ -1,7 +1,7 @@
 From ed14a45c795510f16b9aba3ec153091178e79d67 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 14 Jul 2025 13:09:06 -0400
-Subject: [PATCH 8/8] aufs: drop writepage
+Subject: [PATCH] aufs: drop writepage
 
 The upstream kernel has dropped writepage, and uses writepages directly.
 

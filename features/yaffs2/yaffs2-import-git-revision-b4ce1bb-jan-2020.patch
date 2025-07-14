@@ -1,4 +1,4 @@
-From 0eb2d22fb484917ae95146cc40338c46cfa24656 Mon Sep 17 00:00:00 2001
+From fa9fcc8a2358a6bfbd03cfc801a306083d90db80 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 13 Jan 2020 12:19:30 -0500
 Subject: [PATCH] yaffs2: import git revision b4ce1bb (jan, 2020)
@@ -96,7 +96,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  create mode 100644 fs/yaffs2/yportenv.h
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index c718b2e2de0e..225f47397ff9 100644
+index 44b6cdd36dc1..73ef41e297aa 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
 @@ -324,6 +324,7 @@ source "fs/hfsplus/Kconfig"
@@ -108,15 +108,16 @@ index c718b2e2de0e..225f47397ff9 100644
  # UBIFS File system configuration
  source "fs/ubifs/Kconfig"
 diff --git a/fs/Makefile b/fs/Makefile
-index 77fd7f7b5d02..0934c0cf82f3 100644
+index 79c08b914c47..89e763148e8d 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
-@@ -127,4 +127,5 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
+@@ -127,5 +127,6 @@ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
  obj-$(CONFIG_EROFS_FS)		+= erofs/
  obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
  obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
 +obj-$(CONFIG_YAFFS_FS)		+= yaffs2/
  obj-$(CONFIG_BPF_LSM)		+= bpf_fs_kfuncs.o
+ obj-$(CONFIG_RESCTRL_FS)	+= resctrl/
 diff --git a/fs/yaffs2/Kconfig b/fs/yaffs2/Kconfig
 new file mode 100644
 index 000000000000..408570fc7a5e

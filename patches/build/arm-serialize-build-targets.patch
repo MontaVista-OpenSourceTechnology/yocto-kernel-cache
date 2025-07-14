@@ -1,4 +1,4 @@
-From 54558a9445a357297c20b0b6146f89d3b04aa689 Mon Sep 17 00:00:00 2001
+From 7b64e8d48e51399150c0356c760f78b19f9e346a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Tue, 10 Jun 2008 21:58:35 -0400
 Subject: [PATCH] arm: serialize build targets

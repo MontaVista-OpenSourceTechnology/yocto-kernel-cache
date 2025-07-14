@@ -1,7 +1,7 @@
 From 003b186df0b3179f30a086afa8fe5ce538a6a4b6 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 11 Jul 2025 12:02:39 -0400
-Subject: [PATCH 5/8] aufs6: core
+Subject: [PATCH] aufs6: core
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

@@ -1,4 +1,4 @@
-From d0e16e11769ec4dfb8e2625ddafe5dd709a74962 Mon Sep 17 00:00:00 2001
+From 6a01fecb23d75a987185023b88dc8c116ce61f38 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 13 Jul 2022 12:18:15 -0400
 Subject: [PATCH] tools: use basename to identify file in gen-mach-types

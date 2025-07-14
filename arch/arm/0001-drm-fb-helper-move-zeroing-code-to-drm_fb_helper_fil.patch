@@ -1,4 +1,4 @@
-From b14167dc0059001d0656661f1272aa0669cfbe58 Mon Sep 17 00:00:00 2001
+From 4ad2435af6c0d58fa4da91918d9351de9edd7130 Mon Sep 17 00:00:00 2001
 From: Jon Mason <jon.mason@arm.com>
 Date: Tue, 8 Aug 2023 16:38:37 -0400
 Subject: [PATCH] drm/fb-helper: move zeroing code to drm_fb_helper_fill_var

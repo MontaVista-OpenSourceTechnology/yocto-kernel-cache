@@ -1,4 +1,4 @@
-From bc52a514886266f2ae98afd1719ee476f3f1f365 Mon Sep 17 00:00:00 2001
+From b50ec1754c8a1ec6cee62a6a2e7249dbf37c0cdd Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Mon, 21 Aug 2017 13:52:53 -0400
 Subject: [PATCH] perf: x86-32: explicitly include <errno.h>

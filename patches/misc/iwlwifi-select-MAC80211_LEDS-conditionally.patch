@@ -1,4 +1,4 @@
-From 5b4de7d73049621c01751d344e74ee44a36efb5e Mon Sep 17 00:00:00 2001
+From 618d17dfe2d63da688f7d3101ecd7c170fc19b1d Mon Sep 17 00:00:00 2001
 From: Liwei Song <liwei.song@windriver.com>
 Date: Mon, 28 Jun 2021 17:04:40 +0800
 Subject: [PATCH] iwlwifi: select MAC80211_LEDS conditionally

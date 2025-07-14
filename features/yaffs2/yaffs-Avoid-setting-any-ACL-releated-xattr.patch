@@ -1,4 +1,4 @@
-From 27c8ab6750500cc64d532f63c749682b9fd6de40 Mon Sep 17 00:00:00 2001
+From 3da4b8b620f6ad9edb425c7e5499409d2cfe9f6a Mon Sep 17 00:00:00 2001
 From: Zhang Xiao <xiao.zhang@windriver.com>
 Date: Wed, 27 Aug 2014 13:34:15 +0800
 Subject: [PATCH] yaffs: Avoid setting any ACL releated xattr

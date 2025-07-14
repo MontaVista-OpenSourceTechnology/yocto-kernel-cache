@@ -1,4 +1,4 @@
-From ebf2e6f624789af7c3be36856435d5f1d936c3bc Mon Sep 17 00:00:00 2001
+From 50953b0ba0bb42280b374abb99480ed49a206a26 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Thu, 19 Aug 2010 13:57:50 -0400
 Subject: [PATCH] vmware: include jiffies.h

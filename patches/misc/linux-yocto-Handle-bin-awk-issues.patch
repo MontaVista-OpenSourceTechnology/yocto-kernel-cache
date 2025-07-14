@@ -1,4 +1,4 @@
-From 43ffea11d480516874131fdcd7b23526b0b02f5f Mon Sep 17 00:00:00 2001
+From cb7efdfac2001b0ca610d11d6b7921394cf11a19 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Tue, 22 Aug 2017 09:50:50 +0100
 Subject: [PATCH] linux-yocto: Handle /bin/awk issues
@@ -39,7 +39,7 @@ index 6d7c2d8eaf55..2a4a42a6d70c 100644
  #
  # Awk script to generate include/generated/machtypes.h
 diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index 5770c8097f32..d84b2ee13c60 100644
+index 2c19d7fc8a85..70b1f2026a57 100644
 --- a/arch/x86/tools/gen-insn-attr-x86.awk
 +++ b/arch/x86/tools/gen-insn-attr-x86.awk
 @@ -1,4 +1,4 @@
@@ -49,7 +49,7 @@ index 5770c8097f32..d84b2ee13c60 100644
  # gen-insn-attr-x86.awk: Instruction attribute table generator
  # Written by Masami Hiramatsu <mhiramat@redhat.com>
 diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index 5770c8097f32..d84b2ee13c60 100644
+index 2c19d7fc8a85..70b1f2026a57 100644
 --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
 +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
 @@ -1,4 +1,4 @@

@@ -1,4 +1,4 @@
-From f7168459271d78c6767254c4468d1984dd263dd0 Mon Sep 17 00:00:00 2001
+From 55905587392c5427e65d9d820526e2162ff0db14 Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Thu, 16 Jul 2009 12:47:15 +1000
 Subject: [PATCH] FAT: Added FAT_NO_83NAME

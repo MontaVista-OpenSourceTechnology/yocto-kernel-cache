@@ -1,7 +1,7 @@
 From c0e472d56041be972f6476354567633086483f0a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 11 Jul 2025 10:05:17 -0400
-Subject: [PATCH 2/8] aufs6: base
+Subject: [PATCH] aufs6: base
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

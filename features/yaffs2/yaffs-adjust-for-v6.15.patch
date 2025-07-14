@@ -1,4 +1,4 @@
-From 541fb3be256b434b9a89ba13e243b8e734546fbe Mon Sep 17 00:00:00 2001
+From 9a1cf6bff910e2c3cca9a08e0d2f539b8a5e9a09 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 11 Apr 2025 11:15:38 -0400
 Subject: [PATCH] yaffs: adjust for v6.15
