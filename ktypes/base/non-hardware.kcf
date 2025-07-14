@@ -83,6 +83,7 @@ drivers/vhost/Kconfig
 drivers/virt/acrn/Kconfig
 drivers/virt/coco/arm-cca-guest/Kconfig
 drivers/virt/coco/efi_secret/Kconfig
+drivers/virt/coco/guest/Kconfig
 drivers/virt/coco/Kconfig
 drivers/virt/coco/pkvm-guest/Kconfig
 drivers/virt/coco/sev-guest/Kconfig
@@ -96,6 +97,7 @@ fs/9p/Kconfig
 fs/adfs/Kconfig
 fs/affs/Kconfig
 fs/afs/Kconfig
+fs/aufs/Kconfig
 fs/autofs/Kconfig
 fs/bcachefs/Kconfig
 fs/befs/Kconfig
@@ -150,6 +152,7 @@ fs/pstore/Kconfig
 fs/qnx4/Kconfig
 fs/qnx6/Kconfig
 fs/quota/Kconfig
+fs/resctrl/Kconfig
 fs/romfs/Kconfig
 fs/smb/client/Kconfig
 fs/smb/Kconfig
@@ -227,8 +230,6 @@ net/can/j1939/Kconfig
 net/can/Kconfig
 net/ceph/Kconfig
 net/dcb/Kconfig
-net/dccp/ccids/Kconfig
-net/dccp/Kconfig
 net/dns_resolver/Kconfig
 net/dsa/Kconfig
 net/hsr/Kconfig
