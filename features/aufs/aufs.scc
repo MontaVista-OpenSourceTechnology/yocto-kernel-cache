@@ -1,3 +1,11 @@
 # SPDX-License-Identifier: MIT
 #
 
+patch aufs6-kbuild.patch
+patch aufs6-base.patch
+patch aufs6-mmap.patch
+patch aufs6-standalone.patch
+patch aufs6-core.patch
+patch aufs-6.16-fixups.patch
+patch aufs-update-lookup_noperm-to-v6.16-signatures.patch
+patch aufs-drop-writepage.patch
