@@ -1,0 +1,133 @@
+From c4698c3f96f6135e4e95b1d136cf858cb748a66d Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 14 Jul 2025 11:55:16 -0400
+Subject: [PATCH] yaffs2: update for v6.16+ compatibility
+
+We have timer and folio/writeback changes in the mainline kernel.
+
+We create some wrapper routines and update our signatures to work
+with 6.16+
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 216a2905b4b0..5adc1bfd7744 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -75,6 +75,7 @@
+ #endif
+ 
+ #include <linux/blkdev.h>
++#include <linux/writeback.h>
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -136,6 +137,12 @@ static inline char* yaffs_devname(struct super_block *sb, char *buf, unsigned lo
+ 
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 16, 0)
++#define page_index_compat(page) page_folio(page)->index
++#else
++#define page_index_compat(page) ((page)->index)
++#endif
++
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 26))
+ #define YPROC_ROOT  (&proc_root)
+ #else
+@@ -318,7 +325,7 @@ static int yaffs_readpage_nolock(struct file *f, struct page *pg)
+ 	struct yaffs_obj *obj;
+ 	unsigned char *pg_buf;
+ 	int ret;
+-	loff_t pos = ((loff_t) pg->index) << PAGE_SHIFT;
++	loff_t pos = ((loff_t) page_index_compat(pg)) << PAGE_SHIFT;
+ 	struct yaffs_dev *dev;
+ 
+ 	yaffs_trace(YAFFS_TRACE_OS,
+@@ -452,15 +459,15 @@ static int yaffs_writepage(struct page *page)
+ 
+ 	end_index = i_size >> PAGE_CACHE_SHIFT;
+ 
+-	if (page->index < end_index)
++	if (page_index_compat(page) < end_index)
+ 		n_bytes = PAGE_CACHE_SIZE;
+ 	else {
+ 		n_bytes = i_size & (PAGE_CACHE_SIZE - 1);
+ 
+-		if (page->index > end_index || !n_bytes) {
++		if (page_index_compat(page) > end_index || !n_bytes) {
+ 			yaffs_trace(YAFFS_TRACE_OS,
+ 				"yaffs_writepage at %lld, inode size = %lld!!",
+-				((loff_t)page->index) << PAGE_CACHE_SHIFT,
++				((loff_t)page_index_compat(page)) << PAGE_CACHE_SHIFT,
+ 				inode->i_size);
+ 			yaffs_trace(YAFFS_TRACE_OS,
+ 				"                -> don't care!!");
+@@ -486,13 +493,13 @@ static int yaffs_writepage(struct page *page)
+ 
+ 	yaffs_trace(YAFFS_TRACE_OS,
+ 		"yaffs_writepage at %lld, size %08x",
+-		((loff_t)page->index) << PAGE_CACHE_SHIFT, n_bytes);
++		((loff_t)page_index_compat(page)) << PAGE_CACHE_SHIFT, n_bytes);
+ 	yaffs_trace(YAFFS_TRACE_OS,
+ 		"writepag0: obj = %lld, ino = %lld",
+ 		obj->variant.file_variant.file_size, inode->i_size);
+ 
+ 	n_written = yaffs_wr_file(obj, buffer,
+-				  ((loff_t)page->index) << PAGE_CACHE_SHIFT, n_bytes, 0);
++				  ((loff_t)page_index_compat(page)) << PAGE_CACHE_SHIFT, n_bytes, 0);
+ 
+ 	yaffs_set_super_dirty(dev);
+ 
+@@ -511,6 +518,17 @@ static int yaffs_writepage(struct page *page)
+ 	return (n_written == n_bytes) ? 0 : -ENOSPC;
+ }
+ 
++static int yaffs_writepage_wrapper(struct folio *folio, struct writeback_control *wbc, void *data)
++{
++    struct page *page = &folio->page;
++    return yaffs_writepage(page, wbc);
++}
++
++static int yaffs_writepages(struct address_space *mapping, struct writeback_control *wbc)
++{
++    return write_cache_pages(mapping, wbc, yaffs_writepage_wrapper, NULL);
++}
++
+ /* Space holding and freeing is done to ensure we have space available for write_begin/end */
+ /* For now we just assume few parallel writes and check against a small number. */
+ /* Todo: need to do this with a counter to handle parallel reads better */
+@@ -728,7 +746,7 @@ static int yaffs_commit_write(struct file *f, struct page *pg, unsigned offset,
+ {
+ 	void *addr, *kva;
+ 
+-	loff_t pos = (((loff_t) pg->index) << PAGE_CACHE_SHIFT) + offset;
++	loff_t pos = (((loff_t) page_index_compat(pg)) << PAGE_CACHE_SHIFT) + offset;
+ 	int n_bytes = to - offset;
+ 	int n_written;
+ 
+@@ -758,7 +776,8 @@ static int yaffs_commit_write(struct file *f, struct page *pg, unsigned offset,
+ 
+ static struct address_space_operations yaffs_file_address_operations = {
+ 	.read_folio = yaffs_read_folio,
+-	.writepage = yaffs_writepage,
++	//	.writepage = yaffs_writepage,
++	.writepages = yaffs_writepages,
+ #if (YAFFS_USE_WRITE_BEGIN_END > 0)
+ 	.write_begin = yaffs_write_begin,
+ 	.write_end = yaffs_write_end,
+@@ -2181,7 +2200,7 @@ struct timer_struct {
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
+ static void yaffs_background_waker(struct timer_list *t)
+ {
+-	struct timer_struct *ts = from_timer(ts, t, timer);
++	struct timer_struct *ts = container_of(t, struct timer_struct, timer);
+ 
+ 	wake_up_process(ts->task);
+ }
+-- 
+2.39.2
+
