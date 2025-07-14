@@ -27,6 +27,7 @@
 	config = cfg/cgroup-hugetlb.scc
 	config = cfg/efi.scc
 	config = cfg/rbd.scc
+	config = cfg/cpu_nr_512.scc
 	config = cfg/dmaengine.scc
 	config = cfg/vswitch.scc
 	config = cfg/net/ip_nf.scc
@@ -176,6 +177,7 @@
 	config = features/mei/mei-txe.scc
 	config = features/mei/mei-spd.scc
 	config = features/mei/mei-me.scc
+	config = features/mei/mei-gsc-proxy.scc
 	config = features/kdump/kdump-enable.scc
 	config = features/intel-persistent-memory/intel-x86-64-pmem.scc
 	config = features/intel-persistent-memory/intel-x86-64-pmem-preempt-rt.scc
@@ -275,6 +277,8 @@
 	config = features/tpm/tpm-2.0.scc
 	config = features/tpm/vtpm.scc
 	config = features/firmware/firmware.scc
+	config = features/endian/big.scc
+	config = features/endian/little.scc
 	config = features/intel-pinctrl/intel-pinctrl.scc
 	config = features/ciphers/ciphers.scc
 	config = features/x2apic/x2apic.scc
