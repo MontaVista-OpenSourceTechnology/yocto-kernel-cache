@@ -1,6 +1,7 @@
 # Core arm configuration settings
 include cfg/remoteproc.cfg
 kconf hardware nxp-imx9.cfg
+include cfg/timer/no_hz.scc
 
 include features/profiling/profiling.scc
 include features/usb/ehci-hcd.scc
