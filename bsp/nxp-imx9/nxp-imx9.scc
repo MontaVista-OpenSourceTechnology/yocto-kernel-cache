@@ -2,6 +2,7 @@
 include cfg/remoteproc.cfg
 include features/tsn/tsn.scc
 kconf hardware nxp-imx9.cfg
+include cfg/timer/no_hz.scc
 
 include features/profiling/profiling.scc
 include features/usb/ehci-hcd.scc
