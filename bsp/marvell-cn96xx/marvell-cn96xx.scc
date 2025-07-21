@@ -15,5 +15,4 @@ include features/mtd/mtd.scc
 include features/mmc/mmc-base.scc
 include features/pci/pci.scc
 include features/pci-iov/pci-iov.scc
-include features/transparent-hugepage/transparent-hugepage.scc
 include features/edac/edac-enable.scc

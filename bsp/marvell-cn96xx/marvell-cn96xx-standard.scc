@@ -6,3 +6,4 @@ define KARCH arm64
 include ktypes/standard
 
 include marvell-cn96xx.scc
+include features/transparent-hugepage/transparent-hugepage.scc
