@@ -2,3 +2,4 @@ patch clear_warn_once-expand-debugfs-to-include-read-suppo.patch
 patch clear_warn_once-bind-a-timer-to-written-reset-value.patch
 patch clear_warn_once-add-a-clear_warn_once-boot-parameter.patch
 patch sched-isolation-really-align-nohz_full-with-rcu_nocb.patch
+patch panic-update-to-v6.16-timer-sync-calls.patch
