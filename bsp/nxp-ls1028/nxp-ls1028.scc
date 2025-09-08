@@ -2,18 +2,17 @@
 include features/pci/pci.scc
 
 kconf hardware nxp-ls1028.cfg
-kconf hardware features/edac/edac.cfg
 
 include cfg/usb-mass-storage.scc
 include cfg/8250.scc
 include cfg/timer/rtc.scc
 
+include features/edac/edac-enable.scc
 include features/hugetlb/hugetlb.scc
 include arch/arm/32bit-compat.scc
 include features/profiling/profiling.scc
 include features/input/input.scc
 include features/power/arm.scc
-include features/input/keyboard-gpio.scc
 include features/spi/spi.scc
 include features/pwm/pwm.scc
 include features/mmc/mmc-base.scc
