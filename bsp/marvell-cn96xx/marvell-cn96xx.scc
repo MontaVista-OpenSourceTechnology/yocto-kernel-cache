@@ -16,3 +16,4 @@ include features/mmc/mmc-base.scc
 include features/pci/pci.scc
 include features/pci-iov/pci-iov.scc
 include features/edac/edac-enable.scc
+include features/apei/apei.scc
