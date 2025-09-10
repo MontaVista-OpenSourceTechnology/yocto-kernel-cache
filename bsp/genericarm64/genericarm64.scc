@@ -46,3 +46,5 @@ include features/optee/optee.scc
 include features/security/security.scc
 include features/spi/spi.scc
 include features/pmem/pmem.scc
+patch Revert-serial-8250-unexport-serial8250_rpm_-function.patch
+patch Revert-serial-8250_omap-Drop-pm_runtime_irq_safe.patch
