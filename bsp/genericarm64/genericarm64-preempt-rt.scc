@@ -5,6 +5,8 @@ define KARCH arm64
 
 include ktypes/preempt-rt/preempt-rt.scc
 
+branch genericarm64
+
 include genericarm64.scc
 
 # default policy for preempt-rt kernels
