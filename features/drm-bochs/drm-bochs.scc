@@ -1,2 +1,7 @@
 # SPDX-License-Identifier: MIT
 kconf hardware drm-bochs.cfg
+
+if [ "$KARCH" = "x86_64" ] || [ "$KARCH" = "arm64" ]; then
+include drm-bochs-64.cfg
+fi
+
