@@ -21,6 +21,7 @@ include cfg/usb-mass-storage.scc
 include cfg/virtio.scc
 include cfg/fs/flash_fs.scc
 
+include features/block/integrity.scc
 include features/bluetooth/bluetooth.scc
 include features/input/input.scc
 include features/input/keyboard-gpio.scc
