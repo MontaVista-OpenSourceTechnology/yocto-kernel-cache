@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Memory error detection support, e.g. ECC RAM"
+define KFEATURE_COMPATIBILITY all
+
+include features/edac/edac.cfg
+
+kconf non-hardware failure.cfg
+
+if [ "$KARCH" = "arm64" ]; then
+    kconf hardware failure-arm64.cfg
+fi
