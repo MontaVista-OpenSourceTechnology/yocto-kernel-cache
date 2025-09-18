@@ -9,6 +9,7 @@ kconf hardware genericarm64-pinctrl.cfg
 kconf hardware genericarm64-regulator.cfg
 kconf hardware genericarm64-remoteproc.cfg
 kconf hardware genericarm64-serial.cfg
+kconf hardware genericarm64-sound.cfg
 
 include cfg/8250.scc
 include cfg/boot-live.scc
