@@ -89,6 +89,7 @@
 	config = features/nfc/nfc-generic.scc
 	config = features/nfc/nfc-vendor.scc
 	config = features/profiling/profiling.scc
+	config = features/memory/failure.scc
 	config = features/misc/bosch-pressure-sensor-i2c.scc
 	config = features/security/security.scc
 	config = features/kgdb/kgdb.scc
