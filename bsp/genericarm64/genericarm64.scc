@@ -26,6 +26,7 @@ include features/block/integrity.scc
 include features/bluetooth/bluetooth.scc
 include features/bluetooth/bluetooth-hw.scc
 include features/bluetooth/bluetooth-usb.scc
+include features/firmware/firmware.scc
 include features/input/input.scc
 include features/input/keyboard-gpio.scc
 include features/hid/hid.scc
