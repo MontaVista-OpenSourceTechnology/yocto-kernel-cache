@@ -133,6 +133,7 @@
 	config = features/mmc/mmc-sdhci.scc
 	config = features/mmc/mmc-base.scc
 	config = features/mmc/mmc-realtek.scc
+	config = features/sched/sched-desktop.scc
 	config = features/scsi/scsi.scc
 	config = features/scsi/scsi-debug.scc
 	config = features/scsi/cdrom.scc
