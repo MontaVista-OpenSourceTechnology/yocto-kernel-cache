@@ -42,6 +42,7 @@ include features/nvme/nvme.scc
 include features/net/net.scc
 include features/netfilter/netfilter.scc
 include features/numa/numa.scc
+include features/optee/optee.cfg
 include features/pci-iov/pci-iov.scc
 include features/pci/pci.scc
 include features/power/arm.scc
