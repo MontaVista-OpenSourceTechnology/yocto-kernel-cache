@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: MIT
-# intel-quark.scc
 #
 # Core platform enablement for all intel-quark ktypes. This should only
 # contain CPU features and devices known to be present on the supported
