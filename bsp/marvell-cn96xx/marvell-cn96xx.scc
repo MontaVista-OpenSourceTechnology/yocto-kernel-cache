@@ -5,4 +5,5 @@ kconf hardware features/edac/edac.cfg
 include cfg/usb-mass-storage.scc
 
 include features/hugetlb/hugetlb.scc
+include features/nvme/nvme.scc
 include features/profiling/profiling.scc
