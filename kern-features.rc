@@ -287,6 +287,7 @@
 	config = features/intel-pinctrl/intel-pinctrl.scc
 	config = features/ciphers/ciphers.scc
 	config = features/x2apic/x2apic.scc
+	config = features/sram/sram.scc
 	config = features/uio/uio.scc
 	config = bsp/xilinx/board-common.scc
 	config = bsp/xilinx/kc705-microblazeel-features/kc705-microblazeel-features.scc
