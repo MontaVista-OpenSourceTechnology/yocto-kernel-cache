@@ -13,6 +13,7 @@ include cfg/intel.scc
 include features/pci/pci.scc
 include features/pci-iov/pci-iov.scc
 include features/mmc/mmc-sdhci.scc
+include features/nvme/nvme.scc
 include features/usb/ehci-hcd.scc
 include features/usb/uhci-hcd.scc
 include features/usb/ohci-hcd.scc

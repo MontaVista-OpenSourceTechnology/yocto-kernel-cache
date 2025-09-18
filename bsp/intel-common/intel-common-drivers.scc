@@ -18,6 +18,9 @@ include cfg/sound.scc
 # PCI
 include features/pci/pci.scc
 
+# NVMe
+include features/nvme/nvme.scc
+
 # USB
 include features/usb/ehci-hcd.scc
 include features/usb/uhci-hcd.scc
