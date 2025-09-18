@@ -28,6 +28,7 @@ include features/input/keyboard-gpio.scc
 include features/hid/hid.scc
 include features/hugetlb/hugetlb.scc
 include features/leds/leds.scc
+include features/memory/failure.scc
 include features/mmc/mmc-block.scc
 include features/mmc/mmc-sdhci.scc
 include features/mtd/mtd.scc
