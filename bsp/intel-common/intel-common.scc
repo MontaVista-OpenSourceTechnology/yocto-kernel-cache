@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: MIT
-# intel-common.scc
 #
 # Core Intel platform support that should be included in all kernels,
 # standard, rt, tiny, or otherwise. Generally should not included drivers,
