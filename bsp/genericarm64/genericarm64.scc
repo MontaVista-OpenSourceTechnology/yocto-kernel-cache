@@ -36,6 +36,7 @@ include features/numa/numa.scc
 include features/pci-iov/pci-iov.scc
 include features/pci/pci.scc
 include features/power/arm.scc
+include features/sched/sched-desktop.scc
 include features/usb-net/usb-net.scc
 include features/usb/ehci-hcd.scc
 include features/usb/ohci-hcd.scc
