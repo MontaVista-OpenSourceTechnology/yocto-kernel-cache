@@ -3,6 +3,7 @@ define KFEATURE_DESCRIPTION "Xilinx Zynq 7000 SoC"
 define KFEATURE_COMPATIBILITY board
 
 include features/net/net.scc
+include features/sram/sram.scc
 include cfg/timer/no_hz.scc
 
 kconf hardware zynq.cfg
