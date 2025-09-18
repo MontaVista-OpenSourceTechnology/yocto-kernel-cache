@@ -121,6 +121,7 @@
 	config = features/can/can.scc
 	config = features/intel-e1xxxx/intel-e100.scc
 	config = features/mtd/mtd.scc
+	config = features/nvme/nvme.scc
 	config = features/blktrace/blktrace.scc
 	config = features/landlock/landlock.scc
 	config = features/iwlegacy/iwlegacy.scc
