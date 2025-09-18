@@ -1,4 +1,4 @@
-From 56fe65aadac77e6dcac6b8e3f68848a969d8f128 Mon Sep 17 00:00:00 2001
+From 903dde3b850ee8098615a269a6cf3de83904545f Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 10 Aug 2020 22:40:22 -0400
 Subject: [PATCH] defconfigs: drop obselete options
@@ -18,14 +18,13 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  arch/arm/configs/dove_defconfig        | 1 -
  arch/arm/configs/keystone_defconfig    | 1 -
  arch/arm/configs/mvebu_v5_defconfig    | 1 -
- arch/arm/configs/mxs_defconfig         | 1 -
  arch/arm/configs/pxa_defconfig         | 1 -
  arch/arm/configs/qcom_defconfig        | 1 -
  arch/arm/configs/socfpga_defconfig     | 1 -
- 9 files changed, 9 deletions(-)
+ 8 files changed, 8 deletions(-)
 
 diff --git a/arch/arm/configs/axm55xx_defconfig b/arch/arm/configs/axm55xx_defconfig
-index 516689dc6cf1..ae6fbcefc973 100644
+index 49fe3ea741d1..14cd01d09db2 100644
 --- a/arch/arm/configs/axm55xx_defconfig
 +++ b/arch/arm/configs/axm55xx_defconfig
 @@ -85,7 +85,6 @@ CONFIG_MTD_CFI_AMDSTD=y
@@ -49,7 +48,7 @@ index e2ddaca0f89d..dc0b3203a185 100644
  CONFIG_MTD_NAND_DAVINCI=m
  CONFIG_MTD_SPI_NOR=m
 diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
-index d76eb12d29a7..bde0c13162e5 100644
+index 95e67dedfe83..e4b5330b7cea 100644
 --- a/arch/arm/configs/dove_defconfig
 +++ b/arch/arm/configs/dove_defconfig
 @@ -40,7 +40,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
@@ -73,7 +72,7 @@ index c1291ca290b2..b116e2700f55 100644
  CONFIG_MTD_NAND_DAVINCI=y
  CONFIG_MTD_SPI_NOR=y
 diff --git a/arch/arm/configs/mvebu_v5_defconfig b/arch/arm/configs/mvebu_v5_defconfig
-index 23dbb80fcc2e..98c911662028 100644
+index 96ecc6098d97..57794055d154 100644
 --- a/arch/arm/configs/mvebu_v5_defconfig
 +++ b/arch/arm/configs/mvebu_v5_defconfig
 @@ -63,7 +63,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
@@ -84,20 +83,8 @@ index 23dbb80fcc2e..98c911662028 100644
  CONFIG_MTD_RAW_NAND=y
  CONFIG_MTD_NAND_ORION=y
  CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index c76d66135abb..0a5c3bb1a56f 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -45,7 +45,6 @@ CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_DATAFLASH=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SST25L=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_GPMI_NAND=y
 diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-index ff29c5b0e9c9..84c1accb1a97 100644
+index 1a80602c1284..0d441227329f 100644
 --- a/arch/arm/configs/pxa_defconfig
 +++ b/arch/arm/configs/pxa_defconfig
 @@ -123,7 +123,6 @@ CONFIG_MTD_ROM=m
@@ -109,7 +96,7 @@ index ff29c5b0e9c9..84c1accb1a97 100644
  CONFIG_MTD_DOCG3=m
  CONFIG_MTD_ONENAND=m
 diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index ec52ccece0ca..0bfe42de9cf2 100644
+index 09abde621eec..78adaaba017d 100644
 --- a/arch/arm/configs/qcom_defconfig
 +++ b/arch/arm/configs/qcom_defconfig
 @@ -63,7 +63,6 @@ CONFIG_DEVTMPFS_MOUNT=y
@@ -121,7 +108,7 @@ index ec52ccece0ca..0bfe42de9cf2 100644
  CONFIG_MTD_NAND_QCOM=y
  CONFIG_MTD_SPI_NOR=y
 diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-index 294906c8f16e..da4b16392700 100644
+index 49eb6308b3f6..d977ed9f24c5 100644
 --- a/arch/arm/configs/socfpga_defconfig
 +++ b/arch/arm/configs/socfpga_defconfig
 @@ -41,7 +41,6 @@ CONFIG_DEVTMPFS=y
