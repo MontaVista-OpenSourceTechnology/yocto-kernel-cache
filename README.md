@@ -9,7 +9,7 @@ mailing list (subscripion only) and should cc' the maintainer.
 
 When sending single patches, please using something like:
 
-  $ git send-email -1 --to=linux-yocto@lists.yoctoproject.org --subject-prefix='kernel-cache][PATCH'
+  $ git send-email -1 --to=linux-yocto@lists.yoctoproject.org --cc="Bruce Ashfield <bruce.ashfield@gmail.com>" --subject-prefix='kernel-cache][PATCH'
 
 1.0 Overview
 ============
