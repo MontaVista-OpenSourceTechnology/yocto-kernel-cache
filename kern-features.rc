@@ -157,6 +157,7 @@
 	config = features/power/intel.scc
 	config = features/power/intel_pmic.scc
 	config = features/power/arm.scc
+	config = features/power/cpu_freq_stat.scc
 	config = features/bluetooth/bluetooth-usb.scc
 	config = features/bluetooth/bluetooth-vhci.scc
 	config = features/kexec/kexec-enable.scc
