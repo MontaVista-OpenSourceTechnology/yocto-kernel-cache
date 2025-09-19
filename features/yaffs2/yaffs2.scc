@@ -32,3 +32,4 @@ patch fs-yaffs2-fix-a-build-warning-in-yaffs_tagsmarshall..patch
 patch fs-yaffs2-fix-a-build-warning-in-yaffs_yaffs2.c-when.patch
 patch fs-yaffs2-fix-a-build-warning-in-yaffs_mtdif.c-when-.patch
 patch yaffs2-update-for-v6.16-compatibility.patch
+patch yaffs2-adjust-to-6.17-write_begin-write_end.patch

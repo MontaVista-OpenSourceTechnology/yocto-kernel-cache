@@ -1,0 +1,53 @@
+From 66c6846ca6296162567f9c19a3363270173a6fc3 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 18 Sep 2025 23:46:44 -0400
+Subject: [PATCH] yaffs2: adjust to 6.17 write_begin/write_end
+
+Kernel 6.17 made async/io changes that changed the write_begin/write_end
+signatures to accept const struct kiocb * (to support io-specific context).
+
+Converting the yaffs callbacks to that signature and grabbing filp from
+kiocb->ki_filp is the standard compatibility approach.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 5adc1bfd7744..4bb18ea6f86f 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -570,7 +570,7 @@ static void yaffs_release_space(struct file *f)
+ #if (YAFFS_USE_WRITE_BEGIN_END > 0)
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0)
+-static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
++static int yaffs_write_begin(const struct kiocb *iocb, struct address_space *mapping,
+ 			     loff_t pos, unsigned len,
+ 			     struct folio **foliop, void **fsdata)
+ #else
+@@ -579,6 +579,7 @@ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ 			     struct page **pagep, void **fsdata)
+ #endif
+ {
++	struct file *filp = iocb->ki_filp;
+ 	struct page *pg = NULL;
+ 	pgoff_t index = pos >> PAGE_CACHE_SHIFT;
+ 
+@@ -709,10 +710,11 @@ static ssize_t yaffs_file_write(struct file *f, const char *buf, size_t n,
+ 
+ 
+ #if (YAFFS_USE_WRITE_BEGIN_END > 0)
+-static int yaffs_write_end(struct file *filp, struct address_space *mapping,
++static int yaffs_write_end(const struct kiocb *iocb, struct address_space *mapping,
+ 			   loff_t pos, unsigned len, unsigned copied,
+ 			   struct folio *folio, void *fsdadata)
+ {
++	struct file *filp = iocb->ki_filp;
+ 	int ret = 0;
+ 	void *addr, *kva;
+ 	uint32_t offset_into_page = pos & (PAGE_CACHE_SIZE - 1);
+-- 
+2.39.2
+
