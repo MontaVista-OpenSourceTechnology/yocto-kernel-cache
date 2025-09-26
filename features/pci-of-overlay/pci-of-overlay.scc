@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable dynamic OF nodes and overlay support for PCI devices"
+define KFEATURE_COMPATIBILITY board
+
+kconf hardware pci-of-overlay.cfg
