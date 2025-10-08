@@ -6,6 +6,7 @@
 	config = cfg/fs/ext3.scc
 	config = cfg/fs/flash_fs.scc
 	config = cfg/fs/vfat.scc
+	config = cfg/fs/exfat.scc
 	config = cfg/fs/devtmpfs.scc
 	config = cfg/fs/debugfs.scc
 	config = cfg/fs/squashfs.scc
