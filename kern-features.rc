@@ -51,6 +51,7 @@
 	config = cfg/timer/hz_250.scc
 	config = cfg/timer/hz_100.scc
 	config = cfg/efi-ext.scc
+	config = cfg/efi-test.scc
 	config = cfg/lxc.scc
 	config = arch/arm/arm64-4kb-pages.scc
 	config = arch/arm/arm64-64kb-pages.scc
