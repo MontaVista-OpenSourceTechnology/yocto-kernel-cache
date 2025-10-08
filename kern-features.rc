@@ -88,6 +88,7 @@
 	config = features/ftrace/ftrace.scc
 	config = features/vxlan/vxlan-enable.scc
 	config = features/i915/i915.scc
+	config = features/net/mellanox/mellanox.scc
 	config = features/nfc/nfc-generic.scc
 	config = features/nfc/nfc-vendor.scc
 	config = features/profiling/profiling.scc
