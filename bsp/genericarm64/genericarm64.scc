@@ -55,6 +55,7 @@ include features/sched/sched-desktop.scc
 include features/usb-net/usb-net.scc
 include features/usb/ehci-hcd.scc
 include features/usb/ohci-hcd.scc
+include features/usb/serial-all.scc
 include features/usb/uhci-hcd.scc
 include features/usb/xhci-hcd.scc
 include features/wifi/wifi-all.scc
