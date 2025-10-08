@@ -14,6 +14,7 @@ kconf hardware genericarm64-sound.cfg
 include cfg/8250.scc
 include cfg/boot-live.scc
 include cfg/efi-ext.scc
+include cfg/efi-test.scc
 include cfg/fs/flash_fs.scc
 include cfg/kubernetes.scc
 include cfg/net/mdio.scc
