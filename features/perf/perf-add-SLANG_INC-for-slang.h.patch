@@ -1,4 +1,4 @@
-From cf5b54ccc6e6849c6b3ee8d1b90e203d0b4b2224 Mon Sep 17 00:00:00 2001
+From 3200e53694628cfa26335200fbb46d3104345f52 Mon Sep 17 00:00:00 2001
 From: Liang Li <liang.li@windriver.com>
 Date: Wed, 22 Aug 2012 16:04:50 +0800
 Subject: [PATCH] perf: add SLANG_INC for slang.h
@@ -27,18 +27,17 @@ compatibility with sysroot/cross compile cases.
 Signed-off-by: Liang Li <liang.li@windriver.com>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- tools/perf/Makefile.config | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.config | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 8b572fda5629..c04c137b0663 100644
+index 5700516aa84a..3eb6b7cd248e 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -793,7 +793,9 @@ ifndef NO_SLANG
-     endif
+@@ -808,6 +808,9 @@ ifndef NO_SLANG
+     NO_SLANG := 1
    endif
    ifndef NO_SLANG
--    # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
 +    # Some releases like Fedora have /usr/include/slang/slang.h instead of /usr/include/slang.h
 +    SLANG_INC ?= -idirafter =/usr/include/slang
 +    CFLAGS += $(SLANG_INC)

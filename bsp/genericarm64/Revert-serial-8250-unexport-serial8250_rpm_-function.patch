@@ -1,8 +1,7 @@
-From 06207c4dd5e24b2014a3dabcbb19e725982dfda0 Mon Sep 17 00:00:00 2001
+From c917be8174b779b968f8c1a15501af2f401fea6f Mon Sep 17 00:00:00 2001
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 Date: Thu, 28 Aug 2025 09:33:16 +0300
-Subject: [PATCH 1/2] Revert "serial: 8250: unexport serial8250_rpm_*()
- functions"
+Subject: [PATCH] Revert "serial: 8250: unexport serial8250_rpm_*() functions"
 
 This reverts commit 7ba4f02e12e6f2409c5b2afae2963089b5673482.
 Needed by revert of 8700a7ea5519fb0b3bad2362adfeac358c2119ce
@@ -16,15 +15,15 @@ Upstream-Status: Inappropriate
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- drivers/tty/serial/8250/8250.h      |  6 ++++++
- drivers/tty/serial/8250/8250_port.c | 12 ++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ drivers/tty/serial/8250/8250.h      | 6 ++++++
+ drivers/tty/serial/8250/8250_port.c | 6 ++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-index 18530c31a5981..b861585ca02ac 100644
+index 58e64c4e1e3a..1c59bd06ad8b 100644
 --- a/drivers/tty/serial/8250/8250.h
 +++ b/drivers/tty/serial/8250/8250.h
-@@ -223,6 +223,12 @@ static inline bool serial8250_clear_THRI(struct uart_8250_port *up)
+@@ -228,6 +228,12 @@ static inline bool serial8250_clear_THRI(struct uart_8250_port *up)
  struct uart_8250_port *serial8250_setup_port(int index);
  struct uart_8250_port *serial8250_get_port(int line);
  
@@ -38,35 +37,10 @@ index 18530c31a5981..b861585ca02ac 100644
  			    struct serial_rs485 *rs485);
  void serial8250_em485_start_tx(struct uart_8250_port *p, bool toggle_ier);
 diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index db26cf5a5c026..6ed471d410e99 100644
+index 719faf92aa8a..274e870ce7b1 100644
 --- a/drivers/tty/serial/8250/8250_port.c
 +++ b/drivers/tty/serial/8250/8250_port.c
-@@ -517,20 +517,22 @@ void serial8250_clear_and_reinit_fifos(struct uart_8250_port *p)
- }
- EXPORT_SYMBOL_GPL(serial8250_clear_and_reinit_fifos);
- 
--static void serial8250_rpm_get(struct uart_8250_port *p)
-+void serial8250_rpm_get(struct uart_8250_port *p)
- {
- 	if (!(p->capabilities & UART_CAP_RPM))
- 		return;
- 	pm_runtime_get_sync(p->port.dev);
- }
-+EXPORT_SYMBOL_GPL(serial8250_rpm_get);
- 
--static void serial8250_rpm_put(struct uart_8250_port *p)
-+void serial8250_rpm_put(struct uart_8250_port *p)
- {
- 	if (!(p->capabilities & UART_CAP_RPM))
- 		return;
- 	pm_runtime_mark_last_busy(p->port.dev);
- 	pm_runtime_put_autosuspend(p->port.dev);
- }
-+EXPORT_SYMBOL_GPL(serial8250_rpm_put);
- 
- /**
-  *	serial8250_em485_init() - put uart_8250_port into rs485 emulating
-@@ -645,7 +647,7 @@ EXPORT_SYMBOL_GPL(serial8250_em485_config);
+@@ -638,7 +638,7 @@ EXPORT_SYMBOL_GPL(serial8250_em485_config);
   * once and disable_runtime_pm_tx() will still disable RPM because the fifo is
   * empty and the HW can idle again.
   */
@@ -75,7 +49,7 @@ index db26cf5a5c026..6ed471d410e99 100644
  {
  	unsigned char rpm_active;
  
-@@ -657,8 +659,9 @@ static void serial8250_rpm_get_tx(struct uart_8250_port *p)
+@@ -650,8 +650,9 @@ static void serial8250_rpm_get_tx(struct uart_8250_port *p)
  		return;
  	pm_runtime_get_sync(p->port.dev);
  }
@@ -86,7 +60,7 @@ index db26cf5a5c026..6ed471d410e99 100644
  {
  	unsigned char rpm_active;
  
-@@ -671,6 +674,7 @@ static void serial8250_rpm_put_tx(struct uart_8250_port *p)
+@@ -664,6 +665,7 @@ static void serial8250_rpm_put_tx(struct uart_8250_port *p)
  	pm_runtime_mark_last_busy(p->port.dev);
  	pm_runtime_put_autosuspend(p->port.dev);
  }
