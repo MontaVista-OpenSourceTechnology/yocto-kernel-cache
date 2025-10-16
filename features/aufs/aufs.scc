@@ -10,3 +10,5 @@ patch aufs-6.16-fixups.patch
 patch aufs-update-lookup_noperm-to-v6.16-signatures.patch
 patch aufs-drop-writepage.patch
 patch aufs-adjust-filesystem-dentry-operations-for-v6.17.patch
+patch aufs6-drop-export-of-d_exchange.patch
+patch aufs-fix-errors-not-all-warnings-for-v6.18-rc1.patch

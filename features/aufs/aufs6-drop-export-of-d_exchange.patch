@@ -1,0 +1,28 @@
+From d9c42fc6ad9a9af4a32266ff742947727b8fa6ce Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 15 Oct 2025 18:14:10 -0400
+Subject: [PATCH 1/2] aufs6: drop export of d_exchange
+
+The upstream kernel now does this export, so we no longer
+need to.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/dcache.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 30713c62c149..38993262ce32 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -2890,7 +2890,6 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
+ 	spin_unlock(&target->d_lock);
+ 	spin_unlock(&dentry->d_lock);
+ }
+-EXPORT_SYMBOL_GPL(d_exchange);
+ 
+ /*
+  * d_move - move a dentry
+-- 
+2.39.2
+
