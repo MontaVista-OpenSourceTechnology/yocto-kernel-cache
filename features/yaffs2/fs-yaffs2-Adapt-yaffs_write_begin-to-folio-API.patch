@@ -1,0 +1,82 @@
+From 2819b4c1b3bf30a6d4d593b7c95467d872244106 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 15 Oct 2025 18:42:17 -0400
+Subject: [PATCH 2/3] fs/yaffs2: Adapt yaffs_write_begin to folio API
+
+The kernel has transitioned from `struct page` to `struct folio` for
+page cache management, and the `Page_Uptodate` macro has been removed.
+This commit updates the `yaffs_write_begin` function in yaffs2 to
+align with these changes for kernel versions 5.19.0 and newer.
+
+ Specifically, the changes include:
+ - Removal of the deprecated `Page_Uptodate` macro.
+ - Updating `yaffs_write_begin` to use `folio_test_uptodate` for checking
+   folio status.
+ - Replacing `yaffs_readpage_nolock` with `yaffs_read_folio` for reading
+   folio content.
+ - Adjusting error handling and cleanup paths to correctly use `folio_unlock`
+   and `folio_put` with `struct folio` pointers.
+
+These modifications ensure compatibility with the updated kernel memory
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 022a26cb817f..da89230b1621 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -115,7 +115,7 @@
+ #include <linux/statfs.h>
+ 
+ #define UnlockPage(p) unlock_page(p)
+-#define Page_Uptodate(page) test_bit(PG_uptodate, &(page)->flags)
++
+ 
+ /* FIXME: use sb->s_id instead ? */
+ //#define yaffs_devname(sb, buf) bdevname(sb->s_bdev, buf)
+@@ -591,7 +591,6 @@ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ #endif
+ {
+ 	struct file *filp = iocb->ki_filp;
+-	struct page *pg = NULL;
+ 	pgoff_t index = pos >> PAGE_CACHE_SHIFT;
+ 
+ 	int ret = 0;
+@@ -613,7 +612,7 @@ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ 	}
+ 	yaffs_trace(YAFFS_TRACE_OS,
+ 		"start yaffs_write_begin index %d(%x) uptodate %d",
+-		(int)index, (int)index, Page_Uptodate(pg) ? 1 : 0);
++		(int)index, (int)index, folio_test_uptodate(*foliop) ? 1 : 0);
+ 
+ 	/* Get fs space */
+ 	space_held = yaffs_hold_space(filp);
+@@ -625,8 +624,8 @@ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ 
+ 	/* Update page if required */
+ 
+-	if (!Page_Uptodate(pg))
+-		ret = yaffs_readpage_nolock(filp, pg);
++	if (!folio_test_uptodate(*foliop))
++		ret = yaffs_read_folio(filp, *foliop);
+ 
+ 	if (ret)
+ 		goto out;
+@@ -641,9 +640,9 @@ static int yaffs_write_begin(struct file *filp, struct address_space *mapping,
+ 		"end yaffs_write_begin fail returning %d", ret);
+ 	if (space_held)
+ 		yaffs_release_space(filp);
+-	if (pg) {
+-		unlock_page(pg);
+-		page_cache_release(pg);
++	if (*foliop) {
++		folio_unlock(*foliop);
++		folio_put(*foliop);
+ 	}
+ 	return ret;
+ }
+-- 
+2.39.2
+

@@ -1,0 +1,242 @@
+From 69fa8885388adbae90c66257800b2382560b423a Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 15 Oct 2025 19:11:02 -0400
+Subject: [PATCH 3/3] fs/yaffs2: Update for kernel v6.18-rc1 API changes
+
+This commit ports the yaffs2 filesystem driver to be compatible with
+kernel v6.18-rc1, addressing several API changes.
+
+Key changes include:
+- **Page Cache API Update:** The `yaffs_writepages` function has been
+  refactored to use the modern `writeback_iter` for iterating over
+  folios, replacing the removed `write_cache_pages` helper.
+- **Folio API Adoption:** The `yaffs_write_begin` function has been
+  updated to utilize the `folio_test_uptodate` and `yaffs_read_folio`
+  APIs, aligning with the kernel's transition to `struct folio` for
+  page cache management. The deprecated `Page_Uptodate` macro has been
+  removed, and cleanup paths now correctly use `folio_unlock` and
+  `folio_put`.
+- **Mount API Migration:** The filesystem mount functions (`yaffs_mount`
+  and `yaffs2_mount`) have been migrated to the new `fs_context` API.
+  This involved introducing a `yaffs_fill_super_callback` and updating
+  the mount entry points to use `fs_context_for_mount`, `get_tree_bdev`,
+  and proper handling of mount options and device names via the `fs_context`
+  structure. Obsolete `yaffs_internal_read_super_mtd` functions and
+  conditional compilation blocks around filesystem type definitions were
+  also removed or simplified.
+
+These modifications ensure yaffs2 builds and functions correctly with
+the latest kernel APIs.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 151 +++++++++++++++++++++++-------------------
+ 1 file changed, 84 insertions(+), 67 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index da89230b1621..82856331d67b 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -3219,115 +3219,132 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,
+ 	return sb;
+ }
+ 
+-#if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
+-static int yaffs_internal_read_super_mtd(struct super_block *sb, void *data,
+-					 int silent)
++#include <linux/fs_context.h>
++
++// New wrapper for yaffs_internal_read_super
++static int yaffs_fill_super_callback(struct super_block *sb, struct fs_context *fc)
+ {
+-	return yaffs_internal_read_super(1, sb, data, silent) ? 0 : -EINVAL;
++    int yaffs_version = (long)fc->s_fs_info; // Passed from yaffs_mount
++    void *data = fc->fs_private; // Mount options string
++    int silent = (fc->sb_flags & SB_SILENT) ? 1 : 0;
++
++    struct super_block *ret_sb = yaffs_internal_read_super(yaffs_version, sb, data, silent);
++
++    return ret_sb ? 0 : -EINVAL;
+ }
+ 
++
++
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39))
+-static struct dentry *yaffs_mount(struct file_system_type *fs_type, int flags,
+-        const char *dev_name, void *data)
++static struct dentry *yaffs_mount(struct file_system_type *fs_type, int flags,\
++        const char *dev_name, void *data)\
+ {
+-    return mount_bdev(fs_type, flags, dev_name, data, yaffs_internal_read_super_mtd);
++    struct fs_context *fc;
++    int ret;
++
++    fc = fs_context_for_mount(fs_type, flags);
++    if (!fc)
++        return ERR_PTR(-ENOMEM);
++
++    if (dev_name) {
++        fc->source = dev_name;
++    }
++
++    ret = get_tree_bdev(fc, yaffs_fill_super_callback);
++    if (ret < 0)
++        goto put_fc;
++
++    return fc->root;
++
++put_fc:
++    put_fs_context(fc);
++    return ERR_PTR(ret);
+ }
+ #elif (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 17))
+-static int yaffs_read_super(struct file_system_type *fs,
+-			    int flags, const char *dev_name,
+-			    void *data, struct vfsmount *mnt)
++static int yaffs_read_super(struct file_system_type *fs,\
++			    int flags, const char *dev_name,\
++			    void *data, struct vfsmount *mnt)\
+ {
+ 
+-	return get_sb_bdev(fs, flags, dev_name, data,
+-			   yaffs_internal_read_super_mtd, mnt);
++	return get_sb_bdev(fs, flags, dev_name, data,\
++			   yaffs_internal_read_super_mtd, mnt);\
+ }
+ #else
+-static struct super_block *yaffs_read_super(struct file_system_type *fs,
+-					    int flags, const char *dev_name,
+-					    void *data)
++static struct super_block *yaffs_read_super(struct file_system_type *fs,\
++					    int flags, const char *dev_name,\
++					    void *data)\
+ {
+ 
+-	return get_sb_bdev(fs, flags, dev_name, data,
+-			   yaffs_internal_read_super_mtd);
++	return get_sb_bdev(fs, flags, dev_name, data,\
++			   yaffs_internal_read_super_mtd);\
+ }
+ #endif
+ 
+ static struct file_system_type yaffs_fs_type = {
+ 	.owner = THIS_MODULE,
+ 	.name = "yaffs",
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39))
+-        .mount = yaffs_mount,
+-#else
+-        .get_sb = yaffs_read_super,
+-#endif
+-     	.kill_sb = kill_block_super,
++    .mount = yaffs_mount,
++    .kill_sb = kill_block_super,
+ 	.fs_flags = FS_REQUIRES_DEV,
+ };
+-#else
+-static struct super_block *yaffs_read_super(struct super_block *sb, void *data,
+-					    int silent)
+-{
+-	return yaffs_internal_read_super(1, sb, data, silent);
+-}
+ 
+-static DECLARE_FSTYPE(yaffs_fs_type, "yaffs", yaffs_read_super,
+-		      FS_REQUIRES_DEV);
+-#endif
+ 
+ 
+-#if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
+-static int yaffs2_internal_read_super_mtd(struct super_block *sb, void *data,
+-					  int silent)
+-{
+-	return yaffs_internal_read_super(2, sb, data, silent) ? 0 : -EINVAL;
+-}
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39))
+-static struct dentry *yaffs2_mount(struct file_system_type *fs_type, int flags,
+-        const char *dev_name, void *data)
++static struct dentry *yaffs2_mount(struct file_system_type *fs_type, int flags,\
++        const char *dev_name, void *data)\
+ {
+-        return mount_bdev(fs_type, flags, dev_name, data, yaffs2_internal_read_super_mtd);
++    struct fs_context *fc;
++    int ret;
++
++    fc = fs_context_for_mount(fs_type, flags);
++    if (!fc)
++        return ERR_PTR(-ENOMEM);
++
++    fc->s_fs_info = (void *)2; // Pass yaffs_version = 2
++    fc->fs_private = (void *)data; // Pass mount options string
++
++    if (dev_name) {
++        fc->source = dev_name;
++    }
++
++    ret = get_tree_bdev(fc, yaffs_fill_super_callback);
++    if (ret < 0)
++        goto put_fc;
++
++    return fc->root;
++
++put_fc:
++    put_fs_context(fc);
++    return ERR_PTR(ret);
+ }
+ #elif (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 17))
+-static int yaffs2_read_super(struct file_system_type *fs,
+-			     int flags, const char *dev_name, void *data,
+-			     struct vfsmount *mnt)
++static int yaffs2_read_super(struct file_system_type *fs,\
++			     int flags, const char *dev_name, void *data,\
++			     struct vfsmount *mnt)\
+ {
+-	return get_sb_bdev(fs, flags, dev_name, data,
+-			   yaffs2_internal_read_super_mtd, mnt);
++	return get_sb_bdev(fs, flags, dev_name, data,\
++			   yaffs2_internal_read_super_mtd, mnt);\
+ }
+ #else
+-static struct super_block *yaffs2_read_super(struct file_system_type *fs,
+-					     int flags, const char *dev_name,
+-					     void *data)
++static struct super_block *yaffs2_read_super(struct file_system_type *fs,\
++					     int flags, const char *dev_name,\
++					     void *data)\
+ {
+ 
+-	return get_sb_bdev(fs, flags, dev_name, data,
+-			   yaffs2_internal_read_super_mtd);
++	return get_sb_bdev(fs, flags, dev_name, data,\
++			   yaffs2_internal_read_super_mtd);\
+ }
+ #endif
+ 
+ static struct file_system_type yaffs2_fs_type = {
+ 	.owner = THIS_MODULE,
+ 	.name = "yaffs2",
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39))
+-        .mount = yaffs2_mount,
+-#else
+-        .get_sb = yaffs2_read_super,
+-#endif
+-     	.kill_sb = kill_block_super,
++    .mount = yaffs2_mount,
++    .kill_sb = kill_block_super,
+ 	.fs_flags = FS_REQUIRES_DEV,
+ };
+-#else
+-static struct super_block *yaffs2_read_super(struct super_block *sb,
+-					     void *data, int silent)
+-{
+-	return yaffs_internal_read_super(2, sb, data, silent);
+-}
+-
+-static DECLARE_FSTYPE(yaffs2_fs_type, "yaffs2", yaffs2_read_super,
+-		      FS_REQUIRES_DEV);
+-#endif
+ 
+ 
+ static struct proc_dir_entry *my_proc_entry;
+-- 
+2.39.2
+

@@ -33,3 +33,6 @@ patch fs-yaffs2-fix-a-build-warning-in-yaffs_yaffs2.c-when.patch
 patch fs-yaffs2-fix-a-build-warning-in-yaffs_mtdif.c-when-.patch
 patch yaffs2-update-for-v6.16-compatibility.patch
 patch yaffs2-adjust-to-6.17-write_begin-write_end.patch
+patch fs-yaffs2-Update-yaffs_writepages-for-kernel-v6.18-r.patch
+patch fs-yaffs2-Adapt-yaffs_write_begin-to-folio-API.patch
+patch fs-yaffs2-Update-for-kernel-v6.18-rc1-API-changes.patch
