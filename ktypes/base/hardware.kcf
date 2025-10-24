@@ -10,14 +10,12 @@ arch/arm64/Kconfig
 arch/arm64/Kconfig.debug
 arch/arm64/Kconfig.platforms
 arch/arm64/kvm/Kconfig
-arch/arm64/lib/crypto/Kconfig
 arch/arm/common/Kconfig
 arch/arm/crypto/Kconfig
 arch/arm/Kconfig
 arch/arm/Kconfig.debug
 arch/arm/Kconfig-nommu
 arch/arm/Kconfig.platforms
-arch/arm/lib/crypto/Kconfig
 arch/arm/mach-actions/Kconfig
 arch/arm/mach-alpine/Kconfig
 arch/arm/mach-artpec/Kconfig
@@ -111,7 +109,6 @@ arch/mips/Kconfig
 arch/mips/Kconfig.debug
 arch/mips/kvm/Kconfig
 arch/mips/lantiq/Kconfig
-arch/mips/lib/crypto/Kconfig
 arch/mips/loongson2ef/Kconfig
 arch/mips/loongson32/Kconfig
 arch/mips/loongson64/Kconfig
@@ -133,7 +130,6 @@ arch/powerpc/crypto/Kconfig
 arch/powerpc/Kconfig
 arch/powerpc/Kconfig.debug
 arch/powerpc/kvm/Kconfig
-arch/powerpc/lib/crypto/Kconfig
 arch/powerpc/platforms/44x/Kconfig
 arch/powerpc/platforms/512x/Kconfig
 arch/powerpc/platforms/52xx/Kconfig
@@ -166,12 +162,10 @@ arch/riscv/Kconfig.socs
 arch/riscv/Kconfig.vendor
 arch/riscv/kernel/tests/Kconfig.debug
 arch/riscv/kvm/Kconfig
-arch/riscv/lib/crypto/Kconfig
 arch/s390/crypto/Kconfig
 arch/s390/Kconfig
 arch/s390/Kconfig.debug
 arch/s390/kvm/Kconfig
-arch/s390/lib/crypto/Kconfig
 arch/sh/boards/Kconfig
 arch/sh/boards/mach-highlander/Kconfig
 arch/sh/boards/mach-migor/Kconfig
@@ -188,7 +182,6 @@ arch/sh/mm/Kconfig
 arch/sparc/crypto/Kconfig
 arch/sparc/Kconfig
 arch/sparc/Kconfig.debug
-arch/sparc/lib/crypto/Kconfig
 arch/um/drivers/Kconfig
 arch/um/Kconfig
 arch/um/Kconfig.debug
@@ -200,7 +193,6 @@ arch/x86/Kconfig.cpu
 arch/x86/Kconfig.cpufeatures
 arch/x86/Kconfig.debug
 arch/x86/kvm/Kconfig
-arch/x86/lib/crypto/Kconfig
 arch/x86/ras/Kconfig
 arch/x86/um/Kconfig
 arch/x86/xen/Kconfig
@@ -350,6 +342,7 @@ drivers/dma/sh/Kconfig
 drivers/dma/stm32/Kconfig
 drivers/dma/ti/Kconfig
 drivers/dpll/Kconfig
+drivers/dpll/zl3073x/Kconfig
 drivers/edac/Kconfig
 drivers/eisa/Kconfig
 drivers/extcon/Kconfig
@@ -409,6 +402,7 @@ drivers/gpu/drm/i915/Kconfig
 drivers/gpu/drm/i915/Kconfig.debug
 drivers/gpu/drm/i915/Kconfig.profile
 drivers/gpu/drm/imagination/Kconfig
+drivers/gpu/drm/imx/dc/Kconfig
 drivers/gpu/drm/imx/dcss/Kconfig
 drivers/gpu/drm/imx/ipuv3/Kconfig
 drivers/gpu/drm/imx/Kconfig
@@ -559,7 +553,6 @@ drivers/infiniband/hw/mlx5/Kconfig
 drivers/infiniband/hw/mthca/Kconfig
 drivers/infiniband/hw/ocrdma/Kconfig
 drivers/infiniband/hw/qedr/Kconfig
-drivers/infiniband/hw/qib/Kconfig
 drivers/infiniband/hw/usnic/Kconfig
 drivers/infiniband/hw/vmw_pvrdma/Kconfig
 drivers/infiniband/Kconfig
@@ -723,6 +716,7 @@ drivers/media/platform/renesas/rzg2l-cru/Kconfig
 drivers/media/platform/rockchip/Kconfig
 drivers/media/platform/rockchip/rga/Kconfig
 drivers/media/platform/rockchip/rkisp1/Kconfig
+drivers/media/platform/rockchip/rkvdec/Kconfig
 drivers/media/platform/samsung/exynos4-is/Kconfig
 drivers/media/platform/samsung/exynos-gsc/Kconfig
 drivers/media/platform/samsung/Kconfig
@@ -821,6 +815,7 @@ drivers/misc/mei/Kconfig
 drivers/misc/mei/pxp/Kconfig
 drivers/misc/ocxl/Kconfig
 drivers/misc/pvpanic/Kconfig
+drivers/misc/rp1/Kconfig
 drivers/misc/uacce/Kconfig
 drivers/misc/vmw_vmci/Kconfig
 drivers/mmc/core/Kconfig
@@ -1222,6 +1217,7 @@ drivers/platform/mips/Kconfig
 drivers/platform/olpc/Kconfig
 drivers/platform/surface/aggregator/Kconfig
 drivers/platform/surface/Kconfig
+drivers/platform/x86/amd/hfi/Kconfig
 drivers/platform/x86/amd/hsmp/Kconfig
 drivers/platform/x86/amd/Kconfig
 drivers/platform/x86/amd/pmc/Kconfig
@@ -1240,6 +1236,7 @@ drivers/platform/x86/intel/telemetry/Kconfig
 drivers/platform/x86/intel/uncore-frequency/Kconfig
 drivers/platform/x86/intel/wmi/Kconfig
 drivers/platform/x86/Kconfig
+drivers/platform/x86/lenovo/Kconfig
 drivers/platform/x86/siemens/Kconfig
 drivers/platform/x86/tuxedo/Kconfig
 drivers/platform/x86/tuxedo/nb04/Kconfig
@@ -1382,10 +1379,10 @@ drivers/staging/media/av7110/Kconfig
 drivers/staging/media/deprecated/atmel/Kconfig
 drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig
+drivers/staging/media/ipu7/Kconfig
 drivers/staging/media/Kconfig
 drivers/staging/media/max96712/Kconfig
 drivers/staging/media/meson/vdec/Kconfig
-drivers/staging/media/rkvdec/Kconfig
 drivers/staging/media/starfive/camss/Kconfig
 drivers/staging/media/starfive/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
@@ -1544,13 +1541,20 @@ sound/core/Kconfig
 sound/core/seq/Kconfig
 sound/drivers/Kconfig
 sound/firewire/Kconfig
+sound/hda/codecs/cirrus/Kconfig
+sound/hda/codecs/hdmi/Kconfig
+sound/hda/codecs/Kconfig
+sound/hda/codecs/realtek/Kconfig
+sound/hda/codecs/side-codecs/Kconfig
+sound/hda/common/Kconfig
+sound/hda/controllers/Kconfig
+sound/hda/core/Kconfig
 sound/hda/Kconfig
 sound/isa/Kconfig
 sound/Kconfig
 sound/mips/Kconfig
 sound/oss/dmasound/Kconfig
 sound/parisc/Kconfig
-sound/pci/hda/Kconfig
 sound/pci/Kconfig
 sound/pcmcia/Kconfig
 sound/ppc/Kconfig
