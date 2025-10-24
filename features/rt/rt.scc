@@ -1,3 +1,37 @@
 # SPDX-License-Identifier: MIT
 #
 
+patch netfilter-ctnetlink-remove-refcounting-in-dying-list.patch
+patch netfilter-nft_set_pipapo_avx2-Drop-the-comment-regar.patch
+patch netfilter-nft_set_pipapo_avx2-split-lookup-function-.patch
+patch netfilter-nft_set_pipapo-use-avx2-algorithm-for-inse.patch
+patch netfilter-nft_set_pipapo-Store-real-pointer-adjust-l.patch
+patch netfilter-nft_set_pipapo-Use-nested-BH-locking-for-n.patch
+patch netfilter-nft_set_pipapo-use-0-genmask-for-packetpat.patch
+patch netfilter-nft_set_pipapo_avx2-fix-skip-of-expired-en.patch
+patch workqueue-Provide-a-handshake-for-canceling-BH-worke.patch
+patch softirq-Provide-a-handshake-for-canceling-tasklets-v.patch
+patch softirq-Allow-to-drop-the-softirq-BKL-lock-on-PREEMP.patch
+patch net-gro_cells-Use-nested-BH-locking-for-gro_cell.patch
+patch Reapply-serial-8250-Switch-to-nbcon-console.patch
+patch Reapply-serial-8250-Revert-drop-lockdep-annotation-f.patch
+patch drm-i915-Use-preempt_disable-enable_rt-where-recomme.patch
+patch drm-i915-Don-t-disable-interrupts-on-PREEMPT_RT-duri.patch
+patch drm-i915-Don-t-check-for-atomic-context-on-PREEMPT_R.patch
+patch drm-i915-Disable-tracing-points-on-PREEMPT_RT.patch
+patch drm-i915-gt-Use-spin_lock_irq-instead-of-local_irq_d.patch
+patch drm-i915-Drop-the-irqs_disabled-check.patch
+patch drm-i915-guc-Consider-also-RCU-depth-in-busy-loop.patch
+patch drm-i915-Consider-RCU-read-section-as-atomic.patch
+patch Revert-drm-i915-Depend-on-PREEMPT_RT.patch
+patch arm-Disable-jump-label-on-PREEMPT_RT.patch
+patch ARM-enable-irq-in-translation-section-permission-fau.patch
+patch arm-Disable-FAST_GUP-on-PREEMPT_RT-if-HIGHPTE-is-als.patch
+patch ARM-Allow-to-enable-RT.patch
+patch powerpc-pseries-iommu-Use-a-locallock-instead-local_.patch
+patch powerpc-pseries-Select-the-generic-memory-allocator.patch
+patch powerpc-kvm-Disable-in-kernel-MPIC-emulation-for-PRE.patch
+patch powerpc-stackprotector-work-around-stack-guard-init-.patch
+patch POWERPC-Allow-to-enable-RT.patch
+patch sysfs-Add-sys-kernel-realtime-entry.patch
+patch Add-localversion-for-RT-release.patch

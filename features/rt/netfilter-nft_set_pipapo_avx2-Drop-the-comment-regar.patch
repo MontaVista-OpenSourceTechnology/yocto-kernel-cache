@@ -1,0 +1,37 @@
+From ad0c9bb9cd3ba95586c7a2d86773db5ae1420b06 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Fri, 15 Aug 2025 18:09:36 +0200
+Subject: [PATCH 02/34] netfilter: nft_set_pipapo_avx2: Drop the comment
+ regarding protection
+
+The comment claims that the kernel_fpu_begin_mask() below protects
+access to the scratch map. This is not true because the access is only
+protected by local_bh_disable() above.
+
+Remove the misleading comment.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/netfilter/nft_set_pipapo_avx2.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/net/netfilter/nft_set_pipapo_avx2.c b/net/netfilter/nft_set_pipapo_avx2.c
+index c0884fa68c79..e572743fa2c0 100644
+--- a/net/netfilter/nft_set_pipapo_avx2.c
++++ b/net/netfilter/nft_set_pipapo_avx2.c
+@@ -1170,9 +1170,7 @@ nft_pipapo_avx2_lookup(const struct net *net, const struct nft_set *set,
+ 
+ 	m = rcu_dereference(priv->match);
+ 
+-	/* This also protects access to all data related to scratch maps.
+-	 *
+-	 * Note that we don't need a valid MXCSR state for any of the
++	/* Note that we don't need a valid MXCSR state for any of the
+ 	 * operations we use here, so pass 0 as mask and spare a LDMXCSR
+ 	 * instruction.
+ 	 */
+-- 
+2.39.2
+

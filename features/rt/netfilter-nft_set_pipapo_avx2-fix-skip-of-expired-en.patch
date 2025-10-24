@@ -1,0 +1,87 @@
+From 9b97d79e6f5b7d86083bbedfa4c0c91401548d2f Mon Sep 17 00:00:00 2001
+From: Florian Westphal <fw@strlen.de>
+Date: Tue, 9 Sep 2025 14:11:48 +0200
+Subject: [PATCH 08/34] netfilter: nft_set_pipapo_avx2: fix skip of expired
+ entries
+
+KASAN reports following splat:
+BUG: KASAN: slab-out-of-bounds in pipapo_get_avx2+0x941/0x25d0
+Read of size 1 at addr ffff88814c561be0 by task nft/3944
+Call Trace:
+ pipapo_get_avx2+0x941/0x25d0
+ nft_pipapo_insert+0x440/0x11b0
+ nf_tables_newsetelem+0x220a/0x3a00
+ ..
+
+This bisects to commit 84c1da7b38d9 ("netfilter: nft_set_pipapo: use AVX2
+algorithm for insertions too").
+
+However, that change merely uncovers this bug.
+
+When we find a match but that match has expired or timed out, the AVX2
+implementation restarts the full match loop.
+
+At that point, the pointer to the key data has already been changed and
+points to the keys last field.
+This will then result in out-of-bounds read once its incremented again
+for the next field.
+
+The restart logic in AVX2 is different compared to the plain C
+implementation, but both should follow the same logic.
+
+The C implementation just calls pipapo_refill() again do check the next
+entry.  Do the same in the AVX2 implementation.
+
+Note that with this change, due to implementation differences of
+pipapo_refill vs. nft_pipapo_avx2_refill, the refill call will return
+the same element again. Then, on the next call, it will move to the next
+entry as expected.  This is because avx2_refill doesn't clear the bitmap
+in the 'last' conditional.  This is harmless. Expired/timed out elements
+are also not expected to be frequent.
+
+selftest is added in a followup commit.
+
+Fixes: 7400b063969b ("nft_set_pipapo: Introduce AVX2-based lookup implementation")
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/netfilter/nft_set_pipapo_avx2.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/net/netfilter/nft_set_pipapo_avx2.c b/net/netfilter/nft_set_pipapo_avx2.c
+index 3e584dc4ad20..9235efb10dd5 100644
+--- a/net/netfilter/nft_set_pipapo_avx2.c
++++ b/net/netfilter/nft_set_pipapo_avx2.c
+@@ -1179,7 +1179,6 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 
+ 	nft_pipapo_avx2_prepare();
+ 
+-next_match:
+ 	nft_pipapo_for_each_field(f, i, m) {
+ 		bool last = i == m->field_count - 1, first = !i;
+ 		int ret = 0;
+@@ -1226,6 +1225,7 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 
+ #undef NFT_SET_PIPAPO_AVX2_LOOKUP
+ 
++next_match:
+ 		if (ret < 0) {
+ 			scratch->map_index = map_index;
+ 			kernel_fpu_end();
+@@ -1238,8 +1238,11 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 
+ 			e = f->mt[ret].e;
+ 			if (unlikely(__nft_set_elem_expired(&e->ext, tstamp) ||
+-				     !nft_set_elem_active(&e->ext, genmask)))
++				     !nft_set_elem_active(&e->ext, genmask))) {
++				ret = pipapo_refill(res, f->bsize, f->rules,
++						    fill, f->mt, last);
+ 				goto next_match;
++			}
+ 
+ 			scratch->map_index = map_index;
+ 			kernel_fpu_end();
+-- 
+2.39.2
+

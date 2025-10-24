@@ -1,0 +1,123 @@
+From 8516c13b9a5748f02e9a19e7765fbd8ffde59755 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Mon, 18 Aug 2025 13:02:13 +0200
+Subject: [PATCH 06/34] netfilter: nft_set_pipapo: Use nested-BH locking for
+ nft_pipapo_scratch
+
+nft_pipapo_scratch is a per-CPU variable and relies on disabled BH for
+its locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
+this data structure requires explicit locking.
+
+Add a local_lock_t to the data structure and use local_lock_nested_bh() for
+locking. This change adds only lockdep coverage and does not alter the
+functional behaviour for !PREEMPT_RT.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/netfilter/nft_set_pipapo.c      | 5 +++++
+ net/netfilter/nft_set_pipapo.h      | 2 ++
+ net/netfilter/nft_set_pipapo_avx2.c | 4 ++++
+ 3 files changed, 11 insertions(+)
+
+diff --git a/net/netfilter/nft_set_pipapo.c b/net/netfilter/nft_set_pipapo.c
+index 538be6f6b628..96aefa504f57 100644
+--- a/net/netfilter/nft_set_pipapo.c
++++ b/net/netfilter/nft_set_pipapo.c
+@@ -429,6 +429,7 @@ static struct nft_pipapo_elem *pipapo_get_slow(const struct nft_pipapo_match *m,
+ 	scratch = *raw_cpu_ptr(m->scratch);
+ 	if (unlikely(!scratch))
+ 		goto out;
++	__local_lock_nested_bh(&scratch->bh_lock);
+ 
+ 	map_index = scratch->map_index;
+ 
+@@ -465,6 +466,7 @@ static struct nft_pipapo_elem *pipapo_get_slow(const struct nft_pipapo_match *m,
+ 				  last);
+ 		if (b < 0) {
+ 			scratch->map_index = map_index;
++			__local_unlock_nested_bh(&scratch->bh_lock);
+ 			local_bh_enable();
+ 
+ 			return NULL;
+@@ -484,6 +486,7 @@ static struct nft_pipapo_elem *pipapo_get_slow(const struct nft_pipapo_match *m,
+ 			 * *next* bitmap (not initial) for the next packet.
+ 			 */
+ 			scratch->map_index = map_index;
++			__local_unlock_nested_bh(&scratch->bh_lock);
+ 			local_bh_enable();
+ 			return e;
+ 		}
+@@ -498,6 +501,7 @@ static struct nft_pipapo_elem *pipapo_get_slow(const struct nft_pipapo_match *m,
+ 		data += NFT_PIPAPO_GROUPS_PADDING(f);
+ 	}
+ 
++	__local_unlock_nested_bh(&scratch->bh_lock);
+ out:
+ 	local_bh_enable();
+ 	return NULL;
+@@ -1231,6 +1235,7 @@ static int pipapo_realloc_scratch(struct nft_pipapo_match *clone,
+ 		}
+ 
+ 		pipapo_free_scratch(clone, i);
++		local_lock_init(&scratch->bh_lock);
+ 		*per_cpu_ptr(clone->scratch, i) = scratch;
+ 	}
+ 
+diff --git a/net/netfilter/nft_set_pipapo.h b/net/netfilter/nft_set_pipapo.h
+index e10cdbaa65d8..eaab422aa56a 100644
+--- a/net/netfilter/nft_set_pipapo.h
++++ b/net/netfilter/nft_set_pipapo.h
+@@ -124,10 +124,12 @@ struct nft_pipapo_field {
+ 
+ /**
+  * struct nft_pipapo_scratch - percpu data used for lookup and matching
++ * @bh_lock:    PREEMPT_RT local spinlock
+  * @map_index:	Current working bitmap index, toggled between field matches
+  * @__map:	store partial matching results during lookup
+  */
+ struct nft_pipapo_scratch {
++	local_lock_t bh_lock;
+ 	u8 map_index;
+ 	unsigned long __map[];
+ };
+diff --git a/net/netfilter/nft_set_pipapo_avx2.c b/net/netfilter/nft_set_pipapo_avx2.c
+index 43336f5a1816..3e584dc4ad20 100644
+--- a/net/netfilter/nft_set_pipapo_avx2.c
++++ b/net/netfilter/nft_set_pipapo_avx2.c
+@@ -1163,6 +1163,7 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 	if (unlikely(!scratch))
+ 		return NULL;
+ 
++	__local_lock_nested_bh(&scratch->bh_lock);
+ 	map_index = scratch->map_index;
+ 	map = NFT_PIPAPO_LT_ALIGN(&scratch->__map[0]);
+ 	res  = map + (map_index ? m->bsize_max : 0);
+@@ -1228,6 +1229,7 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 		if (ret < 0) {
+ 			scratch->map_index = map_index;
+ 			kernel_fpu_end();
++			__local_unlock_nested_bh(&scratch->bh_lock);
+ 			return NULL;
+ 		}
+ 
+@@ -1241,6 +1243,7 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 
+ 			scratch->map_index = map_index;
+ 			kernel_fpu_end();
++			__local_unlock_nested_bh(&scratch->bh_lock);
+ 			return e;
+ 		}
+ 
+@@ -1250,6 +1253,7 @@ struct nft_pipapo_elem *pipapo_get_avx2(const struct nft_pipapo_match *m,
+ 	}
+ 
+ 	kernel_fpu_end();
++	__local_unlock_nested_bh(&scratch->bh_lock);
+ 	return NULL;
+ }
+ 
+-- 
+2.39.2
+

@@ -1,0 +1,73 @@
+From 2d9c4b600058faad17f0e7da90c542a6e7defe91 Mon Sep 17 00:00:00 2001
+From: Florian Westphal <fw@strlen.de>
+Date: Tue, 16 Sep 2025 18:34:01 +0200
+Subject: [PATCH 07/34] netfilter: nft_set_pipapo: use 0 genmask for packetpath
+ lookups
+
+In commit c4eaca2e1052 ("netfilter: nft_set_pipapo: don't check genbit from
+packetpath lookups") I replaced genmask_cur() with NFT_GENMASK_ANY, but
+this change has no effect in the pipapo set type.
+
+New entries are unreachable from the active copy, so NFT_GENMASK_ANY has
+same result as genmask_cur():
+
+current-gen elements are disabled and the new-generation
+elements cannot be found.
+
+Tests did not catch this incomplete fix because the change also dropped
+the genmask test from the AVX2 version of the algorithm, so test only
+fails if host cpu lacks AVX2 support.
+
+Use genmask test only from the control plane (inserts, deletions, ..).
+
+Packet path has to skip the check, use of 0 is enough for this because
+ext->genmask has a the relevant bit set when the element is INACTIVE
+in that generation: using a 0 genmask thus makes nft_set_elem_active()
+always return true.
+
+Fix the comment and replace NFT_GENMASK_ANY with 0.
+
+Fixes: c4eaca2e1052 ("netfilter: nft_set_pipapo: don't check genbit from packetpath lookups")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/netfilter/nft_set_pipapo.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/net/netfilter/nft_set_pipapo.c b/net/netfilter/nft_set_pipapo.c
+index 96aefa504f57..337daa777c35 100644
+--- a/net/netfilter/nft_set_pipapo.c
++++ b/net/netfilter/nft_set_pipapo.c
+@@ -550,8 +550,7 @@ static struct nft_pipapo_elem *pipapo_get(const struct nft_pipapo_match *m,
+  *
+  * This function is called from the data path.  It will search for
+  * an element matching the given key in the current active copy.
+- * Unlike other set types, this uses NFT_GENMASK_ANY instead of
+- * nft_genmask_cur().
++ * Unlike other set types, this uses 0 instead of nft_genmask_cur().
+  *
+  * This is because new (future) elements are not reachable from
+  * priv->match, they get added to priv->clone instead.
+@@ -561,8 +560,8 @@ static struct nft_pipapo_elem *pipapo_get(const struct nft_pipapo_match *m,
+  * inconsistent state: matching old entries get skipped but thew
+  * newly matching entries are unreachable.
+  *
+- * GENMASK will still find the 'now old' entries which ensures consistent
+- * priv->match view.
++ * GENMASK_ANY doesn't work for the same reason: old-gen entries get
++ * skipped, new-gen entries are only reachable from priv->clone.
+  *
+  * nft_pipapo_commit swaps ->clone and ->match shortly after the
+  * genbit flip.  As ->clone doesn't contain the old entries in the first
+@@ -579,7 +578,7 @@ nft_pipapo_lookup(const struct net *net, const struct nft_set *set,
+ 	const struct nft_pipapo_elem *e;
+ 
+ 	m = rcu_dereference(priv->match);
+-	e = pipapo_get_slow(m, (const u8 *)key, NFT_GENMASK_ANY, get_jiffies_64());
++	e = pipapo_get_slow(m, (const u8 *)key, 0, get_jiffies_64());
+ 
+ 	return e ? &e->ext : NULL;
+ }
+-- 
+2.39.2
+
