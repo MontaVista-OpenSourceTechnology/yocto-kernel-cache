@@ -1,0 +1,95 @@
+From 3b2f001e6a236aaf17bf11005dc18cef6f13f7b3 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 27 Oct 2025 09:47:05 -0400
+Subject: [PATCH] boot: only emit rdinit warning on initramfs boot
+
+commit 98aa4d5d242d3a73 [init/main.c: add warning when file specified in
+rdinit is inaccessible] promoted a long time check to be visible on
+boot.
+
+The issue is that it is always issued even when an initramfs boot is
+not used.
+
+To avoid needing to completely disable CONFIG_BLK_DEV_INITRD and not
+have the warning issues when an initramfs isn't used, we add checks for
+the existence and size of an initramfs before allowing the warning
+to be generated.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ init/main.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+diff --git a/init/main.c b/init/main.c
+index d9cf20a20f91..8830f8b3baee 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -161,6 +161,7 @@ static size_t initargs_offs;
+ 
+ static char *execute_command;
+ static char *ramdisk_execute_command = "/init";
++static bool rdinit_cmdline_set __initdata;
+ 
+ /*
+  * Used to generate warnings if static_key manipulation functions are used
+@@ -622,6 +623,7 @@ static int __init rdinit_setup(char *str)
+ 	unsigned int i;
+ 
+ 	ramdisk_execute_command = str;
++	rdinit_cmdline_set = true;
+ 	/* See "auto" comment in init_setup */
+ 	for (i = 1; i < MAX_INIT_ARGS; i++)
+ 		argv_init[i] = NULL;
+@@ -1575,6 +1577,11 @@ void __init console_on_rootfs(void)
+ 
+ static noinline void __init kernel_init_freeable(void)
+ {
++#ifdef CONFIG_BLK_DEV_INITRD
++	bool initrd_available;
++#else
++	bool initrd_available = false;
++#endif
+ 	/* Now the scheduler is fully set up and can do blocking allocations */
+ 	gfp_allowed_mask = __GFP_BITS_MASK;
+ 
+@@ -1606,6 +1613,14 @@ static noinline void __init kernel_init_freeable(void)
+ 
+ 	kunit_run_all_tests();
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++	/*
++	 * Capture whether an initrd was supplied before wait_for_initramfs()
++	 * resets the initrd markers.
++	 */
++	initrd_available = initrd_start || phys_initrd_size;
++#endif
++
+ 	wait_for_initramfs();
+ 	console_on_rootfs();
+ 
+@@ -1614,10 +1629,18 @@ static noinline void __init kernel_init_freeable(void)
+ 	 * the work
+ 	 */
+ 	int ramdisk_command_access;
+-	ramdisk_command_access = init_eaccess(ramdisk_execute_command);
+-	if (ramdisk_command_access != 0) {
+-		pr_warn("check access for rdinit=%s failed: %i, ignoring\n",
+-			ramdisk_execute_command, ramdisk_command_access);
++	if (ramdisk_execute_command &&
++	    (initrd_available || rdinit_cmdline_set)) {
++		ramdisk_command_access = init_eaccess(ramdisk_execute_command);
++		if (ramdisk_command_access != 0) {
++			if (initrd_available)
++				pr_warn("check access for rdinit=%s failed: %i, ignoring\n",
++					ramdisk_execute_command,
++					ramdisk_command_access);
++			ramdisk_execute_command = NULL;
++			prepare_namespace();
++		}
++	} else if (ramdisk_execute_command) {
+ 		ramdisk_execute_command = NULL;
+ 		prepare_namespace();
+ 	}
+-- 
+2.39.2
+
