@@ -5,4 +5,4 @@
 patch mount_root-clarify-error-messages-for-when-no-rootfs.patch
 patch check-console-device-file-on-fs-when-booting.patch
 patch nfs-Allow-default-io-size-to-be-configured.patch
-patch boot-only-emit-rdinit-warning-on-initramfs-boot.patch
+patch boot-conditionally-emit-rdinit-warning-to-avoid-spur.patch
