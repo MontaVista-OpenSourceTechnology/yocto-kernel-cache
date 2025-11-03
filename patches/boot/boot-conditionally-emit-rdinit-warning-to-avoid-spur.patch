@@ -1,27 +1,28 @@
-From 3b2f001e6a236aaf17bf11005dc18cef6f13f7b3 Mon Sep 17 00:00:00 2001
+From 0d37b338d2cc9a54db438a2f542d06e4478fb20c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 27 Oct 2025 09:47:05 -0400
-Subject: [PATCH] boot: only emit rdinit warning on initramfs boot
+Subject: [PATCH] boot: conditionally emit rdinit warning to avoid spurious
+ messages
 
-commit 98aa4d5d242d3a73 [init/main.c: add warning when file specified in
-rdinit is inaccessible] promoted a long time check to be visible on
-boot.
+The rdinit warning added by commit 98aa4d5d242d3 ("init/main.c: add
+warning when file specified in rdinit is inaccessible") is helpful for
+debugging initramfs issues, but generates spurious warnings on systems
+that don't use initramfs or have rdinit explicitly set.
 
-The issue is that it is always issued even when an initramfs boot is
-not used.
+Only emit the warning when:
+ - An initramfs is actually available (initrd_start || phys_initrd_size), OR
+ - rdinit was explicitly set on the command line
 
-To avoid needing to completely disable CONFIG_BLK_DEV_INITRD and not
-have the warning issues when an initramfs isn't used, we add checks for
-the existence and size of an initramfs before allowing the warning
-to be generated.
+This preserves the diagnostic value for legitimate initramfs boot failures
+while eliminating noise on traditional root filesystem boots.
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- init/main.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ init/main.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/init/main.c b/init/main.c
-index d9cf20a20f91..8830f8b3baee 100644
+index d9cf20a20f919..dfddfa6c8a489 100644
 --- a/init/main.c
 +++ b/init/main.c
 @@ -161,6 +161,7 @@ static size_t initargs_offs;
@@ -67,26 +68,16 @@ index d9cf20a20f91..8830f8b3baee 100644
  	wait_for_initramfs();
  	console_on_rootfs();
  
-@@ -1614,10 +1629,18 @@ static noinline void __init kernel_init_freeable(void)
- 	 * the work
- 	 */
+@@ -1616,8 +1631,10 @@ static noinline void __init kernel_init_freeable(void)
  	int ramdisk_command_access;
--	ramdisk_command_access = init_eaccess(ramdisk_execute_command);
--	if (ramdisk_command_access != 0) {
+ 	ramdisk_command_access = init_eaccess(ramdisk_execute_command);
+ 	if (ramdisk_command_access != 0) {
 -		pr_warn("check access for rdinit=%s failed: %i, ignoring\n",
 -			ramdisk_execute_command, ramdisk_command_access);
-+	if (ramdisk_execute_command &&
-+	    (initrd_available || rdinit_cmdline_set)) {
-+		ramdisk_command_access = init_eaccess(ramdisk_execute_command);
-+		if (ramdisk_command_access != 0) {
-+			if (initrd_available)
-+				pr_warn("check access for rdinit=%s failed: %i, ignoring\n",
-+					ramdisk_execute_command,
-+					ramdisk_command_access);
-+			ramdisk_execute_command = NULL;
-+			prepare_namespace();
++		if (initrd_available || rdinit_cmdline_set) {
++			pr_warn("check access for rdinit=%s failed: %i, ignoring\n",
++				ramdisk_execute_command, ramdisk_command_access);
 +		}
-+	} else if (ramdisk_execute_command) {
  		ramdisk_execute_command = NULL;
  		prepare_namespace();
  	}
