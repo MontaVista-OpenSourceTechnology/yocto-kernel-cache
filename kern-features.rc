@@ -270,6 +270,7 @@
 	config = features/input/keyboard-gpio.scc
 	config = features/input/input.scc
 	config = features/input/touchscreen.scc
+	config = features/input/multitouch.scc
 	config = features/nfsd/nfsd-enable.scc
 	config = features/nfsd/nfsd.scc
 	config = features/block/integrity.scc
