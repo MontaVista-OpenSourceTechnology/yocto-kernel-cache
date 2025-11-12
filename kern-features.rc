@@ -97,6 +97,7 @@
 	config = features/kgdb/kgdb.scc
 	config = features/vrf/vrf.scc
 	config = features/usb/usb-gadgets.scc
+	config = features/usb/usb-configfs.scc
 	config = features/usb/serial-all.scc
 	config = features/usb/designware-usb3.scc
 	config = features/usb/usb-dummy-hcd.scc
