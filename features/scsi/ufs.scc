@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable options for UFS storage support"
+define KFEATURE_COMPATIBILITY board
+
+kconf hardware ufs.cfg
+
+if [ "$KARCH" = "arm64" ]; then
+    kconf hardware ufs-arm64.cfg
+fi
