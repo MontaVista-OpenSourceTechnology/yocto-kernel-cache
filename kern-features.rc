@@ -145,6 +145,7 @@
 	config = features/intel-idxd/intel-idxd.scc
 	config = features/tun/tun.scc
 	config = features/hid/hid.scc
+	config = features/hid/hid-i2c.scc
 	config = features/rpmb/rpmb-uapi.scc
 	config = features/rpmb/rpmb-sim.scc
 	config = features/rpmb/rpmb-base.scc
