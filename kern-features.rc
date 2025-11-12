@@ -143,6 +143,7 @@
 	config = features/scsi/scsi-debug.scc
 	config = features/scsi/cdrom.scc
 	config = features/scsi/disk.scc
+	config = features/scsi/ufs.scc
 	config = features/intel-idxd/intel-idxd.scc
 	config = features/tun/tun.scc
 	config = features/hid/hid.scc
