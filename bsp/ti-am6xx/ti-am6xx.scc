@@ -8,4 +8,4 @@ include arch/arm/32bit-compat.scc
 include features/optee/optee.scc
 include features/tsn/tsn.scc
 
-kconf hardware ti-am62.cfg
+kconf hardware ti-am6xx.cfg

@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
-define KMACHINE ti-am62
+define KMACHINE ti-am62ax
 define KTYPE preempt-rt
 define KARCH arm64
 
 include ktypes/preempt-rt
 
-include ti-am62.scc
-kconf hardware ti-am62-preempt-rt.cfg
+include ti-am6xx.scc
+kconf hardware ti-am6xx-preempt-rt.cfg
