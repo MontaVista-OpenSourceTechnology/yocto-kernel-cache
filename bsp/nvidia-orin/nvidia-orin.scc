@@ -15,6 +15,7 @@ include features/usb/xhci-hcd.scc
 include features/input/input.scc
 include features/usb/usb-gadgets.scc
 include features/optee/optee.scc
+include cfg/timer/no_hz.scc
 
 # enable the ability to run 32 bit apps
 include arch/arm/32bit-compat.scc
