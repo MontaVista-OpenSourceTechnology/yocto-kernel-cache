@@ -1,3 +1,8 @@
 # SPDX-License-Identifier: MIT
 #
 
+patch aufs6-kbuild-patch.patch
+patch aufs6-base-patch.patch
+patch aufs6-mmap-patch.patch
+patch aufs6-standalone-patch.patch
+patch aufs6-import-sources-and-docs.patch
