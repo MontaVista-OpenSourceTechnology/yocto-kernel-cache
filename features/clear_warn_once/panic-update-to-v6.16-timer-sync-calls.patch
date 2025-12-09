@@ -1,4 +1,4 @@
-From 614ccfac76a925ce6ef11164d57e6537d592403a Mon Sep 17 00:00:00 2001
+From 89c9f113143165b40ce08ad1330022c7f9742b92 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 14 Jul 2025 11:50:03 -0400
 Subject: [PATCH] panic: update to v6.16 timer sync calls
@@ -9,10 +9,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 3f35ce6c5b72..68fa9f81b78e 100644
+index f738fad0fd76c..8bbd6316a6cd8 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -873,7 +873,7 @@ static int warn_once_set(void *data, u64 val)
+@@ -993,7 +993,7 @@ static int warn_once_set(void *data, u64 val)
  	}
  
  	if (warn_timer_active) {

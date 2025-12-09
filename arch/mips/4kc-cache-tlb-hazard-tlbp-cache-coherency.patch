@@ -1,4 +1,4 @@
-From c79901c3dfdcf121838a638b83d70ea5c426ee1f Mon Sep 17 00:00:00 2001
+From 83d3a8760647183fb945fd3119ee388aceafb00c Mon Sep 17 00:00:00 2001
 From: Weixing Shi <weixing.shi@windriver.com>
 Date: Mon, 12 Apr 2010 14:59:38 +0800
 Subject: [PATCH] 4kc cache tlb hazard: tlbp cache coherency
@@ -13,7 +13,7 @@ Signed-off-by: <james.perkins@windriver.com> James Perkins
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
-index 69ea54bdc0c3..e0550af8bafd 100644
+index 69ea54bdc0c36..e0550af8bafd7 100644
 --- a/arch/mips/mm/tlbex.c
 +++ b/arch/mips/mm/tlbex.c
 @@ -463,6 +463,7 @@ static void __maybe_unused build_tlb_probe_entry(u32 **p)

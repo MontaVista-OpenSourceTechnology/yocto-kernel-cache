@@ -1,4 +1,4 @@
-From 753c6406c3b70e44085245f69b7cfad994845f74 Mon Sep 17 00:00:00 2001
+From 0933c8c47c8ab024966f50d857ecfcbd7006777a Mon Sep 17 00:00:00 2001
 From: Charles Manning <cdhmanning@gmail.com>
 Date: Mon, 16 Mar 2020 16:52:51 +0800
 Subject: [PATCH] yaffs2: fix memory leak when /proc/yaffs is read
@@ -22,7 +22,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index d3f89e07401b..4fbd0a42ff3d 100644
+index d3f89e07401bb..4fbd0a42ff3db 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -3697,6 +3697,7 @@ static struct file_operations procfs_ops = {

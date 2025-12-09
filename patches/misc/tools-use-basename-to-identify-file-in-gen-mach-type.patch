@@ -1,4 +1,4 @@
-From 6a01fecb23d75a987185023b88dc8c116ce61f38 Mon Sep 17 00:00:00 2001
+From 65fd3646f87ff422c0f15ff937b13c66ab9dbc5f Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 13 Jul 2022 12:18:15 -0400
 Subject: [PATCH] tools: use basename to identify file in gen-mach-types
@@ -17,7 +17,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/tools/gen-mach-types b/arch/arm/tools/gen-mach-types
-index cb2b69f2a39d..1fcdba948623 100644
+index cb2b69f2a39d9..1fcdba9486237 100644
 --- a/arch/arm/tools/gen-mach-types
 +++ b/arch/arm/tools/gen-mach-types
 @@ -21,10 +21,14 @@ NF == 3 {

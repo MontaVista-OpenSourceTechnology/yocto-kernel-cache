@@ -1,4 +1,4 @@
-From b39672b16ac380491433d327f005d51cf3702a3f Mon Sep 17 00:00:00 2001
+From 22761785fd5db4644098269e36d6c07aa7ec5f49 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Sat, 29 Aug 2020 10:25:04 -0400
 Subject: [PATCH] yaffs: include blkdev.h
@@ -11,7 +11,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index eefde558c8d6..f5c45bee9f73 100644
+index eefde558c8d6f..f5c45bee9f739 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -74,6 +74,8 @@

@@ -1,4 +1,4 @@
-From 618d17dfe2d63da688f7d3101ecd7c170fc19b1d Mon Sep 17 00:00:00 2001
+From 06466a29e35ff54cd3b2880d9e4f4bb62ca18a9c Mon Sep 17 00:00:00 2001
 From: Liwei Song <liwei.song@windriver.com>
 Date: Mon, 28 Jun 2021 17:04:40 +0800
 Subject: [PATCH] iwlwifi: select MAC80211_LEDS conditionally
@@ -19,7 +19,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/wireless/intel/iwlwifi/Kconfig b/drivers/net/wireless/intel/iwlwifi/Kconfig
-index 82f577da1a8b..b90a26ebca3a 100644
+index 153a8368b4127..19c94be9fc24b 100644
 --- a/drivers/net/wireless/intel/iwlwifi/Kconfig
 +++ b/drivers/net/wireless/intel/iwlwifi/Kconfig
 @@ -60,7 +60,7 @@ config IWLWIFI_LEDS

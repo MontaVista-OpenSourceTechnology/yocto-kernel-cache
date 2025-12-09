@@ -1,4 +1,4 @@
-From 67e7c2c63791ef5d8c2718cda82d4dea526a0ee3 Mon Sep 17 00:00:00 2001
+From b3383952411afc7d198fce7ba8308d3c570fa08a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 22 Nov 2023 12:04:28 -0500
 Subject: [PATCH] yaffs: fix mtime/itime field access
@@ -24,7 +24,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index e428957cbd9a..4f1a9401e657 100644
+index e428957cbd9a4..4f1a9401e6574 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");

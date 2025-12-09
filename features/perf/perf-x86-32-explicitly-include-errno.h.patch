@@ -1,4 +1,4 @@
-From b50ec1754c8a1ec6cee62a6a2e7249dbf37c0cdd Mon Sep 17 00:00:00 2001
+From 30d002e1b9157e0da61188a81baa9cf02d2254ec Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Mon, 21 Aug 2017 13:52:53 -0400
 Subject: [PATCH] perf: x86-32: explicitly include <errno.h>
@@ -22,7 +22,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/util/libunwind/x86_32.c b/tools/perf/util/libunwind/x86_32.c
-index 1697dece1b74..a1a2d1246f51 100644
+index 1697dece1b743..a1a2d1246f518 100644
 --- a/tools/perf/util/libunwind/x86_32.c
 +++ b/tools/perf/util/libunwind/x86_32.c
 @@ -19,6 +19,7 @@

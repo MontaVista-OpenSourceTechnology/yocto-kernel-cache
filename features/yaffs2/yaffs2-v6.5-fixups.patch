@@ -1,4 +1,4 @@
-From e4a316df52b5c19248ace45912f20dbbcfb9fa9a Mon Sep 17 00:00:00 2001
+From 0d21bec750ad94ba0b754c6ac62474200e302e20 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 27 Jul 2023 18:17:32 -0400
 Subject: [PATCH] yaffs2: v6.5 fixups
@@ -9,7 +9,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 66ce3efb6ad1..279be14981f5 100644
+index 66ce3efb6ad1c..279be14981f55 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -844,7 +844,7 @@ static const struct file_operations yaffs_file_operations = {

@@ -1,4 +1,4 @@
-From 3e467848213a6804ac976ae69e03fcb859367d5e Mon Sep 17 00:00:00 2001
+From a0325954a33882bc53150141069477f9b4a6db90 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Thu, 8 Apr 2010 23:44:21 -0700
 Subject: [PATCH] check console device file on fs when booting
@@ -21,10 +21,10 @@ Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
  1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/init/main.c b/init/main.c
-index 225a58279acd..85c4f2eb3d6c 100644
+index 07a3116811c5d..387cf1fc9e364 100644
 --- a/init/main.c
 +++ b/init/main.c
-@@ -1540,7 +1540,21 @@ static int __ref kernel_init(void *unused)
+@@ -1549,7 +1549,21 @@ static int __ref kernel_init(void *unused)
  /* Open /dev/console, for stdin/stdout/stderr, this should never fail */
  void __init console_on_rootfs(void)
  {

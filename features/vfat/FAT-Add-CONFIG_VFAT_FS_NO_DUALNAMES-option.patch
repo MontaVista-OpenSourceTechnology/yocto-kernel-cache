@@ -1,4 +1,4 @@
-From 395b479523935772aa62bfd2c78d88ce36e43445 Mon Sep 17 00:00:00 2001
+From 332e311aa5a636922a81dc5221f916589a302fa0 Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Tue, 21 Jul 2009 09:59:29 +1000
 Subject: [PATCH] FAT: Add CONFIG_VFAT_FS_NO_DUALNAMES option
@@ -16,7 +16,7 @@ Signed-off-by: Andrew Tridgell <tridge@samba.org>
  2 files changed, 102 insertions(+), 2 deletions(-)
 
 diff --git a/fs/fat/Kconfig b/fs/fat/Kconfig
-index 25fae1c83725..ae82dcfad982 100644
+index 25fae1c83725b..ae82dcfad9827 100644
 --- a/fs/fat/Kconfig
 +++ b/fs/fat/Kconfig
 @@ -77,6 +77,27 @@ config VFAT_FS
@@ -48,7 +48,7 @@ index 25fae1c83725..ae82dcfad982 100644
  	int "Default codepage for FAT"
  	depends on FAT_FS
 diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index dd910edd2404..fe51e558cbf9 100644
+index 5dbc4cbb8fce3..23e82ddb2f7ad 100644
 --- a/fs/fat/namei_vfat.c
 +++ b/fs/fat/namei_vfat.c
 @@ -22,6 +22,7 @@

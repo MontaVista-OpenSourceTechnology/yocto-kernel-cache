@@ -1,4 +1,4 @@
-From b90fbabad5a5bbfb12185bc11087f16e7264a74a Mon Sep 17 00:00:00 2001
+From d362be3395240af50fcf7a82e0617d878b339b09 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Mon, 21 Feb 2022 13:20:08 -0500
 Subject: [PATCH] sched/isolation: really align nohz_full with rcu_nocbs
@@ -54,10 +54,10 @@ Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
  1 file changed, 11 insertions(+)
 
 diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 93b038d48900..ef895a95f719 100644
+index a4cf17b1fab06..ebb62904a0fcc 100644
 --- a/kernel/sched/isolation.c
 +++ b/kernel/sched/isolation.c
-@@ -129,6 +129,17 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+@@ -131,6 +131,17 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
  		goto free_non_housekeeping_mask;
  	}
  

@@ -1,4 +1,4 @@
-From 780fe8a587c187c98bdf9d5a111f5e31fa87cee9 Mon Sep 17 00:00:00 2001
+From 59996482e38ae44e7e693fb0e55f21df3d141e79 Mon Sep 17 00:00:00 2001
 From: Mark Asselstine <mark.asselstine@windriver.com>
 Date: Tue, 15 Jul 2008 15:49:27 -0400
 Subject: [PATCH] arm: ARM EABI socketcall
@@ -14,7 +14,7 @@ Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index f379c852dcb7..f22fd8af2d7b 100644
+index 88336a1292bb7..a19ae53ddd761 100644
 --- a/arch/arm/kernel/entry-common.S
 +++ b/arch/arm/kernel/entry-common.S
 @@ -353,7 +353,8 @@ ENTRY(\sym)

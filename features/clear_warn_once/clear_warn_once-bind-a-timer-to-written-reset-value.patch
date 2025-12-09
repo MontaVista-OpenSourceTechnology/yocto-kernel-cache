@@ -1,4 +1,4 @@
-From d203efc53bfa9d41a1afab6a90e07e401466c5b8 Mon Sep 17 00:00:00 2001
+From a86c636747e9fe4faeb406083f6f43de9af4f4ec Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Wed, 16 Dec 2020 12:22:57 -0500
 Subject: [PATCH] clear_warn_once: bind a timer to written reset value
@@ -26,7 +26,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  2 files changed, 41 insertions(+)
 
 diff --git a/Documentation/admin-guide/clearing-warn-once.rst b/Documentation/admin-guide/clearing-warn-once.rst
-index 211fd926cf00..8d058bbc0859 100644
+index 211fd926cf00f..8d058bbc0859d 100644
 --- a/Documentation/admin-guide/clearing-warn-once.rst
 +++ b/Documentation/admin-guide/clearing-warn-once.rst
 @@ -7,3 +7,12 @@ echo 1 > /sys/kernel/debug/clear_warn_once
@@ -43,10 +43,10 @@ index 211fd926cf00..8d058bbc0859 100644
 +
 +Writing a value of zero (or one) will remove any previously set timer.
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 910da0d32c2e..060b25607658 100644
+index 69280e3e14cb1..4a1a9d5c48c29 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -833,6 +833,7 @@ EXPORT_SYMBOL(__warn_printk);
+@@ -953,6 +953,7 @@ EXPORT_SYMBOL(__warn_printk);
  /* Support resetting WARN*_ONCE state */
  
  static u64 clear_warn_once;
@@ -54,7 +54,7 @@ index 910da0d32c2e..060b25607658 100644
  
  static void do_clear_warn_once(void)
  {
-@@ -840,6 +841,14 @@ static void do_clear_warn_once(void)
+@@ -960,6 +961,14 @@ static void do_clear_warn_once(void)
  	memset(__start_once, 0, __end_once - __start_once);
  }
  
@@ -69,7 +69,7 @@ index 910da0d32c2e..060b25607658 100644
  static int warn_once_get(void *data, u64 *val)
  {
  	*val = clear_warn_once;
-@@ -850,6 +859,29 @@ static int warn_once_set(void *data, u64 val)
+@@ -970,6 +979,29 @@ static int warn_once_set(void *data, u64 val)
  {
  	clear_warn_once = val;
  

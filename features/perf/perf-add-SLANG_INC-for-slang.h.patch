@@ -1,4 +1,4 @@
-From 3200e53694628cfa26335200fbb46d3104345f52 Mon Sep 17 00:00:00 2001
+From 3294f93a2fabbe7920dc1cc486535abec3f908f7 Mon Sep 17 00:00:00 2001
 From: Liang Li <liang.li@windriver.com>
 Date: Wed, 22 Aug 2012 16:04:50 +0800
 Subject: [PATCH] perf: add SLANG_INC for slang.h
@@ -31,10 +31,10 @@ Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 5700516aa84a..3eb6b7cd248e 100644
+index 2dd5f5a60568d..b5e20bf7325ad 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -808,6 +808,9 @@ ifndef NO_SLANG
+@@ -805,6 +805,9 @@ ifndef NO_SLANG
      NO_SLANG := 1
    endif
    ifndef NO_SLANG

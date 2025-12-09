@@ -1,4 +1,4 @@
-From c4698c3f96f6135e4e95b1d136cf858cb748a66d Mon Sep 17 00:00:00 2001
+From 055e775ad4d4e3156c3e173ea3929694c36dd5a9 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 14 Jul 2025 11:55:16 -0400
 Subject: [PATCH] yaffs2: update for v6.16+ compatibility
@@ -14,7 +14,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 28 insertions(+), 9 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 216a2905b4b0..5adc1bfd7744 100644
+index 216a2905b4b09..5adc1bfd77445 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -75,6 +75,7 @@

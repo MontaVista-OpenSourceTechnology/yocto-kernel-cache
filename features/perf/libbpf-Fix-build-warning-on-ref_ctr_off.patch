@@ -1,4 +1,4 @@
-From a69c0d092255dd554d9fc41b8f979cded8beccc9 Mon Sep 17 00:00:00 2001
+From 717d23d6a9f152b3800164b4763ad183bb29e28b Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 4 Dec 2022 18:23:47 -0800
 Subject: [PATCH] libbpf: Fix build warning on ref_ctr_off
@@ -29,10 +29,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 00e67f05f8f0..d804f05cf1cc 100644
+index dd3b2f57082d2..880c69cac118e 100644
 --- a/tools/lib/bpf/libbpf.c
 +++ b/tools/lib/bpf/libbpf.c
-@@ -11039,7 +11039,7 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
+@@ -11127,7 +11127,7 @@ static int perf_event_open_probe(bool uprobe, bool retprobe, const char *name,
  	struct perf_event_attr attr;
  	int type, pfd;
  

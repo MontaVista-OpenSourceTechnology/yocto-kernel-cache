@@ -1,4 +1,4 @@
-From 3da4b8b620f6ad9edb425c7e5499409d2cfe9f6a Mon Sep 17 00:00:00 2001
+From dbe9fc65fe7de3baa5762b9ed1d1d37b3f951c12 Mon Sep 17 00:00:00 2001
 From: Zhang Xiao <xiao.zhang@windriver.com>
 Date: Wed, 27 Aug 2014 13:34:15 +0800
 Subject: [PATCH] yaffs: Avoid setting any ACL releated xattr
@@ -12,7 +12,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 6 insertions(+)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index f4c5ba95d51d..611ef43d9825 100644
+index f4c5ba95d51d1..611ef43d9825a 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -970,6 +970,12 @@ static int yaffs_setxattr(struct dentry *dentry, const char *name,

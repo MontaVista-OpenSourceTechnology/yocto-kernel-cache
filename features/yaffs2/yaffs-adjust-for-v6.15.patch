@@ -1,4 +1,4 @@
-From 9a1cf6bff910e2c3cca9a08e0d2f539b8a5e9a09 Mon Sep 17 00:00:00 2001
+From 6da3d6a799c457d1b71d963972029a6250789ed4 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 11 Apr 2025 11:15:38 -0400
 Subject: [PATCH] yaffs: adjust for v6.15
@@ -37,7 +37,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index fd50f7db939b..5337301ac1c6 100644
+index fd50f7db939ba..5337301ac1c64 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -1442,7 +1442,7 @@ static int yaffs_mknod(struct inode *dir, struct dentry *dentry, int mode,

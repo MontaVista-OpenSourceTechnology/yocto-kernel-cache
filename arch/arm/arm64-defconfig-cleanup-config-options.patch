@@ -1,4 +1,4 @@
-From 6929785b0edc80f7fd272fc654ecdd63f356aaff Mon Sep 17 00:00:00 2001
+From 27dd8eb5b3a2306e09db669f94d4ccef84bd7d6f Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross@burtonini.com>
 Date: Tue, 11 Jan 2022 12:02:36 +0000
 Subject: [PATCH] arm64: defconfig: cleanup config options
@@ -33,10 +33,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 deletion(-)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 7e04a2905ce4..58e2ca8b1bae 100644
+index 1a48faad2473a..cdeda1448109d 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -112,7 +112,6 @@ CONFIG_ACPI_HOTPLUG_MEMORY=y
+@@ -116,7 +116,6 @@ CONFIG_ACPI_HOTPLUG_MEMORY=y
  CONFIG_ACPI_HMAT=y
  CONFIG_ACPI_APEI=y
  CONFIG_ACPI_APEI_GHES=y

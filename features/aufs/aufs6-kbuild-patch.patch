@@ -1,7 +1,7 @@
 From 5a198b852702e242e06192e91cdb2ab72d3a035c Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 9 Dec 2025 11:18:14 -0500
-Subject: [PATCH 1/5] aufs6: kbuild patch
+Subject: [PATCH] aufs6: kbuild patch
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

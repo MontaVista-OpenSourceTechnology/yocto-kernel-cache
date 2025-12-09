@@ -1,4 +1,4 @@
-From 437590187ef315c3f4f22a4677596e35db64bc6c Mon Sep 17 00:00:00 2001
+From 732651bbdcf2b059c2555fab412cf6b3f5e44350 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 28 Jun 2024 12:55:18 -0400
 Subject: [PATCH] cpu/amd: inhibit SMP check for qemux86
@@ -32,7 +32,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 655f44f89ded..22fc98d2b073 100644
+index 5d46709c58d0b..03474c574d07c 100644
 --- a/arch/x86/kernel/cpu/amd.c
 +++ b/arch/x86/kernel/cpu/amd.c
 @@ -270,9 +270,13 @@ static void init_amd_k7(struct cpuinfo_x86 *c)

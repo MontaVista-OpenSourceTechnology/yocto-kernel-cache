@@ -1,4 +1,4 @@
-From 03d6e28cecee11efc148e85700b807afad23651c Mon Sep 17 00:00:00 2001
+From bcf6779c9565b6e14658279bf4ab455f5bf4e94a Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 21 Feb 2025 22:13:10 -0500
 Subject: [PATCH] yaffs: fix calls to readlink_copy
@@ -28,7 +28,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index a2bed0980ca2..a4794ca07d50 100644
+index a2bed0980ca2f..a4794ca07d508 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -1118,7 +1118,7 @@ static int yaffs_readlink(struct dentry *dentry, char __user * buffer,

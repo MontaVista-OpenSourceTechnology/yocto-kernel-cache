@@ -1,4 +1,4 @@
-From 55905587392c5427e65d9d820526e2162ff0db14 Mon Sep 17 00:00:00 2001
+From 9e6997e6e5768723bc14c95ce0b006bef4506d03 Mon Sep 17 00:00:00 2001
 From: Andrew Tridgell <tridge@samba.org>
 Date: Thu, 16 Jul 2009 12:47:15 +1000
 Subject: [PATCH] FAT: Added FAT_NO_83NAME
@@ -16,7 +16,7 @@ Signed-off-by: Andrew Tridgell <tridge@samba.org>
  2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/fs/fat/dir.c b/fs/fat/dir.c
-index acbec5bdd521..e881e7b0388c 100644
+index 92b091783966a..0c9cd3e12cf4b 100644
 --- a/fs/fat/dir.c
 +++ b/fs/fat/dir.c
 @@ -379,7 +379,8 @@ static int fat_parse_short(struct super_block *sb,
@@ -72,7 +72,7 @@ index acbec5bdd521..e881e7b0388c 100644
  			sinfo->slot_off -= sizeof(*sinfo->de);
  			sinfo->nr_slots = 1;
 diff --git a/include/uapi/linux/msdos_fs.h b/include/uapi/linux/msdos_fs.h
-index a5773899f4d9..22794eb8d1a3 100644
+index a5773899f4d91..22794eb8d1a36 100644
 --- a/include/uapi/linux/msdos_fs.h
 +++ b/include/uapi/linux/msdos_fs.h
 @@ -48,6 +48,7 @@
