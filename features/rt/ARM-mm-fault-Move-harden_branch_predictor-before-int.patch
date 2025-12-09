@@ -1,0 +1,71 @@
+From d8acd4a99c7e0a283de63244a1dd92678ffde40d Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Wed, 29 Oct 2025 11:22:29 +0100
+Subject: [PATCH 09/20] ARM: mm: fault: Move harden_branch_predictor() before
+ interrupts are enabled
+
+In the LPAE case, interrupts are enabled early in do_page_fault(). If
+the user attempts to access a pointer > TASK_SIZE then is invoked
+harden_branch_predictor(). The function will complain that CPU migration
+is enabled due to its smp_processor_id() usage.
+
+The intention is invoke harden_branch_predictor() on the CPU which
+triggered the page fault. It is only invoked for user access of pointer
+> TASK_SIZE. This always generate a fault for the user because this area
+is restricted to the kernel.
+
+Move the invocation of harden_branch_predictor() up in the call chain to
+the two callers do_bad_area() and do_page_fault().
+Invoke it if the user accesses the >= TASK_SIZE area.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/arm/mm/fault.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index fc4e50cfb0f8a..a0b9ea697f963 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -183,9 +183,6 @@ __do_user_fault(unsigned long addr, unsigned int fsr, unsigned int sig,
+ {
+ 	struct task_struct *tsk = current;
+ 
+-	if (addr > TASK_SIZE)
+-		harden_branch_predictor();
+-
+ #ifdef CONFIG_DEBUG_USER
+ 	if (((user_debug & UDBG_SEGV) && (sig == SIGSEGV)) ||
+ 	    ((user_debug & UDBG_BUS)  && (sig == SIGBUS))) {
+@@ -218,10 +215,13 @@ void do_bad_area(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 	 * If we are in kernel mode at this point, we
+ 	 * have no context to handle this fault with.
+ 	 */
+-	if (user_mode(regs))
++	if (user_mode(regs)) {
++		if (addr >= TASK_SIZE)
++			harden_branch_predictor();
+ 		__do_user_fault(addr, fsr, SIGSEGV, SEGV_MAPERR, regs);
+-	else
++	} else {
+ 		__do_kernel_fault(mm, addr, fsr, regs);
++	}
+ }
+ 
+ #ifdef CONFIG_MMU
+@@ -274,8 +274,11 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 
+ 
+ 	/* Enable interrupts if they were enabled in the parent context. */
+-	if (interrupts_enabled(regs))
++	if (interrupts_enabled(regs)) {
++		if (user_mode(regs) && addr >= TASK_SIZE)
++			harden_branch_predictor();
+ 		local_irq_enable();
++	}
+ 
+ 	/*
+ 	 * If we're in an interrupt or have no user
+-- 
+2.39.2
+
