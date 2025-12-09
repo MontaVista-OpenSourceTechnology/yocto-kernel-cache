@@ -97,7 +97,6 @@
 	config = features/kgdb/kgdb.scc
 	config = features/vrf/vrf.scc
 	config = features/usb/usb-gadgets.scc
-	config = features/usb/usb-configfs.scc
 	config = features/usb/serial-all.scc
 	config = features/usb/designware-usb3.scc
 	config = features/usb/usb-dummy-hcd.scc
@@ -107,6 +106,7 @@
 	config = features/usb/designware-usb2.scc
 	config = features/usb/usb-base.scc
 	config = features/usb/ohci-hcd.scc
+	config = features/usb/usb-configfs.scc
 	config = features/usb/usb-typec.scc
 	config = features/usb/serial.scc
 	config = features/usb/xhci-hcd.scc
@@ -139,15 +139,15 @@
 	config = features/mmc/mmc-sdhci.scc
 	config = features/mmc/mmc-base.scc
 	config = features/mmc/mmc-realtek.scc
+	config = features/scsi/ufs.scc
 	config = features/scsi/scsi.scc
 	config = features/scsi/scsi-debug.scc
 	config = features/scsi/cdrom.scc
 	config = features/scsi/disk.scc
-	config = features/scsi/ufs.scc
 	config = features/intel-idxd/intel-idxd.scc
 	config = features/tun/tun.scc
-	config = features/hid/hid.scc
 	config = features/hid/hid-i2c.scc
+	config = features/hid/hid.scc
 	config = features/rpmb/rpmb-uapi.scc
 	config = features/rpmb/rpmb-sim.scc
 	config = features/rpmb/rpmb-base.scc
