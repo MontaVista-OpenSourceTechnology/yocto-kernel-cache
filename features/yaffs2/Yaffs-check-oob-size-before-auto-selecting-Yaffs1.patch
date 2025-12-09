@@ -1,4 +1,4 @@
-From e9b386014ab778ff74a37a0b54a9aab5edacc28d Mon Sep 17 00:00:00 2001
+From 2e9798a3a378ff59a5c623ba9b4c75c6c7b8a203 Mon Sep 17 00:00:00 2001
 From: Jiang Lu <lu.jiang@windriver.com>
 Date: Fri, 13 Dec 2013 11:18:18 +0800
 Subject: [PATCH] Yaffs:check oob size before auto selecting Yaffs1
@@ -15,7 +15,7 @@ Signed-off-by: Jiang Lu <lu.jiang@windriver.com>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index c1c80f7a33a0..f4c5ba95d51d 100644
+index c1c80f7a33a0e..f4c5ba95d51d1 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -2963,17 +2963,17 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,

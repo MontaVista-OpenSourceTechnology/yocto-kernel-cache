@@ -1,4 +1,4 @@
-From f52f53d5c76f81e576a702a835212a4bd14184ff Mon Sep 17 00:00:00 2001
+From 845c70d58d52265afb673263bc7eaf36738eb19f Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Tue, 10 Jun 2008 21:58:45 -0400
 Subject: [PATCH] powerpc: serialize image targets
@@ -13,7 +13,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index f3804103c56c..fff9ffc351f1 100644
+index a58b1029592ce..bd5fdf2c4e8d7 100644
 --- a/arch/powerpc/Makefile
 +++ b/arch/powerpc/Makefile
 @@ -232,6 +232,9 @@ PHONY += $(BOOT_TARGETS1) $(BOOT_TARGETS2)

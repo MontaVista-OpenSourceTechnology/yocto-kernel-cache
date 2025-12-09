@@ -1,7 +1,7 @@
-From 69fa8885388adbae90c66257800b2382560b423a Mon Sep 17 00:00:00 2001
+From efd765af1cacb76b0699487d23822df2ffee8758 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 15 Oct 2025 19:11:02 -0400
-Subject: [PATCH 3/3] fs/yaffs2: Update for kernel v6.18-rc1 API changes
+Subject: [PATCH] fs/yaffs2: Update for kernel v6.18-rc1 API changes
 
 This commit ports the yaffs2 filesystem driver to be compatible with
 kernel v6.18-rc1, addressing several API changes.
@@ -34,7 +34,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 84 insertions(+), 67 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index da89230b1621..82856331d67b 100644
+index da89230b16210..82856331d67ba 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -3219,115 +3219,132 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,

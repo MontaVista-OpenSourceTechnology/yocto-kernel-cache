@@ -1,4 +1,4 @@
-From 8b0da29af98ffe89632e9cf3d015dc9d47a0d3e3 Mon Sep 17 00:00:00 2001
+From 7fe98cee6e745cdaa2ad2b55fff1e653c89d90f5 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Sun, 25 Jan 2009 17:58:09 -0500
 Subject: [PATCH] modpost: mask trivial warnings
@@ -15,7 +15,7 @@ Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 5ca7c268294e..4063f1808336 100644
+index 47c8aa2a69392..47222dcb7bafd 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
 @@ -1563,7 +1563,7 @@ static void read_symbols(const char *modname)
@@ -27,7 +27,7 @@ index 5ca7c268294e..4063f1808336 100644
  	Elf_Sym *sym;
  
  	if (!parse_elf(&info, modname))
-@@ -2175,7 +2175,7 @@ static void read_dump(const char *fname)
+@@ -2190,7 +2190,7 @@ static void read_dump(const char *fname)
  
  static void write_dump(const char *fname)
  {

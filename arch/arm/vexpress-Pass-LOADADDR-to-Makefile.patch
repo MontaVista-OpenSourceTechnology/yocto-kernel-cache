@@ -1,4 +1,4 @@
-From c68131496cc7d94e6dff6c80cd8d09b2c1b52b65 Mon Sep 17 00:00:00 2001
+From 0506b4e6fd0071f49d537aba235017b1d5b45fa2 Mon Sep 17 00:00:00 2001
 From: Yang Shi <yang.shi@windriver.com>
 Date: Tue, 15 Jul 2014 21:19:34 -0700
 Subject: [PATCH] vexpress: Pass LOADADDR to Makefile
@@ -15,7 +15,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-index ba9b9a802469..868f5884ed72 100644
+index ba9b9a802469f..868f5884ed727 100644
 --- a/arch/arm/boot/Makefile
 +++ b/arch/arm/boot/Makefile
 @@ -61,6 +61,10 @@ $(obj)/zImage:	$(obj)/compressed/vmlinux FORCE

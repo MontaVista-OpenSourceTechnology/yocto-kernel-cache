@@ -1,4 +1,4 @@
-From 9a9fbe60090df7f4e93cf7f15d8a209191cb3307 Mon Sep 17 00:00:00 2001
+From 45e988fb14dba04dba5d93b678f77dea4637fce6 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 19 Mar 2021 12:13:36 -0400
 Subject: [PATCH] yaffs2: v5.12+ build fixups (not runtime tested)
@@ -9,7 +9,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index f5c45bee9f73..ec49a2378928 100644
+index f5c45bee9f739..ec49a2378928c 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -897,7 +897,7 @@ static int yaffs_vfs_setsize(struct inode *inode, loff_t newsize)

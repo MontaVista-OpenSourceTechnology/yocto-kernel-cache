@@ -1,7 +1,7 @@
 From d9b2e42268e44e1cb3011bbb39e9e72d6ac36a67 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 9 Dec 2025 11:18:40 -0500
-Subject: [PATCH 3/5] aufs6: mmap patch
+Subject: [PATCH] aufs6: mmap patch
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

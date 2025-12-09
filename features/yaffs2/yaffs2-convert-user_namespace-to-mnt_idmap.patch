@@ -1,4 +1,4 @@
-From 42cfb278b4355cc722433c90aaa64060c105659c Mon Sep 17 00:00:00 2001
+From f022050f767d71477ce1eef00e2c52a570959093 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 17 Mar 2023 22:31:42 -0400
 Subject: [PATCH] yaffs2: convert user_namespace to mnt_idmap
@@ -16,7 +16,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 53c93c33c6d0..7f75c68a9736 100644
+index 53c93c33c6d07..7f75c68a97363 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -910,7 +910,7 @@ static int yaffs_vfs_setsize(struct inode *inode, loff_t newsize)

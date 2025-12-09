@@ -1,7 +1,7 @@
-From 2819b4c1b3bf30a6d4d593b7c95467d872244106 Mon Sep 17 00:00:00 2001
+From 4d5d77f12a931fd974252d42c6be1bb001e71538 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Wed, 15 Oct 2025 18:42:17 -0400
-Subject: [PATCH 2/3] fs/yaffs2: Adapt yaffs_write_begin to folio API
+Subject: [PATCH] fs/yaffs2: Adapt yaffs_write_begin to folio API
 
 The kernel has transitioned from `struct page` to `struct folio` for
 page cache management, and the `Page_Uptodate` macro has been removed.
@@ -24,7 +24,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 022a26cb817f..da89230b1621 100644
+index 022a26cb817fa..da89230b16210 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -115,7 +115,7 @@

@@ -1,7 +1,7 @@
 From a55ba284454486cbf9d8ad3584656f9d37f9778e Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 9 Dec 2025 11:19:00 -0500
-Subject: [PATCH 4/5] aufs6: standalone patch
+Subject: [PATCH] aufs6: standalone patch
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

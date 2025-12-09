@@ -1,4 +1,4 @@
-From f516a92f21951bde7fab2fc4d196516cf29ccdb2 Mon Sep 17 00:00:00 2001
+From 6a93a9cf599317de9be3f8665d46199768384666 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 16 Mar 2020 23:20:57 -0400
 Subject: [PATCH] yaffs2: v5.6 build fixups
@@ -9,7 +9,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 4fbd0a42ff3d..598ecd57a0ed 100644
+index 4fbd0a42ff3db..598ecd57a0ed7 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -2059,11 +2059,11 @@ static void yaffs_fill_inode_from_obj(struct inode *inode,

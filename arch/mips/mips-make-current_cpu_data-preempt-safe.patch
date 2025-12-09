@@ -1,4 +1,4 @@
-From 16e80dcbaeec523706fe6ad7455f9e00d2362d93 Mon Sep 17 00:00:00 2001
+From abf9c20ffcbf46787ad80d8ead7ed725738cb071 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Fri, 29 Sep 2023 00:11:41 +0000
 Subject: [PATCH] mips: make current_cpu_data preempt safe
@@ -51,7 +51,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/mips/include/asm/cpu-info.h b/arch/mips/include/asm/cpu-info.h
-index a600670d00e9..07f9cddd6c77 100644
+index fd60837ce50bc..c21182a29ed6d 100644
 --- a/arch/mips/include/asm/cpu-info.h
 +++ b/arch/mips/include/asm/cpu-info.h
 @@ -117,7 +117,7 @@ struct cpuinfo_mips {

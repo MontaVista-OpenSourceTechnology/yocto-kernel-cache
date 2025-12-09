@@ -1,4 +1,4 @@
-From b2dae70cb824000e6c2486819e31d9731919d8ec Mon Sep 17 00:00:00 2001
+From db990e0cacd4b1fac6fc02df0a5c2e7ed83de307 Mon Sep 17 00:00:00 2001
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
 Date: Sat, 27 Sep 2014 12:01:21 -0400
 Subject: [PATCH] fat: don't use obsolete random32 call in namei_vfat
@@ -25,7 +25,7 @@ Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index 603b904c8b5d..ae1951d3b10f 100644
+index 9191f73948506..12274287096da 100644
 --- a/fs/fat/namei_vfat.c
 +++ b/fs/fat/namei_vfat.c
 @@ -613,7 +613,7 @@ static void vfat_build_dummy_83_buffer(struct inode *dir, char *msdos_name,

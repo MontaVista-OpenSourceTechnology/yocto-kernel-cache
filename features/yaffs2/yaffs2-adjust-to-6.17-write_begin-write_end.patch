@@ -1,4 +1,4 @@
-From 66c6846ca6296162567f9c19a3363270173a6fc3 Mon Sep 17 00:00:00 2001
+From f1f2a6b942537011747b4240787c23bea1eaaac6 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 18 Sep 2025 23:46:44 -0400
 Subject: [PATCH] yaffs2: adjust to 6.17 write_begin/write_end
@@ -15,7 +15,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 5adc1bfd7744..4bb18ea6f86f 100644
+index 5adc1bfd77445..4bb18ea6f86f0 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -570,7 +570,7 @@ static void yaffs_release_space(struct file *f)

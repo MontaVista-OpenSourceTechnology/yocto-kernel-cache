@@ -1,4 +1,4 @@
-From cb7efdfac2001b0ca610d11d6b7921394cf11a19 Mon Sep 17 00:00:00 2001
+From 4e9a658ef02fdf91c2fab12ab6bea29f0d8f72ce Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Tue, 22 Aug 2017 09:50:50 +0100
 Subject: [PATCH] linux-yocto: Handle /bin/awk issues
@@ -19,7 +19,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  5 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/tools/gen-mach-types b/arch/arm/tools/gen-mach-types
-index cbe1c33bb871..cb2b69f2a39d 100644
+index cbe1c33bb8710..cb2b69f2a39d9 100644
 --- a/arch/arm/tools/gen-mach-types
 +++ b/arch/arm/tools/gen-mach-types
 @@ -1,4 +1,4 @@
@@ -29,7 +29,7 @@ index cbe1c33bb871..cb2b69f2a39d 100644
  #
  # Awk script to generate include/generated/mach-types.h
 diff --git a/arch/sh/tools/gen-mach-types b/arch/sh/tools/gen-mach-types
-index 6d7c2d8eaf55..2a4a42a6d70c 100644
+index 6d7c2d8eaf550..2a4a42a6d70cf 100644
 --- a/arch/sh/tools/gen-mach-types
 +++ b/arch/sh/tools/gen-mach-types
 @@ -1,4 +1,4 @@
@@ -39,7 +39,7 @@ index 6d7c2d8eaf55..2a4a42a6d70c 100644
  #
  # Awk script to generate include/generated/machtypes.h
 diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index 2c19d7fc8a85..70b1f2026a57 100644
+index 7ea1b75e59b74..7236547466f0b 100644
 --- a/arch/x86/tools/gen-insn-attr-x86.awk
 +++ b/arch/x86/tools/gen-insn-attr-x86.awk
 @@ -1,4 +1,4 @@
@@ -49,7 +49,7 @@ index 2c19d7fc8a85..70b1f2026a57 100644
  # gen-insn-attr-x86.awk: Instruction attribute table generator
  # Written by Masami Hiramatsu <mhiramat@redhat.com>
 diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index 2c19d7fc8a85..70b1f2026a57 100644
+index 7ea1b75e59b74..7236547466f0b 100644
 --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
 +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
 @@ -1,4 +1,4 @@
@@ -59,7 +59,7 @@ index 2c19d7fc8a85..70b1f2026a57 100644
  # gen-insn-attr-x86.awk: Instruction attribute table generator
  # Written by Masami Hiramatsu <mhiramat@redhat.com>
 diff --git a/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk b/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
-index 1a29f6379bde..6285ff7158a5 100644
+index 1a29f6379bdea..6285ff7158a5d 100644
 --- a/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
 +++ b/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
 @@ -1,4 +1,4 @@

@@ -1,4 +1,4 @@
-From d0835685e3d60afd9f1978f11006d24f63e84797 Mon Sep 17 00:00:00 2001
+From 7cd4772743005d47e54ffb8a105e8d498fa2b3e5 Mon Sep 17 00:00:00 2001
 From: Weixing Shi <weixing.shil@windriver.com>
 Date: Mon, 12 Apr 2010 14:58:03 +0800
 Subject: [PATCH] malta uhci quirks: make allowance for slow 4k(e)c
@@ -16,7 +16,7 @@ Signed-off-by: <bruce.ashfield@windriver.com> Bruce Ashfield
  2 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index 0404489c2f6a..0aabb4517551 100644
+index 0404489c2f6a9..0aabb4517551b 100644
 --- a/drivers/usb/host/pci-quirks.c
 +++ b/drivers/usb/host/pci-quirks.c
 @@ -650,6 +650,9 @@ static inline int io_type_enabled(struct pci_dev *pdev, unsigned int mask)
@@ -49,7 +49,7 @@ index 0404489c2f6a..0aabb4517551 100644
  	 * make sure the controller is stopped.
  	 */
 diff --git a/drivers/usb/host/uhci-q.c b/drivers/usb/host/uhci-q.c
-index 9480d4ff0111..71a7393f0566 100644
+index 9480d4ff01110..71a7393f0566a 100644
 --- a/drivers/usb/host/uhci-q.c
 +++ b/drivers/usb/host/uhci-q.c
 @@ -72,7 +72,9 @@ static void uhci_fsbr_off(struct uhci_hcd *uhci)

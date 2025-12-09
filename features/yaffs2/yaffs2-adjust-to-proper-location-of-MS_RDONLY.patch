@@ -1,4 +1,4 @@
-From c5e84122a5c552c8496dfea35d143004189cc480 Mon Sep 17 00:00:00 2001
+From 7b753b9b69df59a32303c741c1534dfc6047a84e Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 14 Jan 2020 13:53:11 -0500
 Subject: [PATCH] yaffs2: adjust to proper location of MS_RDONLY
@@ -9,7 +9,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index a36d9bfaa9d2..34cdc58339a8 100644
+index a36d9bfaa9d2b..34cdc58339a8f 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -173,6 +173,8 @@ static uint32_t YCALCBLOCKS(uint64_t partition_size, uint32_t block_size)

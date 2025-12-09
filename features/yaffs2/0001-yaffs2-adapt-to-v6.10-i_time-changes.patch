@@ -1,4 +1,4 @@
-From cce54b42cc604c78f87a2964b55b4b4bf046ef9d Mon Sep 17 00:00:00 2001
+From 040dcd764872989ac26f0f35dd04f9e854e6b978 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 1 Aug 2024 15:14:33 -0400
 Subject: [PATCH] yaffs2: adapt to v6.10 i_time changes
@@ -9,7 +9,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 4f1a9401e657..26e97bd3994c 100644
+index 4f1a9401e6574..26e97bd3994c0 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");

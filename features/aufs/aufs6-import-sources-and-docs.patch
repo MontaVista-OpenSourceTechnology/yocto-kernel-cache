@@ -1,7 +1,7 @@
 From 8903f880c38c2a9b1db181b26bcd52a3d9a8a4d2 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 9 Dec 2025 11:19:50 -0500
-Subject: [PATCH 5/5] aufs6: import sources and docs
+Subject: [PATCH] aufs6: import sources and docs
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---

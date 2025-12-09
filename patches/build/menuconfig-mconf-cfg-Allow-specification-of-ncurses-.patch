@@ -1,4 +1,4 @@
-From 059d464171d77b9283ccba54d2095c10fd24e1f8 Mon Sep 17 00:00:00 2001
+From de1c1e666698acf6d1ae4beb7cd7c0d57b86a86f Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Mon, 2 Jul 2018 23:10:28 -0400
 Subject: [PATCH] menuconfig,mconf-cfg: Allow specification of ncurses location
@@ -25,7 +25,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 8 insertions(+)
 
 diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-index 1bc304dc2f7d..240bf64829a6 100755
+index 1bc304dc2f7d9..240bf64829a6d 100755
 --- a/scripts/kconfig/mconf-cfg.sh
 +++ b/scripts/kconfig/mconf-cfg.sh
 @@ -9,6 +9,14 @@ libs=$2

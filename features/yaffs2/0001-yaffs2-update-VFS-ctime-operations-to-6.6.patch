@@ -1,4 +1,4 @@
-From 1979267aec654d9f4ee0055d7ae5ecd0c4b39c0f Mon Sep 17 00:00:00 2001
+From 69abd08f1d7cf2f5d2ae7f18128e1dd806219d93 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Thu, 21 Sep 2023 17:04:31 -0400
 Subject: [PATCH] yaffs2: update VFS ctime operations to 6.6+
@@ -17,7 +17,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
-index 279be14981f5..e428957cbd9a 100644
+index 279be14981f55..e428957cbd9a4 100644
 --- a/fs/yaffs2/yaffs_vfs.c
 +++ b/fs/yaffs2/yaffs_vfs.c
 @@ -282,7 +282,7 @@ MODULE_PARM(yaffs_gc_control, "i");

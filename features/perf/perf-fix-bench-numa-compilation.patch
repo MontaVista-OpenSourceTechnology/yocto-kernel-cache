@@ -1,4 +1,4 @@
-From deb3516b4619d7543173a632e0cfc0acf4f9c2dc Mon Sep 17 00:00:00 2001
+From 69ebf94353af160ac798e953ec2d94fa8273c338 Mon Sep 17 00:00:00 2001
 From: Riccardo Magliocchetti <riccardo.magliocchetti@gmail.com>
 Date: Thu, 17 Oct 2013 15:11:25 -0700
 Subject: [PATCH] perf: fix bench numa compilation
@@ -21,7 +21,7 @@ Signed-off-by: Yang Shi <yang.shi@windriver.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 19be2aaf4dc0..8b53c75a6b36 100644
+index 19be2aaf4dc0c..8b53c75a6b36c 100644
 --- a/tools/perf/bench/numa.c
 +++ b/tools/perf/bench/numa.c
 @@ -23,6 +23,7 @@
