@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable Rust Kernel Support"
+
+kconf non-hardware kernel-rust.cfg
