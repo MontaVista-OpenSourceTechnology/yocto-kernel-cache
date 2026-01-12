@@ -1,0 +1,7 @@
+define KMACHINE nxp-lx2xxx
+define KTYPE standard
+define KARCH arm64
+
+include ktypes/standard
+
+include nxp-lx2xxx.scc
