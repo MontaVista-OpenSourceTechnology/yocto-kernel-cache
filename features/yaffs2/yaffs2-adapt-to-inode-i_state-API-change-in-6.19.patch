@@ -1,0 +1,32 @@
+From be32d47e5f1fe89ead7a6a6af78fa3f7abf95da0 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Sun, 25 Jan 2026 17:29:28 -0500
+Subject: [PATCH] yaffs2: adapt to inode i_state API change in 6.19
+
+In Linux 6.19, inode->i_state changed from an unsigned long to
+struct inode_state_flags. Direct bitwise operations on i_state
+no longer work.
+
+Use inode_state_read_once() to read the state for bitwise checks.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 82856331d67b..4e96e54139a8 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1270,7 +1270,7 @@ static struct inode *yaffs_iget(struct super_block *sb, unsigned long ino)
+ 	inode = iget_locked(sb, ino);
+ 	if (!inode)
+ 		return ERR_PTR(-ENOMEM);
+-	if (!(inode->i_state & I_NEW))
++	if (!(inode_state_read_once(inode) & I_NEW))
+ 		return inode;
+ 
+ 	/* NB This is called as a side effect of other functions, but
+-- 
+2.43.0
+
