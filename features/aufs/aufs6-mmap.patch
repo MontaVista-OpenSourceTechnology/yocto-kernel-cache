@@ -1,7 +1,7 @@
-From d9b2e42268e44e1cb3011bbb39e9e72d6ac36a67 Mon Sep 17 00:00:00 2001
+From 01212bec59a7831221effc7abdc2b9e4f062d420 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Tue, 9 Dec 2025 11:18:40 -0500
-Subject: [PATCH] aufs6: mmap patch
+Date: Sun, 25 Jan 2026 16:29:21 -0500
+Subject: [PATCH 3/5] aufs6: mmap
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
@@ -15,11 +15,11 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  create mode 100644 fs/au_mf.c
 
 diff --git a/fs/Makefile b/fs/Makefile
-index 33ca8b1068623..d6a42848775e8 100644
+index e9c139d21b58..d62f8abee61a 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -17,6 +17,9 @@ obj-y :=	open.o read_write.o file_table.o super.o \
- 		fs_types.o fs_context.o fs_parser.o fsopen.o init.o \
+ 		fs_dirent.o fs_context.o fs_parser.o fsopen.o init.o \
  		kernel_read_file.o mnt_idmapping.o remap_range.o pidfs.o \
  		file_attr.o
 +ifeq (${CONFIG_AUFS_FS},m)
@@ -30,7 +30,7 @@ index 33ca8b1068623..d6a42848775e8 100644
  obj-$(CONFIG_PROC_FS)		+= proc_namespace.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 0000000000000..bacf13696a772
+index 000000000000..bacf13696a77
 --- /dev/null
 +++ b/fs/au_mf.c
 @@ -0,0 +1,60 @@
@@ -95,7 +95,7 @@ index 0000000000000..bacf13696a772
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6299878e3d97e..2905284f1dfa8 100644
+index 4eec684baca9..9ff978a58a0b 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
 @@ -1788,7 +1788,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
@@ -108,7 +108,7 @@ index 6299878e3d97e..2905284f1dfa8 100644
  		fput(exe_file);
  		return 0;
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
-index c6e7ebc637562..12c340dcdec3d 100644
+index c6e7ebc63756..12c340dcdec3 100644
 --- a/fs/proc/nommu.c
 +++ b/fs/proc/nommu.c
 @@ -39,7 +39,7 @@ static int nommu_region_show(struct seq_file *m, struct vm_region *region)
@@ -121,7 +121,7 @@ index c6e7ebc637562..12c340dcdec3d 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index d362919f4f688..79a2590d40f4d 100644
+index d362919f4f68..79a2590d40f4 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -137,7 +137,7 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -134,10 +134,10 @@ index d362919f4f688..79a2590d40f4d 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0549e96b8db82..3428592320353 100644
+index 2cd870e25357..3bfe3b9c889e 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2889,6 +2889,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+@@ -2463,6 +2463,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
  			   const struct cred *cred);
  const struct path *backing_file_user_path(const struct file *f);
  
@@ -159,7 +159,7 @@ index 0549e96b8db82..3428592320353 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2901,15 +2916,25 @@ const struct path *backing_file_user_path(const struct file *f);
+@@ -2475,15 +2490,25 @@ const struct path *backing_file_user_path(const struct file *f);
  /* Get the path to display in /proc/<pid>/maps */
  static inline const struct path *file_user_path(const struct file *f)
  {
@@ -186,5 +186,5 @@ index 0549e96b8db82..3428592320353 100644
  }
  
 -- 
-2.39.2
+2.43.0
 
