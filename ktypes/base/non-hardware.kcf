@@ -41,7 +41,6 @@ drivers/remoteproc/Kconfig
 drivers/rpmsg/Kconfig
 drivers/staging/axis-fifo/Kconfig
 drivers/staging/fbtft/Kconfig
-drivers/staging/gpib/Kconfig
 drivers/staging/greybus/Kconfig
 drivers/staging/iio/accel/Kconfig
 drivers/staging/iio/adc/Kconfig
@@ -67,7 +66,6 @@ drivers/staging/media/sunxi/Kconfig
 drivers/staging/media/sunxi/sun6i-isp/Kconfig
 drivers/staging/media/tegra-video/Kconfig
 drivers/staging/most/dim2/Kconfig
-drivers/staging/most/i2c/Kconfig
 drivers/staging/most/Kconfig
 drivers/staging/most/net/Kconfig
 drivers/staging/most/video/Kconfig
@@ -76,9 +74,7 @@ drivers/staging/octeon/Kconfig
 drivers/staging/rtl8723bs/Kconfig
 drivers/staging/sm750fb/Kconfig
 drivers/staging/vc04_services/bcm2835-audio/Kconfig
-drivers/staging/vc04_services/bcm2835-camera/Kconfig
 drivers/staging/vc04_services/Kconfig
-drivers/staging/vc04_services/vchiq-mmal/Kconfig
 drivers/staging/vme_user/Kconfig
 drivers/vhost/Kconfig
 drivers/virt/acrn/Kconfig
@@ -180,6 +176,7 @@ kernel/Kconfig.kexec
 kernel/Kconfig.locks
 kernel/Kconfig.preempt
 kernel/livepatch/Kconfig
+kernel/liveupdate/Kconfig
 kernel/module/Kconfig
 kernel/power/Kconfig
 kernel/rcu/Kconfig
