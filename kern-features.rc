@@ -238,6 +238,7 @@
 	config = features/ramconsole/ramconsole.scc
 	config = features/eg20t/eg20t.scc
 	config = features/edac/edac-enable.scc
+	config = features/kernel-rust/kernel-rust.scc
 	config = features/vfio/vfio.scc
 	config = features/vswitch/vswitch.scc
 	config = features/dca/dca.scc
@@ -249,6 +250,7 @@
 	config = features/ipmi/ipmi.scc
 	config = features/intel-vmd/intel-vmd.scc
 	config = features/debug/debug-runtime.scc
+	config = features/debug/debug-kernel-rust.scc
 	config = features/debug/debug-kernel.scc
 	config = features/debug/debug-dyndbg.scc
 	config = features/debug/printk.scc
