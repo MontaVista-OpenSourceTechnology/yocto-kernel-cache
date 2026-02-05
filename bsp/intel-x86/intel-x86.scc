@@ -16,6 +16,7 @@ include features/hugetlb/hugetlb.scc
 include features/power/intel.scc
 include features/scsi/cdrom.scc
 include features/i915/i915.scc
+include features/xe/xe.scc
 include features/intel-e1xxxx/intel-e1xxxx.scc
 include features/igb/igb.scc
 include features/ixgbe/ixgbe.scc
