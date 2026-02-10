@@ -1,0 +1,8 @@
+define KFEATURE_DESCRIPTION "Enable General Features needed by container runtimes"
+define KFEATURE_COMPATIBILITY arch
+
+include cfg/9p.scc
+include cfg/fs/squashfs.scc
+include features/overlayfs/overlayfs.scc
+
+kconf non-hardware container.cfg
