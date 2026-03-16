@@ -6,3 +6,5 @@ define KARCH arm
 include ktypes/preempt-rt/preempt-rt.scc
 
 include amd-zynq.scc
+
+kconf hardware amd-zynq-rt.cfg
