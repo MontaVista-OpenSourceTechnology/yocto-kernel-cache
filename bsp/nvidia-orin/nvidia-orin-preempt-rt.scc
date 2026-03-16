@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+define KMACHINE nvidia-orin
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+
+include nvidia-orin.scc
