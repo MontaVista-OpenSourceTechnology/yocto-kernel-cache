@@ -1,7 +1,7 @@
-From caa09708a0ac9327108dba6298c9ced68814cc9f Mon Sep 17 00:00:00 2001
+From f99f3f98eb336e35db95f45c7060675cc2b2389b Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Sun, 25 Jan 2026 16:28:58 -0500
-Subject: [PATCH 2/5] aufs6: base
+Subject: [PATCH] aufs6: base
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
@@ -19,10 +19,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  11 files changed, 59 insertions(+), 4 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index da9dbc1a4019..b5ab94e0c94c 100644
+index 96ea84948d76..5b3c95906a27 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4163,6 +4163,19 @@ S:	Supported
+@@ -4236,6 +4236,19 @@ S:	Supported
  F:	Documentation/dev-tools/autofdo.rst
  F:	scripts/Makefile.autofdo
  
@@ -41,12 +41,12 @@ index da9dbc1a4019..b5ab94e0c94c 100644
 +
  AUXILIARY BUS DRIVER
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- R:	Dave Ertman <david.m.ertman@intel.com>
+ M:	"Rafael J. Wysocki" <rafael@kernel.org>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bd59c0e9508b..fc83795f1b28 100644
+index 0000913f7efc..e7dadac7dd17 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -631,6 +631,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -630,6 +630,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
@@ -74,10 +74,10 @@ index bd59c0e9508b..fc83795f1b28 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index dc2fff4811d1..7e82da669476 100644
+index 7ba1801d8132..2007442315ec 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1301,6 +1301,9 @@ enum d_walk_ret {
+@@ -1311,6 +1311,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -87,7 +87,7 @@ index dc2fff4811d1..7e82da669476 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1309,7 +1312,7 @@ enum d_walk_ret {
+@@ -1319,7 +1322,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -97,7 +97,7 @@ index dc2fff4811d1..7e82da669476 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index f93dbca08435..0cfe817a8252 100644
+index beab8080badf..c9e5300ff82b 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -36,7 +36,7 @@
@@ -119,10 +119,10 @@ index f93dbca08435..0cfe817a8252 100644
  		return error;
  
 diff --git a/fs/namespace.c b/fs/namespace.c
-index c58674a20cad..71b882e8747e 100644
+index 854f4fc66469..60e48ee64b69 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -954,6 +954,12 @@ static inline int check_mnt(const struct mount *mnt)
+@@ -948,6 +948,12 @@ static inline int check_mnt(const struct mount *mnt)
  	return mnt->mnt_ns == current->nsproxy->mnt_ns;
  }
  
@@ -136,10 +136,10 @@ index c58674a20cad..71b882e8747e 100644
  {
  	u64 seq;
 diff --git a/fs/splice.c b/fs/splice.c
-index d338fe56b50b..966271869bbf 100644
+index 9d8f63e2fd1a..d2b70cb432d1 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -930,7 +930,7 @@ static int warn_unsupported(struct file *file, const char *op)
+@@ -928,7 +928,7 @@ static int warn_unsupported(struct file *file, const char *op)
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -149,10 +149,10 @@ index d338fe56b50b..966271869bbf 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f5c9cf28c4dc..2cd870e25357 100644
+index 8b3dd145b25e..53a16e37ccba 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1388,6 +1388,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1389,6 +1389,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -160,7 +160,7 @@ index f5c9cf28c4dc..2cd870e25357 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -1936,6 +1937,7 @@ struct file_operations {
+@@ -1946,6 +1947,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -169,7 +169,7 @@ index f5c9cf28c4dc..2cd870e25357 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index dd634103b014..20799d7c7ba7 100644
+index 621566345406..24d2eca0dc1d 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
