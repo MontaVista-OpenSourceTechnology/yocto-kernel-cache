@@ -79,6 +79,7 @@ drivers/remoteproc/Kconfig
 drivers/reset/amlogic/Kconfig
 drivers/reset/hisilicon/Kconfig
 drivers/reset/Kconfig
+drivers/reset/spacemit/Kconfig
 drivers/reset/starfive/Kconfig
 drivers/reset/sti/Kconfig
 drivers/reset/tegra/Kconfig
@@ -165,7 +166,6 @@ fs/9p/Kconfig
 fs/adfs/Kconfig
 fs/affs/Kconfig
 fs/afs/Kconfig
-fs/aufs/Kconfig
 fs/autofs/Kconfig
 fs/befs/Kconfig
 fs/bfs/Kconfig
@@ -233,7 +233,6 @@ fs/unicode/Kconfig
 fs/vboxsf/Kconfig
 fs/verity/Kconfig
 fs/xfs/Kconfig
-fs/yaffs2/Kconfig
 fs/zonefs/Kconfig
 init/Kconfig
 io_uring/Kconfig

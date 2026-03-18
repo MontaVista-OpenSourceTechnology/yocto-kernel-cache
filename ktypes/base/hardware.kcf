@@ -251,6 +251,7 @@ drivers/char/tpm/st33zp24/Kconfig
 drivers/char/xillybus/Kconfig
 drivers/clk/actions/Kconfig
 drivers/clk/analogbits/Kconfig
+drivers/clk/aspeed/Kconfig
 drivers/clk/baikal-t1/Kconfig
 drivers/clk/bcm/Kconfig
 drivers/clk/hisilicon/Kconfig
@@ -406,6 +407,7 @@ drivers/gpu/drm/gud/Kconfig
 drivers/gpu/drm/hisilicon/hibmc/Kconfig
 drivers/gpu/drm/hisilicon/Kconfig
 drivers/gpu/drm/hisilicon/kirin/Kconfig
+drivers/gpu/drm/hyperv/Kconfig
 drivers/gpu/drm/i915/Kconfig
 drivers/gpu/drm/i915/Kconfig.debug
 drivers/gpu/drm/i915/Kconfig.profile
@@ -459,6 +461,7 @@ drivers/gpu/drm/udl/Kconfig
 drivers/gpu/drm/v3d/Kconfig
 drivers/gpu/drm/vboxvideo/Kconfig
 drivers/gpu/drm/vc4/Kconfig
+drivers/gpu/drm/vgem/Kconfig
 drivers/gpu/drm/virtio/Kconfig
 drivers/gpu/drm/vkms/Kconfig
 drivers/gpu/drm/vmwgfx/Kconfig
@@ -881,6 +884,7 @@ drivers/net/dsa/Kconfig
 drivers/net/dsa/lantiq/Kconfig
 drivers/net/dsa/microchip/Kconfig
 drivers/net/dsa/mv88e6xxx/Kconfig
+drivers/net/dsa/mxl862xx/Kconfig
 drivers/net/dsa/ocelot/Kconfig
 drivers/net/dsa/qca/Kconfig
 drivers/net/dsa/realtek/Kconfig
@@ -978,7 +982,6 @@ drivers/net/ethernet/mscc/Kconfig
 drivers/net/ethernet/mucse/Kconfig
 drivers/net/ethernet/myricom/Kconfig
 drivers/net/ethernet/natsemi/Kconfig
-drivers/net/ethernet/neterion/Kconfig
 drivers/net/ethernet/netronome/Kconfig
 drivers/net/ethernet/ni/Kconfig
 drivers/net/ethernet/nvidia/Kconfig
@@ -1024,7 +1027,6 @@ drivers/net/ethernet/xircom/Kconfig
 drivers/net/ethernet/xscale/Kconfig
 drivers/net/fddi/Kconfig
 drivers/net/hamradio/Kconfig
-drivers/net/hippi/Kconfig
 drivers/net/hyperv/Kconfig
 drivers/net/ieee802154/Kconfig
 drivers/net/ipa/Kconfig
@@ -1165,6 +1167,7 @@ drivers/perf/hisilicon/Kconfig
 drivers/perf/Kconfig
 drivers/phy/allwinner/Kconfig
 drivers/phy/amlogic/Kconfig
+drivers/phy/apple/Kconfig
 drivers/phy/broadcom/Kconfig
 drivers/phy/cadence/Kconfig
 drivers/phy/freescale/Kconfig
@@ -1187,6 +1190,7 @@ drivers/phy/rockchip/Kconfig
 drivers/phy/samsung/Kconfig
 drivers/phy/socionext/Kconfig
 drivers/phy/sophgo/Kconfig
+drivers/phy/spacemit/Kconfig
 drivers/phy/starfive/Kconfig
 drivers/phy/st/Kconfig
 drivers/phy/sunplus/Kconfig
@@ -1206,6 +1210,7 @@ drivers/pinctrl/intel/Kconfig.tng
 drivers/pinctrl/Kconfig
 drivers/pinctrl/mediatek/Kconfig
 drivers/pinctrl/meson/Kconfig
+drivers/pinctrl/microchip/Kconfig
 drivers/pinctrl/mvebu/Kconfig
 drivers/pinctrl/nomadik/Kconfig
 drivers/pinctrl/nuvoton/Kconfig
@@ -1244,6 +1249,7 @@ drivers/platform/raspberrypi/vchiq-mmal/Kconfig
 drivers/platform/surface/aggregator/Kconfig
 drivers/platform/surface/Kconfig
 drivers/platform/wmi/Kconfig
+drivers/platform/wmi/tests/Kconfig
 drivers/platform/x86/amd/hfi/Kconfig
 drivers/platform/x86/amd/hsmp/Kconfig
 drivers/platform/x86/amd/Kconfig
@@ -1314,6 +1320,7 @@ drivers/resctrl/Kconfig
 drivers/reset/amlogic/Kconfig
 drivers/reset/hisilicon/Kconfig
 drivers/reset/Kconfig
+drivers/reset/spacemit/Kconfig
 drivers/reset/starfive/Kconfig
 drivers/reset/sti/Kconfig
 drivers/reset/tegra/Kconfig
@@ -1638,6 +1645,7 @@ sound/soc/sof/intel/Kconfig
 sound/soc/sof/Kconfig
 sound/soc/sof/mediatek/Kconfig
 sound/soc/sof/xtensa/Kconfig
+sound/soc/sophgo/Kconfig
 sound/soc/spacemit/Kconfig
 sound/soc/spear/Kconfig
 sound/soc/sprd/Kconfig
