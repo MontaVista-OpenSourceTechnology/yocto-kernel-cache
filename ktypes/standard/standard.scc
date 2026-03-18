@@ -50,7 +50,8 @@ include patches/patches.scc
 include features/initramfs/initramfs.scc
 
 include features/yaffs2/yaffs2.scc
-include features/aufs/aufs.scc
+# temporarily disabled until aufs7 is available
+# include features/aufs/aufs.scc
 include features/tmpfs/tmpfs-posix-acl.scc
 
 include features/cgroups/cgroups.scc

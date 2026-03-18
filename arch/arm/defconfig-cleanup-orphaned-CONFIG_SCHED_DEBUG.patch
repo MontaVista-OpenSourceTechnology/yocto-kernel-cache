@@ -1,14 +1,12 @@
-From 7696ac4d9b451dccd13bb0d74e7663d5df44fad3 Mon Sep 17 00:00:00 2001
+From 4a8fc9e90163c8ef48d15ac945a8431bab79a892 Mon Sep 17 00:00:00 2001
 From: Trevor Woerner <twoerner@gmail.com>
 Date: Tue, 16 Sep 2025 16:33:24 +0100
 Subject: [PATCH] defconfig: cleanup orphaned CONFIG_SCHED_DEBUG
 
-In commit b52173065e0a ("sched/debug: Remove CONFIG_SCHED_DEBUG") this
-Kconfig option was removed since CONFIG_SCHED_DEBUG was made unconditional
-by patches preceding it.
+Remove '# CONFIG_SCHED_DEBUG is not set' from defconfigs. This
+option has been removed upstream.
 
 Signed-off-by: Trevor Woerner <twoerner@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
  arch/arc/configs/axs101_defconfig           | 1 -
@@ -40,9 +38,8 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  arch/arm/configs/wpcm450_defconfig          | 1 -
  arch/arm64/configs/defconfig                | 1 -
  arch/hexagon/configs/comet_defconfig        | 1 -
- arch/m68k/configs/amcore_defconfig          | 1 -
- arch/m68k/configs/m5475evb_defconfig        | 1 -
- arch/m68k/configs/stmark2_defconfig         | 1 -
+ arch/loongarch/configs/loongson32_defconfig | 1 -
+ arch/loongarch/configs/loongson64_defconfig | 1 -
  arch/mips/configs/ath25_defconfig           | 1 -
  arch/mips/configs/ath79_defconfig           | 1 -
  arch/mips/configs/cavium_octeon_defconfig   | 1 -
@@ -77,7 +74,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  arch/xtensa/configs/generic_kc705_defconfig | 1 -
  arch/xtensa/configs/virt_defconfig          | 1 -
  arch/xtensa/configs/xip_kc705_defconfig     | 1 -
- 66 files changed, 66 deletions(-)
+ 65 files changed, 65 deletions(-)
 
 diff --git a/arch/arc/configs/axs101_defconfig b/arch/arc/configs/axs101_defconfig
 index f930396d9dae..9c9243f94edc 100644
@@ -159,11 +156,11 @@ index 45d8738abb75..80b204a40d80 100644
  CONFIG_DEBUG_USER=y
  # CONFIG_RUNTIME_TESTING_MENU is not set
 diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-index 2e6ea13c1e9b..55e12e617038 100644
+index ec558e57d081..d9d8585dba22 100644
 --- a/arch/arm/configs/aspeed_g5_defconfig
 +++ b/arch/arm/configs/aspeed_g5_defconfig
 @@ -309,7 +309,6 @@ CONFIG_SOFTLOCKUP_DETECTOR=y
- CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
+ CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=1
  CONFIG_BOOTPARAM_HUNG_TASK_PANIC=1
  CONFIG_WQ_WATCHDOG=y
 -# CONFIG_SCHED_DEBUG is not set
@@ -293,13 +290,13 @@ index 696b4fbc2412..b26eeefcb4c9 100644
 -# CONFIG_SCHED_DEBUG is not set
  # CONFIG_DEBUG_PREEMPT is not set
 diff --git a/arch/arm/configs/pxa3xx_defconfig b/arch/arm/configs/pxa3xx_defconfig
-index 07d422f0ff34..7c465131c0cd 100644
+index fb272e3a2337..2f3b8265e452 100644
 --- a/arch/arm/configs/pxa3xx_defconfig
 +++ b/arch/arm/configs/pxa3xx_defconfig
 @@ -101,7 +101,6 @@ CONFIG_DEBUG_KERNEL=y
  CONFIG_MAGIC_SYSRQ=y
  CONFIG_DEBUG_SHIRQ=y
- CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
+ CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=1
 -# CONFIG_SCHED_DEBUG is not set
  CONFIG_DEBUG_SPINLOCK=y
  CONFIG_DEBUG_SPINLOCK_SLEEP=y
@@ -383,10 +380,10 @@ index cd4b3e70ff68..5c4e462720aa 100644
  # CONFIG_FTRACE is not set
  CONFIG_IO_STRICT_DEVMEM=y
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e7db4af6a271..bf421890e9de 100644
+index b67d5b1fc45b..57e193e5ca5a 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -1854,7 +1854,6 @@ CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+@@ -1945,7 +1945,6 @@ CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
  CONFIG_DEBUG_INFO_REDUCED=y
  CONFIG_MAGIC_SYSRQ=y
  CONFIG_DEBUG_FS=y
@@ -403,38 +400,30 @@ index 83b7626550c8..6c8bd14fbcd4 100644
  CONFIG_MAGIC_SYSRQ=y
  CONFIG_DEBUG_FS=y
 -# CONFIG_SCHED_DEBUG is not set
-diff --git a/arch/m68k/configs/amcore_defconfig b/arch/m68k/configs/amcore_defconfig
-index 88832e9cd7cb..515d5bc85bd3 100644
---- a/arch/m68k/configs/amcore_defconfig
-+++ b/arch/m68k/configs/amcore_defconfig
-@@ -83,7 +83,6 @@ CONFIG_ROMFS_BACKED_BY_BOTH=y
- CONFIG_PRINTK_TIME=y
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_PANIC_ON_OOPS=y
+diff --git a/arch/loongarch/configs/loongson32_defconfig b/arch/loongarch/configs/loongson32_defconfig
+index 276b1577e0be..645b562b3d5f 100644
+--- a/arch/loongarch/configs/loongson32_defconfig
++++ b/arch/loongarch/configs/loongson32_defconfig
+@@ -1099,7 +1099,6 @@ CONFIG_PRINTK_TIME=y
+ CONFIG_STRIP_ASM_SYMS=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_FS=y
 -# CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_BUGVERBOSE is not set
- # CONFIG_CRYPTO_ECHAINIV is not set
- # CONFIG_CRYPTO_HW is not set
-diff --git a/arch/m68k/configs/m5475evb_defconfig b/arch/m68k/configs/m5475evb_defconfig
-index 2473dc30228e..9be4dae84ebf 100644
---- a/arch/m68k/configs/m5475evb_defconfig
-+++ b/arch/m68k/configs/m5475evb_defconfig
-@@ -46,6 +46,5 @@ CONFIG_EXT2_FS=y
- # CONFIG_PROC_PAGE_MONITOR is not set
- CONFIG_ROMFS_FS=y
- CONFIG_ROMFS_BACKED_BY_MTD=y
+ CONFIG_SCHEDSTATS=y
+ # CONFIG_DEBUG_PREEMPT is not set
+ # CONFIG_FTRACE is not set
+diff --git a/arch/loongarch/configs/loongson64_defconfig b/arch/loongarch/configs/loongson64_defconfig
+index a14db1a95e7e..8e8f1cad3922 100644
+--- a/arch/loongarch/configs/loongson64_defconfig
++++ b/arch/loongarch/configs/loongson64_defconfig
+@@ -1133,7 +1133,6 @@ CONFIG_PRINTK_TIME=y
+ CONFIG_STRIP_ASM_SYMS=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_FS=y
 -# CONFIG_SCHED_DEBUG is not set
- CONFIG_BOOTPARAM=y
- CONFIG_BOOTPARAM_STRING="root=/dev/mtdblock0"
-diff --git a/arch/m68k/configs/stmark2_defconfig b/arch/m68k/configs/stmark2_defconfig
-index f9ecb1dcc060..515d9b208b10 100644
---- a/arch/m68k/configs/stmark2_defconfig
-+++ b/arch/m68k/configs/stmark2_defconfig
-@@ -90,4 +90,3 @@ CONFIG_PRINTK_TIME=y
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_SLUB_DEBUG_ON=y
- CONFIG_PANIC_ON_OOPS=y
--# CONFIG_SCHED_DEBUG is not set
+ CONFIG_SCHEDSTATS=y
+ # CONFIG_DEBUG_PREEMPT is not set
+ # CONFIG_FTRACE is not set
 diff --git a/arch/mips/configs/ath25_defconfig b/arch/mips/configs/ath25_defconfig
 index 1d939ba9738d..30565c67702f 100644
 --- a/arch/mips/configs/ath25_defconfig
@@ -513,10 +502,10 @@ index fa916407bdd4..4d31d6ace4b0 100644
  CONFIG_CMDLINE_BOOL=y
  CONFIG_CMDLINE="earlycon"
 diff --git a/arch/mips/configs/loongson2k_defconfig b/arch/mips/configs/loongson2k_defconfig
-index aec1fd1902eb..7094b098e2e7 100644
+index a5c50b63d478..c93b490923f5 100644
 --- a/arch/mips/configs/loongson2k_defconfig
 +++ b/arch/mips/configs/loongson2k_defconfig
-@@ -354,6 +354,5 @@ CONFIG_PRINTK_TIME=y
+@@ -353,6 +353,5 @@ CONFIG_PRINTK_TIME=y
  CONFIG_FRAME_WARN=1024
  CONFIG_STRIP_ASM_SYMS=y
  CONFIG_MAGIC_SYSRQ=y
@@ -661,10 +650,10 @@ index 8bbf51b38480..04aba704d06a 100644
  CONFIG_XMON_DEFAULT=y
  CONFIG_CRYPTO_MD4=y
 diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
-index 2b71a6dc399e..82ccde74f902 100644
+index 86c74146824a..d97b1089e43e 100644
 --- a/arch/powerpc/configs/skiroot_defconfig
 +++ b/arch/powerpc/configs/skiroot_defconfig
-@@ -293,7 +293,6 @@ CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
+@@ -292,7 +292,6 @@ CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=1
  CONFIG_HARDLOCKUP_DETECTOR=y
  CONFIG_BOOTPARAM_HARDLOCKUP_PANIC=y
  CONFIG_WQ_WATCHDOG=y
