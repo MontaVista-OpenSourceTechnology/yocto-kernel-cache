@@ -7,3 +7,4 @@ patch aufs6-standalone.patch
 patch aufs6-core.patch
 patch aufs-update-inode_update_time-for-v7.0.patch
 patch aufs-rename-is_dot_dotdot-for-v7.0.patch
+patch aufs-convert-S_ATIME-S_VERSION-for-v7.0.patch

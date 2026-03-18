@@ -1,0 +1,45 @@
+From a8a3f44e4f6605e5f8f2ffb8bc07f9d94f42f1dd Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 18 Mar 2026 11:29:53 -0400
+Subject: [PATCH] fs/aufs: convert remaining S_ATIME/S_VERSION to
+ fs_update_time API
+
+The old S_ATIME and S_VERSION flags no longer exist in v7.0. The
+update_time callback now receives an enum fs_update_time type parameter
+instead of bit flags. Convert the remaining references and drop the
+S_VERSION/inode_inc_iversion check which is now handled by the VFS.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/i_op.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index c6347e5cdaf5..cdabfad6d026 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -1428,9 +1428,9 @@ static int aufs_update_time(struct inode *inode, enum fs_update_time type,
+ 		AuWarn1("timestamps for i%lu are ignored "
+ 			"since it is on readonly branch (hi%lu).\n",
+ 			inode->i_ino, h_inode->i_ino);
+-	} else if (flags & ~S_ATIME) {
++	} else if (type != FS_UPD_ATIME) {
+ 		err = -EIO;
+-		AuIOErr1("unexpected flags 0x%x\n", flags);
++		AuIOErr1("unexpected type %d\n", type);
+ 		AuDebugOn(1);
+ 	}
+ 
+@@ -1440,9 +1440,6 @@ static int aufs_update_time(struct inode *inode, enum fs_update_time type,
+ 	si_read_unlock(sb);
+ 	lockdep_on();
+ 
+-	if (!err && (flags & S_VERSION))
+-		inode_inc_iversion(inode);
+-
+ 	return err;
+ }
+ 
+-- 
+2.43.0
+
