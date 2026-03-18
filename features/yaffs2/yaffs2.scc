@@ -37,3 +37,4 @@ patch fs-yaffs2-Update-yaffs_writepages-for-kernel-v6.18-r.patch
 patch fs-yaffs2-Adapt-yaffs_write_begin-to-folio-API.patch
 patch fs-yaffs2-Update-for-kernel-v6.18-rc1-API-changes.patch
 patch yaffs2-adapt-to-inode-i_state-API-change-in-6.19.patch
+patch yaffs2-convert-to-init_fs_context-mount-API-for-v7.0.patch
