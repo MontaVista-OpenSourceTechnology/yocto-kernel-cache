@@ -1,0 +1,28 @@
+From d8a656b8fc6149a641704805b78605ae6598c93e Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 18 Mar 2026 10:33:08 -0400
+Subject: [PATCH] fs/aufs: rename is_dot_dotdot to name_is_dot_dotdot for v7.0
+
+The function was renamed upstream in v7.0.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/dir.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/aufs/dir.c b/fs/aufs/dir.c
+index 9fa63600f0fa..f67ab1f548b9 100644
+--- a/fs/aufs/dir.c
++++ b/fs/aufs/dir.c
+@@ -561,7 +561,7 @@ static bool test_empty_cb(struct dir_context *ctx, const char *__name,
+ 	arg->err = 0;
+ 	au_fset_testempty(arg->flags, CALLED);
+ 	/* smp_mb(); */
+-	if (is_dot_dotdot(name, namelen))
++	if (name_is_dot_dotdot(name, namelen))
+ 		goto out; /* success */
+ 
+ 	if (namelen <= AUFS_WH_PFX_LEN
+-- 
+2.43.0
+
