@@ -1,7 +1,6 @@
 [kernel-options]
 	config = cfg/crypto-obsolete-disable.scc
 	config = cfg/sound.scc
-	config = cfg/sound_x86.scc
 	config = cfg/vmware-guest.scc
 	config = cfg/fs/btrfs.scc
 	config = cfg/fs/ext3.scc
@@ -41,6 +40,8 @@
 	config = cfg/net/bridge.scc
 	config = cfg/net/ipsec6.scc
 	config = cfg/virtio.scc
+	config = cfg/container.scc
+	config = cfg/sound_x86.scc
 	config = cfg/docker.scc
 	config = cfg/debug/kcov/debug-kcov.scc
 	config = cfg/debug/kcsan/debug-kcsan.scc
@@ -89,7 +90,7 @@
 	config = features/ftrace/ftrace.scc
 	config = features/vxlan/vxlan-enable.scc
 	config = features/i915/i915.scc
-	config = features/xe/xe.scc
+	config = features/nfc/nfc-vendor-intel.scc
 	config = features/nfc/nfc-generic.scc
 	config = features/nfc/nfc-vendor.scc
 	config = features/profiling/profiling.scc
@@ -158,12 +159,12 @@
 	config = features/systemtap/systemtap.scc
 	config = features/intel-pmc/intel-pmc-core.scc
 	config = features/tsn/tsn.scc
-	config = features/power/arm.scc
 	config = features/power/bq25890.scc
-	config = features/power/cpu_freq_stat.scc
 	config = features/power/hibernation.scc
 	config = features/power/intel.scc
+	config = features/power/cpu_freq_stat.scc
 	config = features/power/intel_pmic.scc
+	config = features/power/arm.scc
 	config = features/bluetooth/bluetooth-hw.scc
 	config = features/bluetooth/bluetooth-usb.scc
 	config = features/bluetooth/bluetooth-vhci.scc
@@ -215,10 +216,11 @@
 	config = features/iscsi/iscsi.scc
 	config = features/firewire/firewire.scc
 	config = features/sram/sram.scc
+	config = features/xe/xe.scc
 	config = features/iwlwifi/iwlwifi.scc
 	config = features/intel-npu/intel-npu.scc
-	config = features/net/hsr.scc
 	config = features/net/mellanox/mellanox.scc
+	config = features/net/hsr.scc
 	config = features/spi/spi.scc
 	config = features/spi/spidev.scc
 	config = features/kvm/qemu-kvm-enable.scc
@@ -261,6 +263,7 @@
 	config = features/debug/debug-btf.scc
 	config = features/sound/intel-snd-sof.scc
 	config = features/sound/snd_hda_intel.scc
+	config = features/gnss/gnss.scc
 	config = features/optee/optee.scc
 	config = features/zram/zram.scc
 	config = features/pmem/pmem.scc
@@ -288,8 +291,8 @@
 	config = features/ocicontainer/xt-checksum.scc
 	config = features/ocicontainer/ebtables.scc
 	config = features/ocicontainer/cgroup.scc
-	config = features/numa/numa.scc
 	config = features/numa/numa_x86_64.scc
+	config = features/numa/numa.scc
 	config = features/smack/smack.scc
 	config = features/tpm/tpm-1.2.scc
 	config = features/tpm/tpm-common.scc
@@ -304,7 +307,6 @@
 	config = features/ciphers/ciphers.scc
 	config = features/x2apic/x2apic.scc
 	config = features/uio/uio.scc
-	config = features/gnss/gnss.scc
 	config = bsp/xilinx/board-common.scc
 	config = bsp/xilinx/kc705-microblazeel-features/kc705-microblazeel-features.scc
 	config = bsp/xilinx/soc/zynq.scc
