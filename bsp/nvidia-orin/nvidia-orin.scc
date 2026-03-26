@@ -17,7 +17,6 @@ include features/usb/xhci-hcd.scc
 include features/input/input.scc
 include features/optee/optee.scc
 include features/spi/spidev.scc
-include features/i2c/i2cdev.scc
 include features/pwm/pwm.scc
 include features/mtd/mtd.scc
 include features/sram/sram.scc
