@@ -1,0 +1,9 @@
+define KMACHINE nxp-imx9
+define KTYPE preempt-rt
+define KARCH arm64
+
+include ktypes/preempt-rt
+
+include nxp-imx9.scc
+
+kconf hardware nxp-imx9-preempt-rt.cfg
