@@ -78,6 +78,7 @@
 	config = cgl/features/selinux/selinux.scc
 	config = cgl/features/aoe/aoe.scc
 	config = cgl/features/quota/quota.scc
+	config = features/backlight/backlight.scc
 	config = features/pwm/pwm.scc
 	config = features/pwm/intel_pwm.scc
 	config = features/usb-net/usb-net.scc
