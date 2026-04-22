@@ -41,6 +41,7 @@ include features/input/multitouch.scc
 include features/input/touchscreen.scc
 include features/hid/hid.scc
 include features/hid/hid-i2c.scc
+include features/hid/hid-special.scc
 include features/hugetlb/hugetlb.scc
 include features/kvm/qemu-kvm-enable.scc
 include features/leds/leds.scc
