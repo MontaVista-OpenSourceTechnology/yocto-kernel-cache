@@ -20,6 +20,7 @@ include cfg/fs/exfat.scc
 include cfg/fs/flash_fs.scc
 include cfg/kubernetes.scc
 include cfg/net/mdio.scc
+include cfg/paravirt_kvm-arm64.scc
 include cfg/sound.scc
 include cfg/timer/no_hz.scc
 include cfg/timer/rtc.scc
