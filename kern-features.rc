@@ -277,6 +277,7 @@
 	config = features/media/media-usb-webcams.scc
 	config = features/media/media-radio.scc
 	config = features/media/media-platform.scc
+	config = features/media/media-platform-arm64.scc
 	config = features/media/media-dvb-frontends.scc
 	config = features/media/media-tuners.scc
 	config = features/media/media-pci-capture.scc

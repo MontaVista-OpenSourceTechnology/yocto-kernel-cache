@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable Configuration For Platform Media devices on arm64"
+define KFEATURE_COMPATIBILITY all
+
+include media.scc
+include media-platform.scc
+
+kconf hardware media-platform-arm64.cfg
