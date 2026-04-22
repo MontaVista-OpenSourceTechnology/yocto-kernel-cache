@@ -3,3 +3,7 @@ define KFEATURE_DESCRIPTION "Enable touchscreen input devices"
 define KFEATURE_COMPATIBILITY board
 
 kconf hardware touchscreen.cfg
+
+if [ "$KARCH" = "arm64" ]; then
+    kconf hardware touchscreen-arm64.cfg
+fi
