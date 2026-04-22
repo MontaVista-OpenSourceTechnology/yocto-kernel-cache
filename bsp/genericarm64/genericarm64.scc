@@ -42,6 +42,7 @@ include features/hid/hid-i2c.scc
 include features/hugetlb/hugetlb.scc
 include features/kvm/qemu-kvm-enable.scc
 include features/leds/leds.scc
+include features/media/media-platform-arm64.scc
 include features/memory/failure.scc
 include features/mmc/mmc-block.scc
 include features/mmc/mmc-sdhci.scc
