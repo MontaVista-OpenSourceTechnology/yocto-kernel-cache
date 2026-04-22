@@ -26,6 +26,7 @@ include cfg/timer/rtc.scc
 include cfg/usb-mass-storage.scc
 include cfg/virtio.scc
 
+include features/backlight/backlight.scc
 include features/block/integrity.scc
 include features/bluetooth/bluetooth.scc
 include features/bluetooth/bluetooth-hw.scc
