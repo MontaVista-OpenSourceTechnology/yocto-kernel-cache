@@ -122,6 +122,7 @@
 	config = features/nf_tables/nf_tables.scc
 	config = features/nf_tables/nft_test.scc
 	config = features/cgroups/cgroups.scc
+	config = features/cgroups/cgroup_debug.scc
 	config = features/can/m_can.scc
 	config = features/can/can.scc
 	config = features/intel-e1xxxx/intel-e100.scc

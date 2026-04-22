@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+define KFEATURE_DESCRIPTION "Enable cgroup debugging"
+define KFEATURE_COMPATIBILITY all
+
+include features/cgroups/cgroups.scc
+
+kconf non-hardware cgroup_debug.cfg
