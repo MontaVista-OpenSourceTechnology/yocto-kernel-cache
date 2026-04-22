@@ -17,6 +17,7 @@
 	config = cfg/xt-checksum.scc
 	config = cfg/ebtables.scc
 	config = cfg/paravirt_kvm.scc
+	config = cfg/paravirt_kvm-arm64.scc
 	config = cfg/debug-kselftest.scc
 	config = cfg/xen.scc
 	config = cfg/hv-guest.scc
