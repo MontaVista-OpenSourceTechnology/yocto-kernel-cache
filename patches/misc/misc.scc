@@ -15,3 +15,4 @@ patch vt-conmakehash-improve-reproducibility.patch
 patch lib-build_OID_registry-fix-reproducibility-issues.patch
 patch tools-use-basename-to-identify-file-in-gen-mach-type.patch
 patch pnmtologo-use-relocatable-file-name.patch
+patch pinctrl-core-include-gpio-driver.h-for-struct-gpio_c.patch

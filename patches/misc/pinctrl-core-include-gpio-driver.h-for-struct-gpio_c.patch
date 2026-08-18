@@ -1,0 +1,41 @@
+From 5ae544e1312ed5b4ed130d22ff1f44333494c4c3 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 18 Aug 2026 14:34:22 -0400
+Subject: [PATCH] pinctrl: core: include gpio/driver.h for struct gpio_chip
+
+Stable commit f53dd26462b8e ("pinctrl: remove pinctrl_gpio_direction_output()")
+[ upstream 45d2055b0067 ] changed pinctrl_gpio_direction_input/output() to take
+a struct gpio_chip * and dereference gc->base. Those functions are compiled
+unconditionally, but in 6.6 core.c the struct gpio_chip definition is only
+pulled in via "../gpio/gpiolib.h" under #ifdef CONFIG_GPIOLIB. Configurations
+with CONFIG_PINCTRL=y and CONFIG_GPIOLIB=n (e.g. linux-yocto-tiny on x86, built
+with --allnoconfig) therefore fail to build:
+
+  drivers/pinctrl/core.c: error: invalid use of undefined type 'struct gpio_chip'
+
+Include <linux/gpio/driver.h> directly so struct gpio_chip is always a complete
+type, matching how mainline core.c has included it since commit ec963d04ca865
+("pinctrl: provide new GPIO-to-pinctrl glue helpers"), present in 6.12/6.18 but
+not 6.6.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ drivers/pinctrl/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index f8d084f9fbfc0..1112d1abcf8cc 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -28,6 +28,8 @@
+ #include <linux/pinctrl/machine.h>
+ #include <linux/pinctrl/pinctrl.h>
+ 
++#include <linux/gpio/driver.h>
++
+ #ifdef CONFIG_GPIOLIB
+ #include "../gpio/gpiolib.h"
+ #endif
+-- 
+2.43.0
+
