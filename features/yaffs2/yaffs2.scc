@@ -39,3 +39,4 @@ patch fs-yaffs2-Update-for-kernel-v6.18-rc1-API-changes.patch
 patch yaffs2-adapt-to-inode-i_state-API-change-in-6.19.patch
 patch yaffs2-convert-to-init_fs_context-mount-API-for-v7.0.patch
 patch fs-yaffs2-replace-strncpy-with-strscpy_pad-for-v7.2.patch
+patch fs-yaffs2-adapt-yaffs_create-to-create-excl-removal-.patch

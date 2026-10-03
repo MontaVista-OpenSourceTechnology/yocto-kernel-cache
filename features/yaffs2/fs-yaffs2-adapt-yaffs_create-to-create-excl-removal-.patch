@@ -1,0 +1,38 @@
+From 0c4afcbac7ffa7af1ed8e9f81678a7281e8355cf Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 2 Oct 2026 23:55:17 -0400
+Subject: [PATCH] fs/yaffs2: adapt yaffs_create to ->create excl removal for
+ v7.3
+
+Upstream commit b2f1e6301efa ("Remove excl arg to ->create inode_operation")
+drops the trailing bool argument from the ->create inode operation in v7.3.
+yaffs_create still carries the old 5-argument signature, so assigning it to
+.create in yaffs_dir_inode_operations fails with an incompatible pointer
+type.
+
+Add a v7.3 version branch with the 4-argument signature. The dropped
+argument was already an unused dummy, so there is no behavioural change.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 5f10028017d3..92b6b2bf6917 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1488,7 +1488,9 @@ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ }
+ 
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 3, 0))
++static int yaffs_create(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
+ static int yaffs_create(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode,
+ 			bool dummy)
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
+-- 
+2.43.0
+
