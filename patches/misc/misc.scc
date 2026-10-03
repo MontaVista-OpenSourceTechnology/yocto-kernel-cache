@@ -11,3 +11,4 @@ patch iwlwifi-select-MAC80211_LEDS-conditionally.patch
 patch tools-use-basename-to-identify-file-in-gen-mach-type.patch
 patch Makefile-remap-rust-debug-info-paths-scope-all.patch
 patch x86-Kconfig.cpu-pin-CC_HAS_MARCH_NATIVE-off-for-repr.patch
+patch drm-client-Avoid-warning-on-vblank-timeout-during-mo.patch
