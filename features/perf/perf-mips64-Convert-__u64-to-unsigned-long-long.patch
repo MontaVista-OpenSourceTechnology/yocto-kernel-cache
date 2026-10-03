@@ -1,4 +1,4 @@
-From 828a5b3143d6affaaeab571fc3e0756cb9f3f5ef Mon Sep 17 00:00:00 2001
+From ecec42dfe5bf2db45e5bbe64255864e9ab763b4a Mon Sep 17 00:00:00 2001
 From: Yang Shi <yang.shi@windriver.com>
 Date: Fri, 25 Oct 2013 12:17:50 -0700
 Subject: [PATCH] perf: mips64: Convert __u64 to unsigned long long

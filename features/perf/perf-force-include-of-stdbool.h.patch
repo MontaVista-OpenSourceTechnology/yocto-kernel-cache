@@ -1,4 +1,4 @@
-From c0f1e9a5e875f8fea808560739f1be173432b439 Mon Sep 17 00:00:00 2001
+From 5b665fd54092e7f2c6dfb9c76365a917ba2b384e Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Thu, 19 Aug 2010 11:24:45 -0400
 Subject: [PATCH] perf: force include of <stdbool.h>

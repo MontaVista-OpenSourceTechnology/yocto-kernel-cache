@@ -1,4 +1,4 @@
-From e6c6bebed3c2cb4a55e8c523af87b4ac9bfa649a Mon Sep 17 00:00:00 2001
+From 8f7d8de2831526b0b347baf7df4041cbae3a38c0 Mon Sep 17 00:00:00 2001
 From: Tom Zanussi <tom.zanussi@intel.com>
 Date: Tue, 10 Jul 2012 09:37:56 -0500
 Subject: [PATCH] perf: add sgidefs.h to for mips builds

@@ -1,4 +1,4 @@
-From 5f39335c9ed17ea051b730dfc1cc203bd28ca3f8 Mon Sep 17 00:00:00 2001
+From 7e6f68f401c9559dc61be115a072648c8dfbbe2a Mon Sep 17 00:00:00 2001
 From: Tom Zanussi <tom.zanussi@intel.com>
 Date: Tue, 21 Jul 2026 11:35:11 -0400
 Subject: [PATCH] perf: change --root to --prefix for python install
@@ -12,11 +12,11 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 476b8dcaef58..38caef699f4e 100644
+index 29cfd44c427f..25dccca8845f 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -897,7 +897,7 @@ install-bin: install-tools install-tests
- install: install-bin try-install-man
+@@ -908,7 +908,7 @@ install-build-deps:
+ 	$(Q)$(SHELL) $(srctree)/tools/perf/scripts/install-build-deps.sh $(INSTALL_BUILD_DEPS_ARGS)
  
  install-python_ext:
 -	$(PYTHON_WORD) util/setup.py $(python_setup_quiet) install --root='/$(DESTDIR_SQ)'

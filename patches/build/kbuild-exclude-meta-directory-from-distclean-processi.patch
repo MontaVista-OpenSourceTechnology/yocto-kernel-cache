@@ -1,4 +1,4 @@
-From 72e3b04692e2ca99a6761169679e9590c5092039 Mon Sep 17 00:00:00 2001
+From 7d101bc4ef80398ac3c4b263f2b3dccdb8e01b64 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Thu, 19 Jun 2008 11:03:07 -0400
 Subject: [PATCH] kbuild: exclude meta directory from distclean processing
@@ -13,10 +13,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile b/Makefile
-index a082a1d7c7d9b..68497ddbbf2c1 100644
+index 6b8b812f23b9..5ab261c24991 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -643,7 +643,7 @@ export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL KBUILD_RUSTFLAGS_KERNEL
+@@ -662,7 +662,7 @@ export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL KBUILD_RUSTFLAGS_KERNEL
  # Files to ignore in find ... statements
  
  export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
@@ -26,5 +26,5 @@ index a082a1d7c7d9b..68497ddbbf2c1 100644
  
  # ===========================================================================
 -- 
-2.39.2
+2.43.0
 
