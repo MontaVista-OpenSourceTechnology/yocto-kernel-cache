@@ -190,7 +190,6 @@ arch/x86/Kconfig.cpu
 arch/x86/Kconfig.cpufeatures
 arch/x86/Kconfig.debug
 arch/x86/kvm/Kconfig
-arch/x86/ras/Kconfig
 arch/x86/um/Kconfig
 arch/x86/xen/Kconfig
 arch/xtensa/Kconfig
@@ -251,6 +250,7 @@ drivers/clk/actions/Kconfig
 drivers/clk/analogbits/Kconfig
 drivers/clk/aspeed/Kconfig
 drivers/clk/bcm/Kconfig
+drivers/clk/cix/Kconfig
 drivers/clk/eswin/Kconfig
 drivers/clk/hisilicon/Kconfig
 drivers/clk/imgtec/Kconfig
@@ -284,6 +284,7 @@ drivers/clk/tegra/Kconfig
 drivers/clk/tenstorrent/Kconfig
 drivers/clk/thead/Kconfig
 drivers/clk/ti/Kconfig
+drivers/clk/ultrarisc/Kconfig
 drivers/clk/uniphier/Kconfig
 drivers/clk/versatile/Kconfig
 drivers/clk/visconti/Kconfig
@@ -303,6 +304,7 @@ drivers/cpuidle/Kconfig.arm
 drivers/cpuidle/Kconfig.mips
 drivers/cpuidle/Kconfig.powerpc
 drivers/cpuidle/Kconfig.riscv
+drivers/cpuidle/Kconfig.s390
 drivers/crypto/allwinner/Kconfig
 drivers/crypto/amlogic/Kconfig
 drivers/crypto/aspeed/Kconfig
@@ -526,6 +528,7 @@ drivers/iio/common/st_sensors/Kconfig
 drivers/iio/dac/Kconfig
 drivers/iio/dummy/Kconfig
 drivers/iio/filter/Kconfig
+drivers/iio/flow/Kconfig
 drivers/iio/frequency/Kconfig
 drivers/iio/gyro/Kconfig
 drivers/iio/health/Kconfig
@@ -535,6 +538,7 @@ drivers/iio/imu/bmi270/Kconfig
 drivers/iio/imu/bmi323/Kconfig
 drivers/iio/imu/bno055/Kconfig
 drivers/iio/imu/inv_icm42600/Kconfig
+drivers/iio/imu/inv_icm42607/Kconfig
 drivers/iio/imu/inv_icm45600/Kconfig
 drivers/iio/imu/inv_mpu6050/Kconfig
 drivers/iio/imu/Kconfig
@@ -704,6 +708,8 @@ drivers/media/platform/cadence/Kconfig
 drivers/media/platform/chips-media/coda/Kconfig
 drivers/media/platform/chips-media/Kconfig
 drivers/media/platform/chips-media/wave5/Kconfig
+drivers/media/platform/dreamchip/Kconfig
+drivers/media/platform/dreamchip/rppx1/Kconfig
 drivers/media/platform/imagination/Kconfig
 drivers/media/platform/intel/Kconfig
 drivers/media/platform/Kconfig
@@ -826,6 +832,7 @@ drivers/misc/cardreader/Kconfig
 drivers/misc/cb710/Kconfig
 drivers/misc/eeprom/Kconfig
 drivers/misc/genwqe/Kconfig
+drivers/misc/issei/Kconfig
 drivers/misc/Kconfig
 drivers/misc/keba/Kconfig
 drivers/misc/lis3lv02d/Kconfig
@@ -950,6 +957,7 @@ drivers/net/ethernet/i825xx/Kconfig
 drivers/net/ethernet/ibm/emac/Kconfig
 drivers/net/ethernet/ibm/Kconfig
 drivers/net/ethernet/intel/idpf/Kconfig
+drivers/net/ethernet/intel/ixd/Kconfig
 drivers/net/ethernet/intel/Kconfig
 drivers/net/ethernet/intel/libeth/Kconfig
 drivers/net/ethernet/intel/libie/Kconfig
@@ -1023,6 +1031,8 @@ drivers/net/ethernet/wiznet/Kconfig
 drivers/net/ethernet/xilinx/Kconfig
 drivers/net/ethernet/xircom/Kconfig
 drivers/net/ethernet/xscale/Kconfig
+drivers/net/ethernet/zte/dinghai/Kconfig
+drivers/net/ethernet/zte/Kconfig
 drivers/net/fddi/Kconfig
 drivers/net/hyperv/Kconfig
 drivers/net/ieee802154/Kconfig
@@ -1087,6 +1097,10 @@ drivers/net/wireless/mediatek/mt76/mt7925/Kconfig
 drivers/net/wireless/mediatek/mt76/mt7996/Kconfig
 drivers/net/wireless/microchip/Kconfig
 drivers/net/wireless/microchip/wilc1000/Kconfig
+drivers/net/wireless/morsemicro/Kconfig
+drivers/net/wireless/morsemicro/mm81x/Kconfig
+drivers/net/wireless/nxp/Kconfig
+drivers/net/wireless/nxp/nxpwifi/Kconfig
 drivers/net/wireless/purelifi/Kconfig
 drivers/net/wireless/purelifi/plfxlc/Kconfig
 drivers/net/wireless/quantenna/Kconfig
@@ -1348,6 +1362,7 @@ drivers/scsi/elx/Kconfig
 drivers/scsi/esas2r/Kconfig
 drivers/scsi/hisi_sas/Kconfig
 drivers/scsi/Kconfig
+drivers/scsi/leapraid/Kconfig
 drivers/scsi/libsas/Kconfig
 drivers/scsi/megaraid/Kconfig.megaraid
 drivers/scsi/mpi3mr/Kconfig

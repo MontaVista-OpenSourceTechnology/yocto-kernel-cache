@@ -25,6 +25,7 @@ drivers/cpuidle/Kconfig.arm
 drivers/cpuidle/Kconfig.mips
 drivers/cpuidle/Kconfig.powerpc
 drivers/cpuidle/Kconfig.riscv
+drivers/cpuidle/Kconfig.s390
 drivers/dma-buf/heaps/Kconfig
 drivers/dma-buf/Kconfig
 drivers/firewire/Kconfig
@@ -179,14 +180,12 @@ fs/crypto/Kconfig
 fs/dlm/Kconfig
 fs/ecryptfs/Kconfig
 fs/efivarfs/Kconfig
-fs/efs/Kconfig
 fs/erofs/Kconfig
 fs/exfat/Kconfig
 fs/ext2/Kconfig
 fs/ext4/Kconfig
 fs/f2fs/Kconfig
 fs/fat/Kconfig
-fs/freevxfs/Kconfig
 fs/fuse/Kconfig
 fs/gfs2/Kconfig
 fs/hfs/Kconfig
@@ -273,6 +272,7 @@ kernel/trace/rv/monitors/snroc/Kconfig
 kernel/trace/rv/monitors/sssw/Kconfig
 kernel/trace/rv/monitors/stall/Kconfig
 kernel/trace/rv/monitors/sts/Kconfig
+kernel/trace/rv/monitors/wakeup/Kconfig
 kernel/trace/rv/monitors/wip/Kconfig
 kernel/trace/rv/monitors/wwnr/Kconfig
 lib/crc/Kconfig
