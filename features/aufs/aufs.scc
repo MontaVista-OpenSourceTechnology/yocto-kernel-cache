@@ -11,3 +11,5 @@ patch aufs-convert-S_ATIME-S_VERSION-for-v7.0.patch
 patch fs-aufs-replace-fsparam_path-with-fsparam_string-for.patch
 patch fs-aufs-open-code-lock_rename-helpers-for-v7.1.patch
 patch fs-aufs-drop-d_u-prefix-for-anonymized-dentry-alias-.patch
+patch fs-aufs-adapt-aufs_create-to-create-excl-removal-for.patch
+patch fs-aufs-drop-a_ops-swap_rw-for-v7.3.patch

@@ -1,0 +1,33 @@
+From 09808a3f5a3ea34af22697f5f913ec67d80238f0 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 2 Oct 2026 23:55:18 -0400
+Subject: [PATCH 2/2] fs/aufs: drop a_ops swap_rw for v7.3
+
+Upstream commit 22779ae8175a ("mm/swap: move swap_ops into file systems for
+file system-based swap") removes the swap_rw member from struct
+address_space_operations in v7.3. aufs copies it via DySetAop(swap_rw) in
+its dynamic-op setup, which no longer compiles.
+
+Drop the DySetAop(swap_rw) entry; swap_activate/swap_deactivate are
+unchanged.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/dynop.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/aufs/dynop.c b/fs/aufs/dynop.c
+index 1c992fa47a63..2e3481239bc8 100644
+--- a/fs/aufs/dynop.c
++++ b/fs/aufs/dynop.c
+@@ -193,7 +193,6 @@ static void dy_aop(struct au_dykey *key, const void *h_op,
+ 	DySetAop(error_remove_folio);
+ 	DySetAop(swap_activate);
+ 	DySetAop(swap_deactivate);
+-	DySetAop(swap_rw);
+ 
+ 	DyDbgSize(cnt, *h_aop);
+ }
+-- 
+2.43.0
+

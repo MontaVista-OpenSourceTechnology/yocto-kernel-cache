@@ -1,0 +1,56 @@
+From 74d4d1c1586cef43598f2dff28082b6923a0569a Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Fri, 2 Oct 2026 23:55:18 -0400
+Subject: [PATCH 1/2] fs/aufs: adapt aufs_create to ->create excl removal for
+ v7.3
+
+Upstream commit b2f1e6301efa ("Remove excl arg to ->create inode_operation")
+drops the trailing bool argument from ->create in v7.3. Drop want_excl from
+aufs_create's signature and declaration to match.
+
+The flag was vestigial: vfsub_create() ignores it and calls vfs_create(),
+which has not taken an excl argument for several releases, so defaulting the
+simple_arg field to false is a no-op.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/i_op_add.c | 4 ++--
+ fs/aufs/inode.h    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/aufs/i_op_add.c b/fs/aufs/i_op_add.c
+index 69494dfbb697..5570845b0aae 100644
+--- a/fs/aufs/i_op_add.c
++++ b/fs/aufs/i_op_add.c
+@@ -388,13 +388,13 @@ int aufs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+ }
+ 
+ int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
+-		struct dentry *dentry, umode_t mode, bool want_excl)
++		struct dentry *dentry, umode_t mode)
+ {
+ 	struct simple_arg arg = {
+ 		.type = Creat,
+ 		.u.c = {
+ 			.mode		= mode,
+-			.want_excl	= want_excl
++			.want_excl	= false
+ 		}
+ 	};
+ 	return add_simple(dir, dentry, &arg);
+diff --git a/fs/aufs/inode.h b/fs/aufs/inode.h
+index dc4f960955ac..ac0a14af4a71 100644
+--- a/fs/aufs/inode.h
++++ b/fs/aufs/inode.h
+@@ -241,7 +241,7 @@ int aufs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+ int aufs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+ 		 struct dentry *dentry, const char *symname);
+ int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
+-		struct dentry *dentry, umode_t mode, bool want_excl);
++		struct dentry *dentry, umode_t mode);
+ struct vfsub_aopen_args;
+ int au_aopen_or_create(struct inode *dir, struct dentry *dentry,
+ 		       struct vfsub_aopen_args *args);
+-- 
+2.43.0
+
