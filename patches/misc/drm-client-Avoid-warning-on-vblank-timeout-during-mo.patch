@@ -1,0 +1,136 @@
+From d8a1ec518ab72fadb60dbe9eed3775b68975defd Mon Sep 17 00:00:00 2001
+From: Krystian Kaniewski <krystianmkaniewski@gmail.com>
+Date: Wed, 12 Aug 2026 10:05:19 +0000
+Subject: [PATCH] drm/client: Avoid warning on vblank timeout during modeset
+ client waits
+
+[ Backport of a fix posted on LKML; not yet merged upstream. ]
+
+Commit d8c4bddcd8bc ("drm/fb-helper: Synchronize dirty worker with
+vblank") added a vblank wait to the fb-helper damage worker via
+drm_client_modeset_wait_for_vblank(). On virtualized/emulated displays
+(the Yocto QEMU autobuilder) and on PREEMPT_RT, the vblank can fail to
+arrive within the 1s timeout even though this is harmless optional
+throttling, producing a spurious warning:
+
+  WARNING: drivers/gpu/drm/drm_vblank.c:1329 drm_crtc_wait_one_vblank
+  vblank wait timed out on crtc 0
+   drm_crtc_wait_one_vblank
+   drm_client_modeset_wait_for_vblank
+   drm_fb_helper_damage_work
+
+The traceback is picked up by Yocto's parselogs and fails runtime tests.
+
+Add a non-warning drm_crtc_wait_one_vblank_internal() and use it from the
+client modeset wait path, where a timeout is expected and does not
+indicate a kernel bug. The warning is preserved for all other callers of
+drm_crtc_wait_one_vblank(), whose external behaviour is unchanged.
+
+Link: https://lore.kernel.org/all/ad8b0286-7779-4682-9516-da4280f1d846@mail.kernel.org
+Fixes: d8c4bddcd8bc ("drm/fb-helper: Synchronize dirty worker with vblank")
+Signed-off-by: Krystian Kaniewski <krystianmkaniewski@gmail.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ drivers/gpu/drm/drm_client_modeset.c |  2 +-
+ drivers/gpu/drm/drm_internal.h       |  1 +
+ drivers/gpu/drm/drm_vblank.c         | 41 ++++++++++++++++++++++------
+ 3 files changed, 34 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index 0080a8e9556a5..7ff0f24a0f502 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -1328,7 +1328,7 @@ int drm_client_modeset_wait_for_vblank(struct drm_client_dev *client, unsigned i
+ 	 */
+ 	ret = drm_crtc_vblank_get(crtc);
+ 	if (!ret) {
+-		drm_crtc_wait_one_vblank(crtc);
++		drm_crtc_wait_one_vblank_internal(crtc);
+ 		drm_crtc_vblank_put(crtc);
+ 	}
+ 
+diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
+index f893b1e3a596e..6fd33672d206a 100644
+--- a/drivers/gpu/drm/drm_internal.h
++++ b/drivers/gpu/drm/drm_internal.h
+@@ -115,6 +115,7 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe);
+ int drm_vblank_get(struct drm_device *dev, unsigned int pipe);
+ void drm_vblank_put(struct drm_device *dev, unsigned int pipe);
+ u64 drm_vblank_count(struct drm_device *dev, unsigned int pipe);
++int drm_crtc_wait_one_vblank_internal(struct drm_crtc *crtc);
+ 
+ /* drm_vblank_work.c */
+ static inline void drm_vblank_flush_worker(struct drm_vblank_crtc *vblank)
+diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+index f90fb2d13e423..7cae88a3c4102 100644
+--- a/drivers/gpu/drm/drm_vblank.c
++++ b/drivers/gpu/drm/drm_vblank.c
+@@ -1297,6 +1297,35 @@ void drm_crtc_vblank_put(struct drm_crtc *crtc)
+ }
+ EXPORT_SYMBOL(drm_crtc_vblank_put);
+ 
++/**
++ * drm_crtc_wait_one_vblank_internal - wait for one vblank
++ * @crtc: DRM crtc
++ *
++ * This waits for one vblank to pass on @crtc, using the irq driver interfaces.
++ * Every caller must hold a vblank reference across the complete wait. Unlike
++ * drm_crtc_wait_one_vblank() it does not warn on timeout, so it is suitable for
++ * optional throttling waits (e.g. the modeset client damage worker) where a
++ * timeout is acceptable and does not indicate a kernel bug.
++ *
++ * Returns: 0 on success, negative error on failures.
++ */
++int drm_crtc_wait_one_vblank_internal(struct drm_crtc *crtc)
++{
++	struct drm_device *dev = crtc->dev;
++	int pipe = drm_crtc_index(crtc);
++	struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
++	int ret;
++	u64 last;
++
++	last = drm_vblank_count(dev, pipe);
++
++	ret = wait_event_timeout(vblank->queue,
++				 last != drm_vblank_count(dev, pipe),
++				 msecs_to_jiffies(1000));
++
++	return ret ? 0 : -ETIMEDOUT;
++}
++
+ /**
+  * drm_crtc_wait_one_vblank - wait for one vblank
+  * @crtc: DRM crtc
+@@ -1311,26 +1340,20 @@ int drm_crtc_wait_one_vblank(struct drm_crtc *crtc)
+ {
+ 	struct drm_device *dev = crtc->dev;
+ 	int pipe = drm_crtc_index(crtc);
+-	struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
+ 	int ret;
+-	u64 last;
+ 
+ 	ret = drm_vblank_get(dev, pipe);
+ 	if (drm_WARN(dev, ret, "vblank not available on crtc %i, ret=%i\n",
+ 		     pipe, ret))
+ 		return ret;
+ 
+-	last = drm_vblank_count(dev, pipe);
+-
+-	ret = wait_event_timeout(vblank->queue,
+-				 last != drm_vblank_count(dev, pipe),
+-				 msecs_to_jiffies(1000));
++	ret = drm_crtc_wait_one_vblank_internal(crtc);
+ 
+-	drm_WARN(dev, ret == 0, "vblank wait timed out on crtc %i\n", pipe);
++	drm_WARN(dev, ret == -ETIMEDOUT, "vblank wait timed out on crtc %i\n", pipe);
+ 
+ 	drm_vblank_put(dev, pipe);
+ 
+-	return ret ? 0 : -ETIMEDOUT;
++	return ret;
+ }
+ EXPORT_SYMBOL(drm_crtc_wait_one_vblank);
+ 
+-- 
+2.43.0
+
