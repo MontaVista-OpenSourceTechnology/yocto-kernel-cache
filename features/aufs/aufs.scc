@@ -12,3 +12,4 @@ patch fs-aufs-replace-fsparam_path-with-fsparam_string-for.patch
 patch fs-aufs-open-code-lock_rename-helpers-for-v7.1.patch
 patch fs-aufs-drop-d_u-prefix-for-anonymized-dentry-alias-.patch
 patch aufs-refresh-to-upstream-aufs7.2.patch
+patch fs-aufs-preserve-open-code-and-mnt-ns-across-refresh.patch
