@@ -1,0 +1,3741 @@
+From: J. R. Okajima <hooanon05g@gmail.com>
+Subject: [PATCH] aufs: refresh to upstream aufs7.x-rcN
+
+Forward the carried aufs to native upstream aufs-standalone aufs7.x-rcN
+(47cf6325, 20260914): moves to the native 7.x VFS handling (superseding
+the carried v7.0/v7.1 ports and the v7.3 ->create-excl / a_ops swap_rw
+bringup adaptations) and brings in x86 CONFIG_PREEMPT_RT support.
+Applied as a delta on top of the existing aufs patch set + adaptations.
+
+diff --git a/Documentation/filesystems/aufs/README b/Documentation/filesystems/aufs/README
+index 2fd6314f2b3f..bd4220e9a202 100644
+--- a/Documentation/filesystems/aufs/README
++++ b/Documentation/filesystems/aufs/README
+@@ -1,5 +1,5 @@
+ 
+-Aufs6 -- advanced multi layered unification filesystem version 6.x
++Aufs7 -- advanced multi layered unification filesystem version 7.x
+ http://aufs.sf.net
+ Junjiro R. Okajima
+ 
+@@ -15,30 +15,22 @@ approaches to aufs1's.
+ Unionfs was being developed by Professor Erez Zadok at Stony Brook
+ University and his team.
+ 
+-Aufs6 supports linux-v6.0 and later, try aufs6.0 branch in
+-aufs-linux.git or aufs-standalone.git.
+-If you want older kernel version support,
+-- for linux-v5.x series, try aufs-linux.git or aufs-standalone.git
++Aufs7 supports linux-v7.0 and later, If you want older kernel version
++support,
++- for linux-v6.x series, try aufs6.* branches in aufs-linux.git or
++  aufs-standalone.git
++- for linux-v5.x series, try aufs5.* branches in aufs-linux.git or
++  aufs-standalone.git
+ - for linux-v4.x series, try aufs4-linux.git or aufs4-standalone.git
+ - for linux-v3.x series, try aufs3-linux.git or aufs3-standalone.git
+ - for linux-v2.6.16 and later, try aufs2-2.6.git, aufs2-standalone.git
+   or aufs1 from CVS on SourceForge.
+ 
+-Note: the name of aufs5-linux.git and aufs5-standalone.git on github
+-      were changed. Now they are aufs-linux.git and
+-      aufs-standalone.git and they contain aufs5 and later branches.
+-
+ Note: it becomes clear that "Aufs was rejected. Let's give it up."
+       According to Christoph Hellwig, linux rejects all union-type
+       filesystems but UnionMount.
+ <http://marc.info/?l=linux-kernel&m=123938533724484&w=2>
+ 
+-PS. Al Viro seems have a plan to merge aufs as well as overlayfs and
+-    UnionMount, and he pointed out an issue around a directory mutex
+-    lock and aufs addressed it. But it is still unsure whether aufs will
+-    be merged (or any other union solution).
+-<http://marc.info/?l=linux-kernel&m=136312705029295&w=1>
+-
+ 
+ 1. Features
+ ----------------------------------------
+@@ -86,7 +78,7 @@ Also there are many enhancements in aufs, such as:
+ - userspace wrapper for pathconf(3)/fpathconf(3) with _PC_LINK_MAX.
+ - and more...
+ 
+-Currently these features are dropped temporary from aufs6.
++Currently these features are dropped temporary from aufs7.
+ See design/08plan.txt in detail.
+ - nested mount, i.e. aufs as readonly no-whiteout branch of another aufs
+   (robr)
+@@ -104,7 +96,7 @@ Features or just an idea in the future (see also design/*.txt),
+ 
+ 2. Download
+ ----------------------------------------
+-There are three GIT trees for aufs6, aufs-linux.git,
++There are three GIT trees for aufs7, aufs-linux.git,
+ aufs-standalone.git, and aufs-util.git.
+ While the aufs-util is always necessary, you need either of aufs-linux
+ or aufs-standalone.
+@@ -112,7 +104,7 @@ or aufs-standalone.
+ The aufs-linux tree includes the whole linux mainline GIT tree,
+ git://git.kernel.org/.../torvalds/linux.git.
+ And you cannot select CONFIG_AUFS_FS=m for this version, eg. you cannot
+-build aufs6 as an external kernel module.
++build aufs7 as an external kernel module.
+ Several extra patches are not included in this tree. Only
+ aufs-standalone tree contains them. They are described in the later
+ section "Configuration and Compilation."
+@@ -121,46 +113,46 @@ On the other hand, the aufs-standalone tree has only aufs source files
+ and necessary patches, and you can select CONFIG_AUFS_FS=m.
+ But you need to apply all aufs patches manually.
+ 
+-You will find GIT branches whose name is in form of "aufs6.x" where "x"
+-represents the linux kernel version, "linux-6.x". For instance,
+-"aufs6.0" is for linux-6.0. For latest "linux-6.x-rcN", use
+-"aufs6.x-rcN" branch.
++You will find GIT branches whose name is in form of "aufs7.x" where "x"
++represents the linux kernel version, "linux-v7.x". For instance,
++"aufs7.0" is for linux-v7.0. For latest "linux-v7.x-rcN", use
++"aufs7.x-rcN" branch.
+ 
+ o aufs-linux tree
+ $ git clone --reference /your/linux/git/tree \
+ 	git://github.com/sfjro/aufs-linux.git aufs-linux.git
+ - if you don't have linux GIT tree, then remove "--reference ..."
+ $ cd aufs-linux.git
+-$ git checkout origin/aufs6.0
++$ git checkout origin/aufs7.0
+ 
+ Or You may want to directly git-pull aufs into your linux GIT tree, and
+ leave the patch-work to GIT.
+ $ cd /your/linux/git/tree
+ $ git remote add aufs git://github.com/sfjro/aufs-linux.git
+ $ git fetch aufs
+-$ git checkout -b my6.0 v6.0
++$ git checkout -b your7.0 v7.0
+ $ (add your local change...)
+-$ git pull aufs aufs6.0
+-- now you have v6.0 + your_changes + aufs6.0 in you my6.0 branch.
++$ git pull aufs aufs7.0
++- now you have v7.0 + your_changes + aufs7.0 in your7.0 branch.
+ - you may need to solve some conflicts between your_changes and
+-  aufs6.0. in this case, git-rerere is recommended so that you can
+-  solve the similar conflicts automatically when you upgrade to 6.1 or
++  aufs7.0. in this case, git-rerere is recommended so that you can
++  solve the similar conflicts automatically when you upgrade to 7.1 or
+   later in the future.
+ 
+ o aufs-standalone tree
+ $ git clone git://github.com/sfjro/aufs-standalone.git aufs-standalone.git
+ $ cd aufs-standalone.git
+-$ git checkout origin/aufs6.0
++$ git checkout origin/aufs7.0
+ 
+ o aufs-util tree
+ $ git clone git://git.code.sf.net/p/aufs/aufs-util aufs-util.git
+ - note that the public aufs-util.git is on SourceForge instead of
+   GitHUB.
+ $ cd aufs-util.git
+-$ git checkout origin/aufs6.0
++$ git checkout origin/aufs7.0
+ 
+-Note: The 6.x-rcN branch is to be used with `rc' kernel versions ONLY.
+-The minor version number, 'x' in '6.x', of aufs may not always
++Note: The 7.x-rcN branch is to be used with `rc' kernel versions ONLY.
++The minor version number, 'x' in '7.x', of aufs may not always
+ follow the minor version number of the kernel.
+ Because changes in the kernel that cause the use of a new
+ minor version number do not always require changes to aufs-util.
+@@ -172,8 +164,8 @@ In this case, you should git-checkout the branch for the
+ nearest lower number.
+ 
+ For (an unreleased) example:
+-If you are using "linux-6.10" and the "aufs6.10" branch
+-does not exist in aufs-util repository, then "aufs6.9", "aufs6.8"
++If you are using "linux-v7.10" and the "aufs7.10" branch
++does not exist in aufs-util repository, then "aufs7.9", "aufs7.8"
+ or something numerically smaller is the branch for your kernel.
+ 
+ Also you can view all branches by
+@@ -197,22 +189,19 @@ For aufs-linux tree,
+ 	CONFIG_LOCKDEP_BITS=21
+ 	CONFIG_LOCKDEP_CHAINS_BITS=21
+ 	CONFIG_LOCKDEP_STACK_TRACE_BITS=24
+-  Also you will need to expand some constant values in LOCKDEP. Refer
+-  to lockdep-debug.patch in aufs-standalone.git.
+ 
+ For aufs-standalone tree,
+ There are several ways to build.
+ 
+ 1.
+-- apply ./aufs6-kbuild.patch to your kernel source files.
+-- apply ./aufs6-base.patch too.
+-- apply ./aufs6-mmap.patch too.
+-- apply ./aufs6-standalone.patch too, if you have a plan to set
+-  CONFIG_AUFS_FS=m. otherwise you don't need ./aufs-standalone.patch.
++- apply ./aufs7-kbuild.patch to your kernel source files.
++- apply ./aufs7-base.patch too.
++- apply ./aufs7-mmap.patch too.
++- apply ./aufs7-standalone.patch too, if you have a plan to set
++  CONFIG_AUFS_FS=m. otherwise you don't need ./aufs7-standalone.patch.
+ - copy ./{Documentation,fs,include/uapi/linux/aufs_type.h} files to your
+   kernel source tree. Never copy $PWD/include/uapi/linux/Kbuild.
+-- enable CONFIG_AUFS_FS, you can select either
+-  =m or =y.
++- enable CONFIG_AUFS_FS, you can select either =m or =y.
+ - and build your kernel as usual.
+ - install the built kernel.
+ - install the header files too by "make headers_install" to the
+@@ -222,9 +211,9 @@ There are several ways to build.
+ 
+ 2.
+ - module only (CONFIG_AUFS_FS=m).
+-- apply ./aufs6-base.patch to your kernel source files.
+-- apply ./aufs6-mmap.patch too.
+-- apply ./aufs6-standalone.patch too.
++- apply ./aufs7-base.patch to your kernel source files.
++- apply ./aufs7-mmap.patch too.
++- apply ./aufs7-standalone.patch too.
+ - build your kernel, don't forget "make headers_install", and reboot.
+ - edit ./config.mk and set other aufs configurations if necessary.
+   Note: You should read $PWD/fs/aufs/Kconfig carefully which describes
+@@ -240,7 +229,7 @@ There are several ways to build.
+     available in aufs standalone version's Makefile only), or copy
+     $PWD/usr/include/linux/aufs_type.h to /usr/include/linux or wherever
+     you like manually. By default, the target directory is $PWD/usr.
+-- no need to apply aufs6-kbuild.patch, nor copying source files to your
++- no need to apply aufs7-kbuild.patch, nor copying source files to your
+   kernel source tree.
+ 
+ Note: The header file aufs_type.h is necessary to build aufs-util
+@@ -262,7 +251,7 @@ And then,
+ 
+ There several other patches in aufs-standalone.git. They are all
+ optional. When you meet some problems, they will help you.
+-- aufs6-loopback.patch
++- aufs7-loopback.patch
+   Supports a nested loopback mount in a branch-fs. This patch is
+   unnecessary until aufs produces a message like "you may want to try
+   another patch for loopback file".
+diff --git a/Documentation/filesystems/aufs/design/01intro.txt b/Documentation/filesystems/aufs/design/01intro.txt
+index a22a37badff6..06eaf5d5d6cb 100644
+--- a/Documentation/filesystems/aufs/design/01intro.txt
++++ b/Documentation/filesystems/aufs/design/01intro.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Introduction
+ ----------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/02struct.txt b/Documentation/filesystems/aufs/design/02struct.txt
+index e89dc7122496..dc4dcb8bdb66 100644
+--- a/Documentation/filesystems/aufs/design/02struct.txt
++++ b/Documentation/filesystems/aufs/design/02struct.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Basic Aufs Internal Structure
+ 
+diff --git a/Documentation/filesystems/aufs/design/03atomic_open.txt b/Documentation/filesystems/aufs/design/03atomic_open.txt
+index 0401e8923935..eb01cc69d655 100644
+--- a/Documentation/filesystems/aufs/design/03atomic_open.txt
++++ b/Documentation/filesystems/aufs/design/03atomic_open.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2015-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2015-2026 Junjiro R. Okajima
+ 
+ Support for a branch who has its ->atomic_open()
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/03lookup.txt b/Documentation/filesystems/aufs/design/03lookup.txt
+index 35efe7079974..70d4c0bba899 100644
+--- a/Documentation/filesystems/aufs/design/03lookup.txt
++++ b/Documentation/filesystems/aufs/design/03lookup.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Lookup in a Branch
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/04branch.txt b/Documentation/filesystems/aufs/design/04branch.txt
+index 0286ccdfc444..b147bcb92dd4 100644
+--- a/Documentation/filesystems/aufs/design/04branch.txt
++++ b/Documentation/filesystems/aufs/design/04branch.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Branch Manipulation
+ 
+diff --git a/Documentation/filesystems/aufs/design/05wbr_policy.txt b/Documentation/filesystems/aufs/design/05wbr_policy.txt
+index 0eeb6ee21fe2..55fb42829717 100644
+--- a/Documentation/filesystems/aufs/design/05wbr_policy.txt
++++ b/Documentation/filesystems/aufs/design/05wbr_policy.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Policies to Select One among Multiple Writable Branches
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/06dirren.dot b/Documentation/filesystems/aufs/design/06dirren.dot
+index 4e6c7e7c20ef..2d62bb6dd55f 100644
+--- a/Documentation/filesystems/aufs/design/06dirren.dot
++++ b/Documentation/filesystems/aufs/design/06dirren.dot
+@@ -1,18 +1,5 @@
+ 
+ // to view this graph, run dot(1) command in GRAPHVIZ.
+-//
+-// This program is free software; you can redistribute it and/or modify
+-// it under the terms of the GNU General Public License as published by
+-// the Free Software Foundation; either version 2 of the License, or
+-// (at your option) any later version.
+-//
+-// This program is distributed in the hope that it will be useful,
+-// but WITHOUT ANY WARRANTY; without even the implied warranty of
+-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-// GNU General Public License for more details.
+-//
+-// You should have received a copy of the GNU General Public License
+-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ digraph G {
+ node [shape=box];
+diff --git a/Documentation/filesystems/aufs/design/06dirren.txt b/Documentation/filesystems/aufs/design/06dirren.txt
+index 6b305def6bda..7f70fdae6351 100644
+--- a/Documentation/filesystems/aufs/design/06dirren.txt
++++ b/Documentation/filesystems/aufs/design/06dirren.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2017-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2017-2026 Junjiro R. Okajima
+ 
+ Special handling for renaming a directory (DIRREN)
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/06fhsm.txt b/Documentation/filesystems/aufs/design/06fhsm.txt
+index edb1b765b5b9..3051ee3e7e47 100644
+--- a/Documentation/filesystems/aufs/design/06fhsm.txt
++++ b/Documentation/filesystems/aufs/design/06fhsm.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2011-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2011-2026 Junjiro R. Okajima
+ 
+ File-based Hierarchical Storage Management (FHSM)
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/06mmap.txt b/Documentation/filesystems/aufs/design/06mmap.txt
+index bf155e7ceebc..e47a2463198e 100644
+--- a/Documentation/filesystems/aufs/design/06mmap.txt
++++ b/Documentation/filesystems/aufs/design/06mmap.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ mmap(2) -- File Memory Mapping
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/06xattr.txt b/Documentation/filesystems/aufs/design/06xattr.txt
+index 354a8e28ddfb..fe381b332141 100644
+--- a/Documentation/filesystems/aufs/design/06xattr.txt
++++ b/Documentation/filesystems/aufs/design/06xattr.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2014-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2014-2026 Junjiro R. Okajima
+ 
+ Listing XATTR/EA and getting the value
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/07export.txt b/Documentation/filesystems/aufs/design/07export.txt
+index 317f84e096e6..c415d13b5640 100644
+--- a/Documentation/filesystems/aufs/design/07export.txt
++++ b/Documentation/filesystems/aufs/design/07export.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Export Aufs via NFS
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/08shwh.txt b/Documentation/filesystems/aufs/design/08shwh.txt
+index 4c7d0b4ab9d6..0ce1982cade4 100644
+--- a/Documentation/filesystems/aufs/design/08shwh.txt
++++ b/Documentation/filesystems/aufs/design/08shwh.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2005-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2005-2026 Junjiro R. Okajima
+ 
+ Show Whiteout Mode (shwh)
+ ----------------------------------------------------------------------
+diff --git a/Documentation/filesystems/aufs/design/10dynop.txt b/Documentation/filesystems/aufs/design/10dynop.txt
+index 973d8d190b55..6d74c81b59d3 100644
+--- a/Documentation/filesystems/aufs/design/10dynop.txt
++++ b/Documentation/filesystems/aufs/design/10dynop.txt
+@@ -1,18 +1,5 @@
+ 
+-# Copyright (C) 2010-2025 Junjiro R. Okajima
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++# Copyright (C) 2010-2026 Junjiro R. Okajima
+ 
+ Dynamically customizable FS operations
+ ----------------------------------------------------------------------
+diff --git a/fs/aufs/Makefile b/fs/aufs/Makefile
+index cd2994e2079a..bf982c70716f 100644
+--- a/fs/aufs/Makefile
++++ b/fs/aufs/Makefile
+@@ -6,6 +6,8 @@ include ${src}/conf.mk
+ endif
+ -include ${src}/priv_def.mk
+ 
++# For aufs as an outsider, it is still useful to specify CFLAGS from
++# the command-line especially in its module building.
+ ccflags-y += ${EXTRA_CFLAGS}
+ # cf. include/linux/kernel.h
+ # enable pr_debug
+diff --git a/fs/aufs/aufs.h b/fs/aufs/aufs.h
+index 3bee75b16017..3112ab5a7bb4 100644
+--- a/fs/aufs/aufs.h
++++ b/fs/aufs/aufs.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/branch.c b/fs/aufs/branch.c
+index 2c61b267ce70..374287dfac44 100644
+--- a/fs/aufs/branch.c
++++ b/fs/aufs/branch.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -137,7 +124,7 @@ static struct au_branch *au_br_alloc(struct super_block *sb, int new_nbranch,
+ 	int err;
+ 
+ 	err = -ENOMEM;
+-	add_branch = kzalloc(sizeof(*add_branch), GFP_NOFS);
++	add_branch = kzalloc_obj(*add_branch, GFP_NOFS);
+ 	if (unlikely(!add_branch))
+ 		goto out;
+ 	add_branch->br_xino = au_xino_alloc(/*nfile*/1);
+@@ -149,8 +136,7 @@ static struct au_branch *au_br_alloc(struct super_block *sb, int new_nbranch,
+ 
+ 	if (au_br_writable(perm)) {
+ 		/* may be freed separately at changing the branch permission */
+-		add_branch->br_wbr = kzalloc(sizeof(*add_branch->br_wbr),
+-					     GFP_NOFS);
++		add_branch->br_wbr = kzalloc_obj(*add_branch->br_wbr, GFP_NOFS);
+ 		if (unlikely(!add_branch->br_wbr))
+ 			goto out_hnotify;
+ 	}
+@@ -738,7 +724,7 @@ static int test_inode_busy(struct super_block *sb, aufs_bindex_t bindex,
+ 		    && au_h_iptr(i, bindex)
+ 		    && au_test_ibusy(i, btop, bbot)) {
+ 			err = -EBUSY;
+-			AuVerbose(verbose, "busy i%lu\n", i->i_ino);
++			AuVerbose(verbose, "busy i%llu\n", i->i_ino);
+ 			AuDbgInode(i);
+ 		}
+ 		ii_read_unlock(i);
+@@ -1360,8 +1346,7 @@ int au_br_mod(struct super_block *sb, struct au_opt_mod *mod, int remount,
+ 
+ 			if (unlikely(err)) {
+ 				rerr = -ENOMEM;
+-				br->br_wbr = kzalloc(sizeof(*br->br_wbr),
+-						     GFP_NOFS);
++				br->br_wbr = kzalloc_obj(*br->br_wbr, GFP_NOFS);
+ 				if (br->br_wbr)
+ 					rerr = au_wbr_init(br, sb, br->br_perm);
+ 				if (unlikely(rerr)) {
+@@ -1374,7 +1359,7 @@ int au_br_mod(struct super_block *sb, struct au_opt_mod *mod, int remount,
+ 	} else if (au_br_writable(mod->perm)) {
+ 		/* ro --> rw */
+ 		err = -ENOMEM;
+-		br->br_wbr = kzalloc(sizeof(*br->br_wbr), GFP_NOFS);
++		br->br_wbr = kzalloc_obj(*br->br_wbr, GFP_NOFS);
+ 		if (br->br_wbr) {
+ 			err = au_wbr_init(br, sb, mod->perm);
+ 			if (unlikely(err)) {
+diff --git a/fs/aufs/branch.h b/fs/aufs/branch.h
+index d2d43b681011..035e2c100ec6 100644
+--- a/fs/aufs/branch.h
++++ b/fs/aufs/branch.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/cpup.c b/fs/aufs/cpup.c
+index 716c23000ad7..ffdea423a210 100644
+--- a/fs/aufs/cpup.c
++++ b/fs/aufs/cpup.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -582,12 +569,10 @@ static int au_reset_acl(struct path *h_path, umode_t mode)
+ {
+ 	int err;
+ 	struct dentry *h_dentry;
+-	/* struct inode *h_inode; */
+ 	struct mnt_idmap *h_idmap;
+ 
+ 	h_idmap = mnt_idmap(h_path->mnt);
+ 	h_dentry = h_path->dentry;
+-	/* h_inode = d_inode(h_dentry); */
+ 	/* forget_all_cached_acls(h_inode)); */
+ 	err = vfsub_remove_acl(h_idmap, h_dentry, XATTR_NAME_POSIX_ACL_ACCESS);
+ 	AuTraceErr(err);
+@@ -674,7 +659,7 @@ int cpup_entry(struct au_cp_generic *cpg, struct dentry *dst_parent,
+ 	switch (mode & S_IFMT) {
+ 	case S_IFREG:
+ 		isreg = 1;
+-		err = vfsub_create(h_dir, &h_path, 0600, /*want_excl*/true);
++		err = vfsub_create(h_dir, &h_path, 0600);
+ 		if (!err)
+ 			err = au_do_cpup_regular(cpg, h_src_attr);
+ 		break;
+@@ -806,7 +791,7 @@ static int au_cpup_single(struct au_cp_generic *cpg, struct dentry *dst_parent)
+ 	} *a;
+ 
+ 	err = -ENOMEM;
+-	a = kmalloc(sizeof(*a), GFP_NOFS);
++	a = kmalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 	a->h_src_attr.valid = 0;
+@@ -836,7 +821,7 @@ static int au_cpup_single(struct au_cp_generic *cpg, struct dentry *dst_parent)
+ 	if (dst_inode) {
+ 		if (unlikely(!plink)) {
+ 			err = -EIO;
+-			AuIOErr("hi%lu(i%lu) exists on b%d "
++			AuIOErr("hi%llu(i%llu) exists on b%d "
+ 				"but plink is disabled\n",
+ 				dst_inode->i_ino, inode->i_ino, cpg->bdst);
+ 			goto out_mnt_write;
+@@ -851,7 +836,7 @@ static int au_cpup_single(struct au_cp_generic *cpg, struct dentry *dst_parent)
+ 				goto out_mnt_write;
+ 			if (unlikely(d_is_negative(h_src))) {
+ 				err = -EIO;
+-				AuIOErr("i%lu exists on b%d "
++				AuIOErr("i%llu exists on b%d "
+ 					"but not pseudo-linked\n",
+ 					inode->i_ino, cpg->bdst);
+ 				dput(h_src);
+@@ -940,9 +925,9 @@ static int au_cpup_single(struct au_cp_generic *cpg, struct dentry *dst_parent)
+ 	a->h_path.dentry = h_dst;
+ 	rerr = 0;
+ 	if (d_is_positive(h_dst)) {
+-		if (!isdir) {
++		if (!isdir)
+ 			rerr = vfsub_unlink(h_dir, &a->h_path, /*force*/0);
+-		} else
++		else
+ 			rerr = vfsub_rmdir(h_dir, &a->h_path);
+ 	}
+ 	au_dtime_revert(&a->dt);
+@@ -1236,9 +1221,9 @@ static int au_cpup_wh(struct au_cp_generic *cpg, struct file *file)
+ 
+ 	dget(wh_dentry);
+ 	h_path.dentry = wh_dentry;
+-	if (!d_is_dir(wh_dentry)) {
++	if (!d_is_dir(wh_dentry))
+ 		err = vfsub_unlink(d_inode(h_parent), &h_path, /*force*/0);
+-	} else
++	else
+ 		err = vfsub_rmdir(d_inode(h_parent), &h_path);
+ 	if (unlikely(err)) {
+ 		AuIOErr("failed remove copied-up tmp file %pd(%d)\n",
+diff --git a/fs/aufs/cpup.h b/fs/aufs/cpup.h
+index b87aeacea83d..2754e4deebbb 100644
+--- a/fs/aufs/cpup.h
++++ b/fs/aufs/cpup.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dbgaufs.c b/fs/aufs/dbgaufs.c
+index f7a0a1b3bc9c..ae4847000ad1 100644
+--- a/fs/aufs/dbgaufs.c
++++ b/fs/aufs/dbgaufs.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -61,7 +48,7 @@ static int dbgaufs_xi_open(struct file *xf, struct file *file, int do_fcnt,
+ 	struct dbgaufs_arg *p;
+ 
+ 	err = -ENOMEM;
+-	p = kmalloc(sizeof(*p), GFP_NOFS);
++	p = kmalloc_obj(*p, GFP_NOFS);
+ 	if (unlikely(!p))
+ 		goto out;
+ 
+diff --git a/fs/aufs/dbgaufs.h b/fs/aufs/dbgaufs.h
+index 8ee442569c43..9d60d297ad61 100644
+--- a/fs/aufs/dbgaufs.h
++++ b/fs/aufs/dbgaufs.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dcsub.c b/fs/aufs/dcsub.c
+index 2c890b0fe993..dc54228aa3f9 100644
+--- a/fs/aufs/dcsub.c
++++ b/fs/aufs/dcsub.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -39,7 +26,7 @@ int au_dpages_init(struct au_dcsub_pages *dpages, gfp_t gfp)
+ 	void *p;
+ 
+ 	err = -ENOMEM;
+-	dpages->dpages = kmalloc(sizeof(*dpages->dpages), gfp);
++	dpages->dpages = kmalloc_obj(*dpages->dpages, gfp);
+ 	if (unlikely(!dpages->dpages))
+ 		goto out;
+ 
+diff --git a/fs/aufs/dcsub.h b/fs/aufs/dcsub.h
+index 1a07ca0d00e4..445d2bdf5bf3 100644
+--- a/fs/aufs/dcsub.h
++++ b/fs/aufs/dcsub.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/debug.c b/fs/aufs/debug.c
+index 60799089d3ec..6bef4f325eef 100644
+--- a/fs/aufs/debug.c
++++ b/fs/aufs/debug.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -128,7 +115,7 @@ static int do_pri_inode(aufs_bindex_t bindex, struct inode *inode, int hn,
+ 	}
+ 
+ 	ctime = inode_get_ctime(inode);
+-	dpri("i%d: %p, i%lu, %s, cnt %d, nl %u?, 0%o, sz %llu, blk %llu,"
++	dpri("i%d: %p, i%llu, %s, cnt %d, nl %u?, 0%o, sz %llu, blk %llu,"
+ 	     " acl %p, def_acl %p,"
+ 	     " hn %d, ct %lld, np %lu, st 0x%x, f 0x%x, v %llu, g %x%s%.*s\n",
+ 	     bindex, inode,
+@@ -173,7 +160,7 @@ void au_dpri_dalias(struct inode *inode)
+ 	struct dentry *d;
+ 
+ 	spin_lock(&inode->i_lock);
+-	hlist_for_each_entry(d, &inode->i_dentry, d_alias)
++	for_each_alias(d, inode)
+ 		au_dpri_dentry(d);
+ 	spin_unlock(&inode->i_lock);
+ }
+@@ -306,11 +293,11 @@ static int do_pri_br(aufs_bindex_t bindex, struct au_branch *br)
+ 		goto out;
+ 
+ 	dpri("s%d: {perm 0x%x, id %d, wbr %p}, "
+-	     "%s, dev 0x%02x%02x, flags 0x%lx, cnt %d, active %d, "
++	     "%s, dev 0x%02x%02x, flags 0x%lx, active %d, "
+ 	     "xino %d\n",
+ 	     bindex, br->br_perm, br->br_id, br->br_wbr,
+ 	     au_sbtype(sb), MAJOR(sb->s_dev), MINOR(sb->s_dev),
+-	     sb->s_flags, sb->s_count,
++	     sb->s_flags,
+ 	     atomic_read(&sb->s_active),
+ 	     !!au_xino_file(br->br_xino, /*idx*/-1));
+ 	return 0;
+@@ -332,7 +319,7 @@ void au_dpri_sb(struct super_block *sb)
+ 	} *a;
+ 
+ 	/* this function can be called from magic sysrq */
+-	a = kzalloc(sizeof(*a), GFP_ATOMIC);
++	a = kzalloc_obj(*a, GFP_ATOMIC);
+ 	if (unlikely(!a)) {
+ 		dpri("no memory\n");
+ 		return;
+diff --git a/fs/aufs/debug.h b/fs/aufs/debug.h
+index 65001ebe77d1..3f451b2c29b3 100644
+--- a/fs/aufs/debug.h
++++ b/fs/aufs/debug.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dentry.c b/fs/aufs/dentry.c
+index 2ae0e2278d8b..44f88cf1f9b2 100644
+--- a/fs/aufs/dentry.c
++++ b/fs/aufs/dentry.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -86,7 +73,7 @@ au_do_lookup(struct dentry *h_parent, struct dentry *dentry,
+ 		 /* && h_inode */
+ 		 && !au_dr_lkup_h_ino(args, bindex, h_inode->i_ino)) {
+ 		AuDbg("b%d %pd ignored hi%llu\n", bindex, h_dentry,
+-		      (unsigned long long)h_inode->i_ino);
++		      h_inode->i_ino);
+ 		goto out_neg;
+ 	}
+ 
+@@ -317,7 +304,7 @@ int au_lkup_neg(struct dentry *dentry, aufs_bindex_t bindex, int wh)
+ 
+ /* subset of struct inode */
+ struct au_iattr {
+-	unsigned long		i_ino;
++	u64			i_ino;
+ 	/* unsigned int		i_nlink; */
+ 	kuid_t			i_uid;
+ 	kgid_t			i_gid;
+diff --git a/fs/aufs/dentry.h b/fs/aufs/dentry.h
+index bb3e20b9e959..f5bb68fa0aba 100644
+--- a/fs/aufs/dentry.h
++++ b/fs/aufs/dentry.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dinfo.c b/fs/aufs/dinfo.c
+index c99a77cf691a..c293be8cc72e 100644
+--- a/fs/aufs/dinfo.c
++++ b/fs/aufs/dinfo.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -41,7 +28,7 @@ struct au_dinfo *au_di_alloc(struct super_block *sb, unsigned int lsc)
+ 	nbr = au_sbbot(sb) + 1;
+ 	if (nbr <= 0)
+ 		nbr = 1;
+-	dinfo->di_hdentry = kcalloc(nbr, sizeof(*dinfo->di_hdentry), GFP_NOFS);
++	dinfo->di_hdentry = kzalloc_objs(*dinfo->di_hdentry, nbr, GFP_NOFS);
+ 	if (dinfo->di_hdentry) {
+ 		au_rw_write_lock_nested(&dinfo->di_rwsem, lsc);
+ 		dinfo->di_btop = -1;
+@@ -67,6 +54,8 @@ void au_di_free(struct au_dinfo *dinfo)
+ 	struct au_hdentry *p;
+ 	aufs_bindex_t bbot, bindex;
+ 
++	AuDebugOn(dinfo->di_htmpfile);
++
+ 	/* dentry may not be revalidated */
+ 	bindex = dinfo->di_btop;
+ 	if (bindex >= 0) {
+diff --git a/fs/aufs/dir.c b/fs/aufs/dir.c
+index f67ab1f548b9..31bbe07758b1 100644
+--- a/fs/aufs/dir.c
++++ b/fs/aufs/dir.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -186,7 +173,7 @@ void au_dir_ts(struct inode *dir, aufs_bindex_t bindex)
+ 	if (!au_br_writable(perm))
+ 		goto out;
+ 
+-	arg = kmalloc(sizeof(*arg), GFP_NOFS);
++	arg = kmalloc_obj(*arg, GFP_NOFS);
+ 	if (!arg)
+ 		goto out;
+ 
+diff --git a/fs/aufs/dir.h b/fs/aufs/dir.h
+index 775419669f52..17633d897953 100644
+--- a/fs/aufs/dir.h
++++ b/fs/aufs/dir.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dirren.c b/fs/aufs/dirren.c
+index 6cc9e568c365..35883a764679 100644
+--- a/fs/aufs/dirren.c
++++ b/fs/aufs/dirren.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2017-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2017-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -201,7 +188,7 @@ static int au_dr_hino_load(struct au_dr_br *dr, struct file *hinofile)
+ 			goto out_free;
+ 		}
+ 
+-		ent = kmalloc(sizeof(*ent), GFP_NOFS);
++		ent = kmalloc_obj(*ent, GFP_NOFS);
+ 		if (!ent) {
+ 			err = -ENOMEM;
+ 			AuTraceErr(err);
+@@ -290,8 +277,7 @@ static int au_dr_hino(struct super_block *sb, aufs_bindex_t bindex,
+ 			}
+ 			goto out_mnt_write;
+ 		} else if (!d_is_positive(hinopath.dentry)) {
+-			err = vfsub_create(dir, &hinopath, 0600,
+-					   /*want_excl*/false);
++			err = vfsub_create(dir, &hinopath, 0600);
+ 			AuTraceErr(err);
+ 			if (unlikely(err))
+ 				goto out_mnt_write;
+@@ -439,7 +425,7 @@ static int au_brid_str(struct au_dr_brid *brid, struct inode *h_inode,
+ 	AuDebugOn(err > sz);
+ 	p += err;
+ 	sz -= err;
+-	err = snprintf(p, sz, "_%llu", (unsigned long long)h_inode->i_ino);
++	err = snprintf(p, sz, "_%llu", h_inode->i_ino);
+ 	AuDebugOn(err > sz);
+ 	p += err;
+ 	sz -= err;
+@@ -633,7 +619,7 @@ static int au_drinfo_do_store(struct au_drinfo_store *w,
+ 	err = 0;
+ 	h_dir = d_inode(w->h_ppath.dentry);
+ 	if (elm && d_is_negative(infopath.dentry)) {
+-		err = vfsub_create(h_dir, &infopath, 0600, /*want_excl*/true);
++		err = vfsub_create(h_dir, &infopath, 0600);
+ 		AuTraceErr(err);
+ 		if (unlikely(err))
+ 			goto out_dput;
+@@ -894,7 +880,7 @@ int au_dr_rename(struct dentry *src, aufs_bindex_t bindex,
+ 	AuDbg("bindex %d\n", bindex);
+ 
+ 	err = -ENOMEM;
+-	ent = kmalloc(sizeof(*ent), GFP_NOFS);
++	ent = kmalloc_obj(*ent, GFP_NOFS);
+ 	if (unlikely(!ent))
+ 		goto out;
+ 
+@@ -1150,9 +1136,8 @@ int au_dr_lkup(struct au_do_lookup_args *lkup, struct dentry *dentry,
+ 	bbot = au_sbbot(sb);
+ 	w.ninfo = bbot + 1;
+ 	if (!lkup->dirren.drinfo) {
+-		lkup->dirren.drinfo = kcalloc(w.ninfo,
+-					      sizeof(*lkup->dirren.drinfo),
+-					      GFP_NOFS);
++		lkup->dirren.drinfo = kzalloc_objs(*lkup->dirren.drinfo,
++						   w.ninfo, GFP_NOFS);
+ 		if (unlikely(!lkup->dirren.drinfo)) {
+ 			err = -ENOMEM;
+ 			goto out;
+diff --git a/fs/aufs/dirren.h b/fs/aufs/dirren.h
+index 5d45f58cfb61..5f933e95c803 100644
+--- a/fs/aufs/dirren.h
++++ b/fs/aufs/dirren.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2017-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2017-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dynop.c b/fs/aufs/dynop.c
+index 2e3481239bc8..9dc81e74a1ab 100644
+--- a/fs/aufs/dynop.c
++++ b/fs/aufs/dynop.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2010-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2010-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/dynop.h b/fs/aufs/dynop.h
+index 22e1f7acfddb..8cd1c7c5c021 100644
+--- a/fs/aufs/dynop.h
++++ b/fs/aufs/dynop.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2010-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2010-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/export.c b/fs/aufs/export.c
+index ce79187b3039..21251550e1fd 100644
+--- a/fs/aufs/export.c
++++ b/fs/aufs/export.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -242,7 +229,7 @@ static struct dentry *decode_by_ino(struct super_block *sb, ino_t ino,
+ 		dentry = d_find_alias(inode);
+ 	else {
+ 		spin_lock(&inode->i_lock);
+-		hlist_for_each_entry(d, &inode->i_dentry, d_alias) {
++		for_each_alias(d, inode) {
+ 			spin_lock(&d->d_lock);
+ 			if (!au_test_anon(d)
+ 			    && d_inode(d->d_parent)->i_ino == dir_ino) {
+@@ -279,7 +266,8 @@ static struct vfsmount *au_mnt_get(struct super_block *sb)
+ 	const struct path *paths, *p;
+ 	struct path a[8];
+ 
+-	get_fs_root(current->fs, &root);
++	scoped_with_init_fs()
++		get_fs_root(current->fs, &root);
+ 	/*
+ 	 * as long as this sb is alive, this temporary unlock is safe.
+ 	 * Really?
+@@ -304,6 +292,7 @@ static struct vfsmount *au_mnt_get(struct super_block *sb)
+ 	si_noflush_read_lock(sb);
+ 	AuDebugOn(!mnt);
+ 	path_put(&root);
++	AuTraceErrPtr(mnt);
+ 	return mnt;
+ }
+ 
+@@ -446,6 +435,11 @@ static struct dentry *decode_by_dir_ino(struct super_block *sb, ino_t ino,
+ 		path.dentry = dget(sb->s_root);
+ 
+ 	path.mnt = au_mnt_get(sb);
++	if (IS_ERR(path.mnt)) {
++		dentry = ERR_CAST(path.mnt);
++		dput(path.dentry);
++		goto out;
++	}
+ 	dentry = au_lkup_by_ino(&path, ino, nsi_lock);
+ 	path_put(&path);
+ 
+@@ -482,6 +476,10 @@ static char *au_build_path(struct dentry *h_parent, struct path *h_rootpath,
+ 		p += n;
+ 
+ 	path.mnt = au_mnt_get(sb);
++	if (IS_ERR(path.mnt)) {
++		p = ERR_CAST(path.mnt);
++		goto out;
++	}
+ 	path.dentry = sb->s_root;
+ 	p = d_path(&path, buf, len - strlen(p));
+ 	mntput(path.mnt);
+diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
+index d1f763e98097..d207fd7ba29c 100644
+--- a/fs/aufs/f_op.c
++++ b/fs/aufs/f_op.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -566,6 +553,50 @@ static ssize_t aufs_copy_file_range(struct file *src, loff_t src_pos,
+ 
+ /* ---------------------------------------------------------------------- */
+ 
++/* called befrore aufs_mmap() */
++static unsigned long
++aufs_get_unmapped_area(struct file *file, unsigned long addr,
++		       unsigned long len, unsigned long pgoff,
++		       unsigned long flags)
++{
++	unsigned long ul;
++	const unsigned char wlock = !!(file->f_mode & FMODE_WRITE);
++	struct inode *inode;
++	struct super_block *sb;
++	struct file *h_file;
++	unsigned long (*guma)(struct file *file, unsigned long addr,
++			      unsigned long len, unsigned long pgoff,
++			      unsigned long flags);
++
++	inode = file_inode(file);
++	sb = inode->i_sb;
++	lockdep_off();
++	si_read_lock(sb, AuLock_NOPLMW);
++
++	h_file = au_write_pre(file, /*do_ready*/wlock, /*wpre*/NULL);
++	lockdep_on();
++	ul = PTR_ERR(h_file);
++	if (IS_ERR(h_file))
++		goto out;
++
++	guma = h_file->f_op->get_unmapped_area;
++	if (!guma)
++		guma = mm_get_unmapped_area;
++	ul = guma(h_file, addr, len, pgoff, flags);
++
++	lockdep_off();
++	ii_write_unlock(inode);
++	lockdep_on();
++	fput(h_file);
++
++out:
++	lockdep_off();
++	si_read_unlock(sb);
++	lockdep_on();
++	AuTraceErr(ul);
++	return ul;
++}
++
+ /*
+  * The locking order around current->mmap_sem.
+  * - in most and regular cases
+@@ -779,6 +810,7 @@ const struct file_operations aufs_file_fop = {
+ 	.release	= aufs_release_nondir,
+ 	.fsync		= aufs_fsync_nondir,
+ 	.fasync		= aufs_fasync,
++	.get_unmapped_area = aufs_get_unmapped_area,
+ 	.setfl		= aufs_setfl,
+ 	.splice_write	= aufs_splice_write,
+ 	.splice_read	= aufs_splice_read,
+diff --git a/fs/aufs/fhsm.c b/fs/aufs/fhsm.c
+index 4d8810388b8a..690ae40fbe59 100644
+--- a/fs/aufs/fhsm.c
++++ b/fs/aufs/fhsm.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2011-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2011-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -378,7 +365,7 @@ int au_fhsm_br_alloc(struct au_branch *br)
+ 	int err;
+ 
+ 	err = 0;
+-	br->br_fhsm = kmalloc(sizeof(*br->br_fhsm), GFP_NOFS);
++	br->br_fhsm = kmalloc_obj(*br->br_fhsm, GFP_NOFS);
+ 	if (br->br_fhsm)
+ 		au_br_fhsm_init(br->br_fhsm);
+ 	else
+diff --git a/fs/aufs/file.c b/fs/aufs/file.c
+index 63c92bcdf6c2..915e4b3efb41 100644
+--- a/fs/aufs/file.c
++++ b/fs/aufs/file.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -820,8 +807,6 @@ static int aufs_swap_activate(struct swap_info_struct *sis, struct file *file,
+ { AuUnsupport(); return 0; }
+ static void aufs_swap_deactivate(struct file *file)
+ { AuUnsupport(); }
+-static int aufs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
+-{ AuUnsupport(); return 0; }
+ #endif /* CONFIG_AUFS_DEBUG */
+ 
+ const struct address_space_operations aufs_aop = {
+@@ -842,7 +827,6 @@ const struct address_space_operations aufs_aop = {
+ 	.is_dirty_writeback	= aufs_is_dirty_writeback,
+ 	.error_remove_folio	= aufs_error_remove_folio,
+ 	.swap_activate		= aufs_swap_activate,
+-	.swap_deactivate	= aufs_swap_deactivate,
+-	.swap_rw		= aufs_swap_rw
++	.swap_deactivate	= aufs_swap_deactivate
+ #endif /* CONFIG_AUFS_DEBUG */
+ };
+diff --git a/fs/aufs/file.h b/fs/aufs/file.h
+index ad40fe7aa279..2f79a0def6fd 100644
+--- a/fs/aufs/file.h
++++ b/fs/aufs/file.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -323,5 +310,15 @@ static inline void au_vm_file_reset(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_MMU */
+ 
++#ifndef CONFIG_MMU
++static inline unsigned long
++mm_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
++			     unsigned long len, unsigned long pgoff,
++			     unsigned long flags, vm_flags_t vm_flags)
++{
++	return addr;
++}
++#endif
++
+ #endif /* __KERNEL__ */
+ #endif /* __AUFS_FILE_H__ */
+diff --git a/fs/aufs/finfo.c b/fs/aufs/finfo.c
+index 7e4a37f5d3ec..fa109ad5ceb1 100644
+--- a/fs/aufs/finfo.c
++++ b/fs/aufs/finfo.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/fsctx.c b/fs/aufs/fsctx.c
+index 4a1224e5ea16..0905297ead1a 100644
+--- a/fs/aufs/fsctx.c
++++ b/fs/aufs/fsctx.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2022-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2022-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -344,6 +331,8 @@ static void au_fsctx_dump(struct au_opts *opts)
+ 
+ /* ---------------------------------------------------------------------- */
+ 
++#define fsparam_path(NAME, OPT)	__fsparam(fs_param_is_string, NAME, OPT, 0, NULL)
++
+ /*
+  * For conditionally compiled mount options.
+  * Instead of fsparam_flag_no(), use this macro to distinguish ignore_silent.
+@@ -358,24 +347,24 @@ const struct fs_parameter_spec aufs_fsctx_paramspec[] = {
+ 	/* "add=%d:%s" or "ins=%d:%s" */
+ 	fsparam_string("add", Opt_add),
+ 	fsparam_string("ins", Opt_add),
+-	fsparam_string("append", Opt_append),
+-	fsparam_string("prepend", Opt_prepend),
++	fsparam_path("append", Opt_append),
++	fsparam_path("prepend", Opt_prepend),
+ 
+-	fsparam_string("del", Opt_del),
++	fsparam_path("del", Opt_del),
+ 	/* fsparam_s32("idel", Opt_idel), */
+-	fsparam_string("mod", Opt_mod),
++	fsparam_path("mod", Opt_mod),
+ 	/* fsparam_string("imod", Opt_imod), */
+ 
+ 	fsparam_s32("dirwh", Opt_dirwh),
+ 
+-	fsparam_string("xino", Opt_xino),
++	fsparam_path("xino", Opt_xino),
+ 	fsparam_flag("noxino", Opt_noxino),
+ 	fsparam_flag_no("trunc_xino", Opt_trunc_xino),
+ 	/* "trunc_xino_v=%d:%d" */
+ 	/* fsparam_string("trunc_xino_v", Opt_trunc_xino_v), */
+-	fsparam_string("trunc_xino", Opt_trunc_xino_path),
++	fsparam_path("trunc_xino", Opt_trunc_xino_path),
+ 	fsparam_s32("itrunc_xino", Opt_itrunc_xino),
+-	/* fsparam_string("zxino", Opt_zxino), */
++	/* fsparam_path("zxino", Opt_zxino), */
+ 	fsparam_flag_no("trunc_xib", Opt_trunc_xib),
+ 
+ #ifdef CONFIG_PROC_FS
+@@ -1080,9 +1069,10 @@ static int au_fsctx_parse_param(struct fs_context *fc, struct fs_parameter *para
+  */
+ static inline unsigned int is_colonopt(char *str)
+ {
+-#define do_test(name)					\
+-	if (!strncmp(str, name ":", sizeof(name)))	\
+-		return sizeof(name) - 1
++#define do_test(name) do {					\
++		if (!strncmp(str, name ":", sizeof(name)))	\
++			return sizeof(name) - 1;		\
++	} while (0)
+ 	do_test("br");
+ 	do_test("add");
+ 	do_test("ins");
+@@ -1200,7 +1190,7 @@ int aufs_fsctx_init(struct fs_context *fc)
+ 
+ 	/* they will be freed by au_fsctx_free() */
+ 	err = -ENOMEM;
+-	a = kzalloc(sizeof(*a), GFP_NOFS);
++	a = kzalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 	a->bindex = 0;
+diff --git a/fs/aufs/fstype.h b/fs/aufs/fstype.h
+index 1c4d94511cf6..ab8261d99fd0 100644
+--- a/fs/aufs/fstype.h
++++ b/fs/aufs/fstype.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/hbl.h b/fs/aufs/hbl.h
+index 6be35b9ab595..294a1e5788ee 100644
+--- a/fs/aufs/hbl.h
++++ b/fs/aufs/hbl.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2017-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2017-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/hfsnotify.c b/fs/aufs/hfsnotify.c
+index 0984a7d3998f..ad3f4bd20abd 100644
+--- a/fs/aufs/hfsnotify.c
++++ b/fs/aufs/hfsnotify.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -171,7 +158,8 @@ static int au_hfsn_handle_event(struct fsnotify_group *group,
+ 	struct fsnotify_mark *inode_mark;
+ 
+ 	AuDebugOn(!(data_type == FSNOTIFY_EVENT_INODE
+-		    || data_type == FSNOTIFY_EVENT_DENTRY));
++		    || data_type == FSNOTIFY_EVENT_DENTRY
++		    || data_type == FSNOTIFY_EVENT_RENAME));
+ 
+ 	err = 0;
+ 	/* if FS_UNMOUNT happens, there must be another bug */
+@@ -234,7 +222,7 @@ static int au_hfsn_init_br(struct au_branch *br, int perm)
+ 		goto out;
+ 
+ 	err = -ENOMEM;
+-	hfsn = kmalloc(sizeof(*hfsn), GFP_NOFS);
++	hfsn = kmalloc_obj(*hfsn, GFP_NOFS);
+ 	if (unlikely(!hfsn))
+ 		goto out;
+ 
+diff --git a/fs/aufs/hfsplus.c b/fs/aufs/hfsplus.c
+index 1f33dad7a93c..a8da05e2aa30 100644
+--- a/fs/aufs/hfsplus.c
++++ b/fs/aufs/hfsplus.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2010-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2010-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/hnotify.c b/fs/aufs/hnotify.c
+index 3cac6d42a1d4..849a29eda86c 100644
+--- a/fs/aufs/hnotify.c
++++ b/fs/aufs/hnotify.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -207,7 +194,7 @@ static int hn_gen_by_inode(char *name, unsigned int nlen, struct inode *inode,
+ 		AuDebugOn(!name);
+ 		au_iigen_dec(inode);
+ 		spin_lock(&inode->i_lock);
+-		hlist_for_each_entry(d, &inode->i_dentry, d_alias) {
++		for_each_alias(d, inode) {
+ 			spin_lock(&d->d_lock);
+ 			dname = &d->d_name;
+ 			if (dname->len != nlen
+@@ -442,7 +429,7 @@ static void au_hn_bh(void *_args)
+ 	AuDebugOn(!a->h_dir);
+ 	AuDebugOn(!a->dir);
+ 	AuDebugOn(!a->mask);
+-	AuDbg("mask 0x%x, i%lu, hi%lu, hci%lu\n",
++	AuDbg("mask 0x%x, i%llu, hi%llu, hci%llu\n",
+ 	      a->mask, a->dir->i_ino, a->h_dir->i_ino,
+ 	      a->h_child_inode ? a->h_child_inode->i_ino : 0);
+ 
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index cdabfad6d026..eb64cc49452c 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -21,7 +8,6 @@
+  */
+ 
+ #include <linux/device_cgroup.h>
+-#include <linux/filelock.h>
+ #include <linux/fs_stack.h>
+ #include <linux/iversion.h>
+ #include <linux/security.h>
+@@ -58,8 +44,7 @@ static int h_permission(struct inode *h_inode, int mask,
+ 		&& write_mask && !(mask & MAY_READ))
+ 	    || !h_inode->i_op->permission) {
+ 		/* AuLabel(generic_permission); */
+-		/* AuDbg("get_inode_acl %ps\n",
+-		   h_inode->i_op->get_inode_acl); */
++		/* AuDbg("get_acl %ps\n", h_inode->i_op->get_acl); */
+ 		err = generic_permission(h_idmap, h_inode, mask);
+ 		if (err == -EOPNOTSUPP && au_test_nfs_noacl(h_inode))
+ 			err = h_inode->i_op->permission(h_idmap, h_inode,
+@@ -953,7 +938,7 @@ static int aufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		goto out;
+ 
+ 	err = -ENOMEM;
+-	a = kzalloc(sizeof(*a), GFP_NOFS);
++	a = kzalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+@@ -1107,7 +1092,7 @@ ssize_t au_sxattr(struct dentry *dentry, struct inode *inode,
+ 	IMustLock(inode);
+ 
+ 	err = -ENOMEM;
+-	a = kzalloc(sizeof(*a), GFP_NOFS);
++	a = kzalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+@@ -1400,7 +1385,7 @@ static int aufs_update_time(struct inode *inode, enum fs_update_time type,
+ 	struct vfsmount *h_mnt;
+ 
+ 	sb = inode->i_sb;
+-	WARN_ONCE((type == FS_UPD_ATIME) && !IS_NOATIME(inode),
++	WARN_ONCE(type == FS_UPD_ATIME && !IS_NOATIME(inode),
+ 		  "unexpected s_flags 0x%lx", sb->s_flags);
+ 
+ 	/* mmap_sem might be acquired already, cf. aufs_mmap() */
+@@ -1425,12 +1410,12 @@ static int aufs_update_time(struct inode *inode, enum fs_update_time type,
+ 		 * communicating. If we copied it up, then the communication
+ 		 * would be corrupted.
+ 		 */
+-		AuWarn1("timestamps for i%lu are ignored "
+-			"since it is on readonly branch (hi%lu).\n",
++		AuWarn1("timestamps for i%llu are ignored "
++			"since it is on readonly branch (hi%llu).\n",
+ 			inode->i_ino, h_inode->i_ino);
+ 	} else if (type != FS_UPD_ATIME) {
+ 		err = -EIO;
+-		AuIOErr1("unexpected type %d\n", type);
++		AuIOErr1("unexpected flags 0x%x\n", flags);
+ 		AuDebugOn(1);
+ 	}
+ 
+@@ -1440,6 +1425,9 @@ static int aufs_update_time(struct inode *inode, enum fs_update_time type,
+ 	si_read_unlock(sb);
+ 	lockdep_on();
+ 
++	if (!err && IS_I_VERSION(inode))
++		inode_inc_iversion(inode);
++
+ 	return err;
+ }
+ 
+diff --git a/fs/aufs/i_op_add.c b/fs/aufs/i_op_add.c
+index 5570845b0aae..d8494940ec73 100644
+--- a/fs/aufs/i_op_add.c
++++ b/fs/aufs/i_op_add.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -226,7 +213,6 @@ struct simple_arg {
+ 	union {
+ 		struct {
+ 			umode_t			mode;
+-			bool			want_excl;
+ 			bool			try_aopen;
+ 			struct vfsub_aopen_args	*aopen;
+ 		} c;
+@@ -265,7 +251,7 @@ static int add_simple(struct inode *dir, struct dentry *dentry,
+ 	IMustLock(dir);
+ 
+ 	err = -ENOMEM;
+-	a = kmalloc(sizeof(*a), GFP_NOFS);
++	a = kmalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 	a->wr_dir_args.force_btgt = -1;
+@@ -297,8 +283,7 @@ static int add_simple(struct inode *dir, struct dentry *dentry,
+ 	switch (arg->type) {
+ 	case Creat:
+ 		if (!try_aopen || !h_dir->i_op->atomic_open) {
+-			err = vfsub_create(h_dir, &a->h_path, arg->u.c.mode,
+-					   arg->u.c.want_excl);
++			err = vfsub_create(h_dir, &a->h_path, arg->u.c.mode);
+ 			created = !err;
+ 			if (!err && try_aopen)
+ 				aopen->file->f_mode |= FMODE_CREATED;
+@@ -393,8 +378,7 @@ int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
+ 	struct simple_arg arg = {
+ 		.type = Creat,
+ 		.u.c = {
+-			.mode		= mode,
+-			.want_excl	= false
++			.mode		= mode
+ 		}
+ 	};
+ 	return add_simple(dir, dentry, &arg);
+@@ -407,7 +391,6 @@ int au_aopen_or_create(struct inode *dir, struct dentry *dentry,
+ 		.type = Creat,
+ 		.u.c = {
+ 			.mode		= aopen_args->create_mode,
+-			.want_excl	= aopen_args->open_flag & O_EXCL,
+ 			.try_aopen	= true,
+ 			.aopen		= aopen_args
+ 		}
+@@ -443,6 +426,7 @@ int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 		goto out;
+ 
+ 	dentry = file->f_path.dentry;
++	AuDebugOn(au_di(dentry));
+ 	err = au_di_init(dentry);
+ 	if (unlikely(err))
+ 		goto out_si;
+@@ -669,7 +653,7 @@ static int au_cpup_or_link(struct dentry *src_dentry, struct dentry *dentry,
+ 					 &a->h_path);
+ 			dput(h_src_dentry);
+ 		} else {
+-			AuIOErr("no dentry found for hi%lu on b%d\n",
++			AuIOErr("no dentry found for hi%llu on b%d\n",
+ 				h_inode->i_ino, a->bdst);
+ 			err = -EIO;
+ 		}
+@@ -702,7 +686,7 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
+ 	IMustLock(inode);
+ 
+ 	err = -ENOMEM;
+-	a = kzalloc(sizeof(*a), GFP_NOFS);
++	a = kzalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+@@ -859,7 +843,7 @@ struct dentry *aufs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+ 	IMustLock(dir);
+ 
+ 	ret = ERR_PTR(-ENOMEM);
+-	a = kmalloc(sizeof(*a), GFP_NOFS);
++	a = kmalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+diff --git a/fs/aufs/i_op_del.c b/fs/aufs/i_op_del.c
+index a7be15fc48bd..ecdccbedbec3 100644
+--- a/fs/aufs/i_op_del.c
++++ b/fs/aufs/i_op_del.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -325,7 +312,7 @@ int aufs_unlink(struct inode *dir, struct dentry *dentry)
+ 	IMustLock(dir);
+ 
+ 	err = -ENOMEM;
+-	a = kmalloc(sizeof(*a), GFP_NOFS);
++	a = kmalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+@@ -421,7 +408,7 @@ int aufs_rmdir(struct inode *dir, struct dentry *dentry)
+ 	IMustLock(dir);
+ 
+ 	err = -ENOMEM;
+-	a = kmalloc(sizeof(*a), GFP_NOFS);
++	a = kmalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+diff --git a/fs/aufs/i_op_ren.c b/fs/aufs/i_op_ren.c
+index 04a8d1a10c3e..2a7398346196 100644
+--- a/fs/aufs/i_op_ren.c
++++ b/fs/aufs/i_op_ren.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -965,7 +952,7 @@ int aufs_rename(struct mnt_idmap *idmap,
+ 
+ 	err = -ENOMEM;
+ 	BUILD_BUG_ON(sizeof(*a) > PAGE_SIZE);
+-	a = kzalloc(sizeof(*a), GFP_NOFS);
++	a = kzalloc_obj(*a, GFP_NOFS);
+ 	if (unlikely(!a))
+ 		goto out;
+ 
+diff --git a/fs/aufs/iinfo.c b/fs/aufs/iinfo.c
+index 8bcb581a0d41..98e549363fe2 100644
+--- a/fs/aufs/iinfo.c
++++ b/fs/aufs/iinfo.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/inode.c b/fs/aufs/inode.c
+index 73abea7f8992..57d78d793406 100644
+--- a/fs/aufs/inode.c
++++ b/fs/aufs/inode.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -411,7 +398,7 @@ struct inode *au_new_inode(struct dentry *dentry, int must_new)
+ 		}
+ 	}
+ 
+-	AuDbg("i%lu\n", (unsigned long)ino);
++	AuDbg("i%llu\n", (unsigned long long)ino);
+ 	inode = au_iget_locked(sb, ino);
+ 	err = PTR_ERR(inode);
+ 	if (IS_ERR(inode))
+@@ -465,9 +452,9 @@ struct inode *au_new_inode(struct dentry *dentry, int must_new)
+ 
+ 	if (unlikely(au_test_fs_unique_ino(h_inode)))
+ 		AuWarn1("Warning: Un-notified UDBA or repeatedly renamed dir,"
+-			" b%d, %s, %pd, hi%lu, i%lu.\n",
++			" b%d, %s, %pd, hi%llu, i%llu.\n",
+ 			btop, au_sbtype(h_dentry->d_sb), dentry,
+-			(unsigned long)h_ino, (unsigned long)ino);
++			(unsigned long long)h_ino, (unsigned long long)ino);
+ 	ino = 0;
+ 	err = au_xino_write(sb, btop, h_ino, /*ino*/0);
+ 	if (!err) {
+diff --git a/fs/aufs/inode.h b/fs/aufs/inode.h
+index ac0a14af4a71..ef106ab5b775 100644
+--- a/fs/aufs/inode.h
++++ b/fs/aufs/inode.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -25,6 +12,7 @@
+ 
+ #ifdef __KERNEL__
+ 
++#include <linux/fs.h>
+ #include <linux/fsnotify.h>
+ #include "fstype.h"
+ #include "rwsem.h"
+@@ -346,8 +334,8 @@ AuStubVoid(au_xattr_init, struct super_block *sb);
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+ struct posix_acl *aufs_get_inode_acl(struct inode *inode, int type, bool rcu);
+-struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap,
+-			       struct dentry *dentry, int type);
++struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap, struct dentry *dentry,
++			       int type);
+ int aufs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		 struct posix_acl *acl, int type);
+ #endif
+diff --git a/fs/aufs/ioctl.c b/fs/aufs/ioctl.c
+index 0816ca65abb3..387eedcf9463 100644
+--- a/fs/aufs/ioctl.c
++++ b/fs/aufs/ioctl.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/lcnt.h b/fs/aufs/lcnt.h
+index 95df0ac9ba40..d8d10e0d0263 100644
+--- a/fs/aufs/lcnt.h
++++ b/fs/aufs/lcnt.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2018-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/loop.c b/fs/aufs/loop.c
+index 0489fd47e355..98ce2f2e4e56 100644
+--- a/fs/aufs/loop.c
++++ b/fs/aufs/loop.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -30,21 +17,23 @@ static struct file *(*backing_file_func)(struct super_block *sb);
+  */
+ int au_test_loopback_overlap(struct super_block *sb, struct dentry *h_adding)
+ {
++	int ret;
+ 	struct super_block *h_sb;
+ 	struct file *backing_file;
+ 
++	ret = 0;
+ 	if (unlikely(!backing_file_func)) {
+ 		/* don't load "loop" module here */
+ 		backing_file_func = symbol_get(loop_backing_file);
+ 		if (unlikely(!backing_file_func))
+ 			/* "loop" module is not loaded */
+-			return 0;
++			goto out;
+ 	}
+ 
+ 	h_sb = h_adding->d_sb;
+ 	backing_file = backing_file_func(h_sb);
+ 	if (!backing_file)
+-		return 0;
++		goto out;
+ 
+ 	h_adding = backing_file->f_path.dentry;
+ 	/*
+@@ -52,8 +41,15 @@ int au_test_loopback_overlap(struct super_block *sb, struct dentry *h_adding)
+ 	 * in this case aufs cannot detect the loop.
+ 	 */
+ 	if (unlikely(h_adding->d_sb == sb))
+-		return 1;
+-	return !!au_test_subdir(h_adding, sb->s_root);
++		ret = 1;
++	else
++		ret = !!au_test_subdir(h_adding, sb->s_root);
++
++	/* correspond to get_file() in loop_backing_file() */
++	fput(backing_file);
++
++out:
++	return ret;
+ }
+ 
+ /* true if a kernel thread named 'loop[0-9].*' accesses a file */
+diff --git a/fs/aufs/loop.h b/fs/aufs/loop.h
+index 4bf0bfe20cb3..9c732a84586b 100644
+--- a/fs/aufs/loop.h
++++ b/fs/aufs/loop.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/magic.mk b/fs/aufs/magic.mk
+index 7bc9eef3ffec..8c91ba97c4b1 100644
+--- a/fs/aufs/magic.mk
++++ b/fs/aufs/magic.mk
+@@ -1,11 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-# defined in ${srctree}/fs/fuse/inode.c
+-# tristate
+-ifdef CONFIG_FUSE_FS
+-ccflags-y += -DFUSE_SUPER_MAGIC=0x65735546
+-endif
+-
+ # defined in ${srctree}/fs/xfs/xfs_sb.h
+ # tristate
+ ifdef CONFIG_XFS_FS
+diff --git a/fs/aufs/mf.c b/fs/aufs/mf.c
+index ba36e8101f20..00bf20259048 100644
+--- a/fs/aufs/mf.c
++++ b/fs/aufs/mf.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2025 Junjiro R. Okajima
++ * Copyright (C) 2025-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/module.c b/fs/aufs/module.c
+index e474ade45eda..56bb825ee7c6 100644
+--- a/fs/aufs/module.c
++++ b/fs/aufs/module.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/module.h b/fs/aufs/module.h
+index 5b028c2fc2b1..5260e6d34644 100644
+--- a/fs/aufs/module.h
++++ b/fs/aufs/module.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/mvdown.c b/fs/aufs/mvdown.c
+index e83d26793d48..d67e49c9ec41 100644
+--- a/fs/aufs/mvdown.c
++++ b/fs/aufs/mvdown.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2011-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2011-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -631,7 +618,7 @@ int au_mvdown(struct dentry *dentry, struct aufs_mvdown __user *uarg)
+ 		goto out;
+ 
+ 	err = -ENOMEM;
+-	args = kmalloc(sizeof(*args), GFP_NOFS);
++	args = kmalloc_obj(*args, GFP_NOFS);
+ 	if (unlikely(!args))
+ 		goto out;
+ 
+diff --git a/fs/aufs/opts.c b/fs/aufs/opts.c
+index 533c87bda342..6e35c9b3437e 100644
+--- a/fs/aufs/opts.c
++++ b/fs/aufs/opts.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/opts.h b/fs/aufs/opts.h
+index 62cc3c40bd3e..7bc0d39576a0 100644
+--- a/fs/aufs/opts.h
++++ b/fs/aufs/opts.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/plink.c b/fs/aufs/plink.c
+index 4b6bdcf23392..93f78dfd9ffc 100644
+--- a/fs/aufs/plink.c
++++ b/fs/aufs/plink.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -150,7 +137,7 @@ void au_plink_list(struct super_block *sb)
+ 		hbl = sbinfo->si_plink + i;
+ 		hlist_bl_lock(hbl);
+ 		hlist_bl_for_each_entry(icntnr, pos, hbl, plink)
+-			AuDbg("%lu\n", icntnr->vfs_inode.i_ino);
++			AuDbg("%llu\n", icntnr->vfs_inode.i_ino);
+ 		hlist_bl_unlock(hbl);
+ 	}
+ }
+@@ -199,7 +186,7 @@ static int plink_name(char *name, int len, struct inode *inode,
+ 	struct inode *h_inode;
+ 
+ 	h_inode = au_h_iptr(inode, bindex);
+-	rlen = snprintf(name, len, "%lu.%lu", inode->i_ino, h_inode->i_ino);
++	rlen = snprintf(name, len, "%llu.%llu", inode->i_ino, h_inode->i_ino);
+ 	return rlen;
+ }
+ 
+diff --git a/fs/aufs/poll.c b/fs/aufs/poll.c
+index 0b8b948fc238..0cb9b521baf0 100644
+--- a/fs/aufs/poll.c
++++ b/fs/aufs/poll.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/posix_acl.c b/fs/aufs/posix_acl.c
+index 12ed81a59bdf..911bd2d08851 100644
+--- a/fs/aufs/posix_acl.c
++++ b/fs/aufs/posix_acl.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2014-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2014-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -68,8 +55,8 @@ struct posix_acl *aufs_get_inode_acl(struct inode *inode, int type, bool rcu)
+ 	return acl;
+ }
+ 
+-struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap,
+-			       struct dentry *dentry, int type)
++struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap, struct dentry *dentry,
++			       int type)
+ {
+ 	struct posix_acl *acl;
+ 	struct inode *inode;
+diff --git a/fs/aufs/procfs.c b/fs/aufs/procfs.c
+index 2ed220449d02..5633db8dd682 100644
+--- a/fs/aufs/procfs.c
++++ b/fs/aufs/procfs.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2010-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2010-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/rdu.c b/fs/aufs/rdu.c
+index 54ebca84aff2..f216403a43b7 100644
+--- a/fs/aufs/rdu.c
++++ b/fs/aufs/rdu.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/rwsem.h b/fs/aufs/rwsem.h
+index c71f6542fe36..1de2b5fcf1ec 100644
+--- a/fs/aufs/rwsem.h
++++ b/fs/aufs/rwsem.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/sbinfo.c b/fs/aufs/sbinfo.c
+index 9433b21b387e..e4bdf52a45f2 100644
+--- a/fs/aufs/sbinfo.c
++++ b/fs/aufs/sbinfo.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -30,7 +17,6 @@ void au_si_free(struct kobject *kobj)
+ {
+ 	int i;
+ 	struct au_sbinfo *sbinfo;
+-	char *locked __maybe_unused; /* debug only */
+ 
+ 	sbinfo = container_of(kobj, struct au_sbinfo, si_kobj);
+ 	for (i = 0; i < AuPlink_NHASH; i++)
+@@ -62,12 +48,12 @@ struct au_sbinfo *au_si_alloc(struct super_block *sb)
+ 	int err, i;
+ 
+ 	err = -ENOMEM;
+-	sbinfo = kzalloc(sizeof(*sbinfo), GFP_NOFS);
++	sbinfo = kzalloc_obj(*sbinfo, GFP_NOFS);
+ 	if (unlikely(!sbinfo))
+ 		goto out;
+ 
+ 	/* will be reallocated separately */
+-	sbinfo->si_branch = kzalloc(sizeof(*sbinfo->si_branch), GFP_NOFS);
++	sbinfo->si_branch = kzalloc_obj(*sbinfo->si_branch, GFP_NOFS);
+ 	if (unlikely(!sbinfo->si_branch))
+ 		goto out_sbinfo;
+ 
+diff --git a/fs/aufs/super.c b/fs/aufs/super.c
+index 502f6557d2d3..58ce8047f557 100644
+--- a/fs/aufs/super.c
++++ b/fs/aufs/super.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -117,8 +104,7 @@ static int au_show_brs(struct seq_file *seq, struct super_block *sb)
+ 	return err;
+ }
+ 
+-static void au_gen_fmt(char *fmt, int len, const char *pat,
+-		       const char *append)
++static void au_gen_fmt(char *fmt, int len, const char *pat, const char *append)
+ {
+ 	char *p;
+ 
+@@ -684,7 +670,7 @@ static int au_refresh_i(struct super_block *sb, unsigned int do_idop)
+ 			e = au_refresh_hinode_self(inode);
+ 			if (unlikely(e)) {
+ 				au_refresh_iop(inode, /*force_getattr*/1);
+-				pr_err("error %d, i%lu\n", e, inode->i_ino);
++				pr_err("error %d, i%llu\n", e, inode->i_ino);
+ 				if (!err)
+ 					err = e;
+ 				/* go on even if err */
+diff --git a/fs/aufs/super.h b/fs/aufs/super.h
+index 42dcdf4667d2..d261171f784e 100644
+--- a/fs/aufs/super.h
++++ b/fs/aufs/super.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -27,7 +14,6 @@
+ 
+ #include <linux/fs.h>
+ #include <linux/kobject.h>
+-#include "hbl.h"
+ #include "lcnt.h"
+ #include "rwsem.h"
+ #include "wkq.h"
+@@ -390,20 +376,6 @@ static inline void au_sbilist_fin(void)
+ 	AuRwDestroy(&au_sbilist_lock);
+ }
+ 
+-static inline void au_sbilist_add(struct super_block *sb)
+-{
+-	au_rw_write_lock(&au_sbilist_lock);
+-	hlist_add_head(&au_sbi(sb)->si_list, &au_sbilist);
+-	au_rw_write_unlock(&au_sbilist_lock);
+-}
+-
+-static inline void au_sbilist_del(struct super_block *sb)
+-{
+-	au_rw_write_lock(&au_sbilist_lock);
+-	hlist_del(&au_sbi(sb)->si_list);
+-	au_rw_write_unlock(&au_sbilist_lock);
+-}
+-
+ #ifdef CONFIG_AUFS_MAGIC_SYSRQ
+ static inline void au_sbilist_write_lock(void)
+ {
+@@ -424,7 +396,9 @@ static inline void au_sbilist_read_unlock(void)
+ {
+ 	au_rw_read_unlock(&au_sbilist_lock);
+ }
++
+ #define AuGFP_SBILIST	GFP_ATOMIC
++
+ #else
+ AuStubVoid(au_sbilist_write_lock, void)
+ AuStubVoid(au_sbilist_write_unlock, void)
+@@ -432,15 +406,29 @@ AuStubVoid(au_sbilist_read_lock, void)
+ AuStubVoid(au_sbilist_read_unlock, void)
+ #define AuGFP_SBILIST	GFP_NOFS
+ #endif /* CONFIG_AUFS_MAGIC_SYSRQ */
++
++static inline void au_sbilist_add(struct super_block *sb)
++{
++	au_rw_write_lock(&au_sbilist_lock);
++	hlist_add_head(&au_sbi(sb)->si_list, &au_sbilist);
++	au_rw_write_unlock(&au_sbilist_lock);
++}
++
++static inline void au_sbilist_del(struct super_block *sb)
++{
++	au_rw_write_lock(&au_sbilist_lock);
++	hlist_del(&au_sbi(sb)->si_list);
++	au_rw_write_unlock(&au_sbilist_lock);
++}
+ #else
+ AuStubVoid(au_sbilist_init, void)
+ AuStubVoid(au_sbilist_fin, void)
+-AuStubVoid(au_sbilist_add, struct super_block *sb)
+-AuStubVoid(au_sbilist_del, struct super_block *sb)
+ AuStubVoid(au_sbilist_write_lock, void)
+ AuStubVoid(au_sbilist_write_unlock, void)
+ AuStubVoid(au_sbilist_read_lock, void)
+ AuStubVoid(au_sbilist_read_unlock, void)
++AuStubVoid(au_sbilist_add, struct super_block *sb)
++AuStubVoid(au_sbilist_del, struct super_block *sb)
+ #define AuGFP_SBILIST	GFP_NOFS
+ #endif
+ 
+diff --git a/fs/aufs/sysaufs.c b/fs/aufs/sysaufs.c
+index 2c28abfd5854..51fbe0c7371c 100644
+--- a/fs/aufs/sysaufs.c
++++ b/fs/aufs/sysaufs.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/sysaufs.h b/fs/aufs/sysaufs.h
+index 224895b1055b..5ee2e3881dcd 100644
+--- a/fs/aufs/sysaufs.h
++++ b/fs/aufs/sysaufs.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -76,26 +63,28 @@ long au_brinfo_compat_ioctl(struct file *file, unsigned long arg);
+ #endif
+ 
+ void sysaufs_br_init(struct au_branch *br);
++
++AuStubVoid(sysaufs_brs_init, void)
+ void sysaufs_brs_add(struct super_block *sb, aufs_bindex_t bindex);
+ void sysaufs_brs_del(struct super_block *sb, aufs_bindex_t bindex);
+ 
+-#define sysaufs_brs_init()	do {} while (0)
+-
+ #else
+ #define sysaufs_attr_group	NULL
+ 
+ AuStubInt0(sysaufs_si_xi_path, struct seq_file *seq, struct super_block *sb)
+ AuStub(ssize_t, sysaufs_si_show, return 0, struct kobject *kobj,
+        struct attribute *attr, char *buf)
++
+ AuStubVoid(sysaufs_br_init, struct au_branch *br)
+-AuStubVoid(sysaufs_brs_add, struct super_block *sb, aufs_bindex_t bindex)
+-AuStubVoid(sysaufs_brs_del, struct super_block *sb, aufs_bindex_t bindex)
+ 
+ static inline void sysaufs_brs_init(void)
+ {
+ 	sysaufs_brs = 0;
+ }
+ 
++AuStubVoid(sysaufs_brs_add, struct super_block *sb, aufs_bindex_t bindex)
++AuStubVoid(sysaufs_brs_del, struct super_block *sb, aufs_bindex_t bindex)
++
+ #endif /* CONFIG_SYSFS */
+ 
+ #endif /* __KERNEL__ */
+diff --git a/fs/aufs/sysfs.c b/fs/aufs/sysfs.c
+index 9d68cf89e2ef..cbc7d1150bc8 100644
+--- a/fs/aufs/sysfs.c
++++ b/fs/aufs/sysfs.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -121,7 +108,7 @@ static struct seq_file *au_seq(char *p, ssize_t len)
+ {
+ 	struct seq_file *seq;
+ 
+-	seq = kzalloc(sizeof(*seq), GFP_NOFS);
++	seq = kzalloc_obj(*seq, GFP_NOFS);
+ 	if (seq) {
+ 		/* mutex_init(&seq.lock); */
+ 		seq->buf = p;
+diff --git a/fs/aufs/sysrq.c b/fs/aufs/sysrq.c
+index 57fa54ce518a..2051dea1cece 100644
+--- a/fs/aufs/sysrq.c
++++ b/fs/aufs/sysrq.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/vdir.c b/fs/aufs/vdir.c
+index eb6bd9fb179c..4d7bcbc051cf 100644
+--- a/fs/aufs/vdir.c
++++ b/fs/aufs/vdir.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -377,7 +364,7 @@ static struct au_vdir *alloc_vdir(struct file *file)
+ 	if (unlikely(!vdir))
+ 		goto out;
+ 
+-	vdir->vd_deblk = kzalloc(sizeof(*vdir->vd_deblk), GFP_NOFS);
++	vdir->vd_deblk = kzalloc_obj(*vdir->vd_deblk, GFP_NOFS);
+ 	if (unlikely(!vdir->vd_deblk))
+ 		goto out_free;
+ 
+@@ -453,8 +440,8 @@ struct fillvdir_arg {
+ };
+ 
+ static bool fillvdir(struct dir_context *ctx, const char *__name, int nlen,
+-		    loff_t offset __maybe_unused, u64 h_ino,
+-		    unsigned int d_type)
++		     loff_t offset __maybe_unused, u64 h_ino,
++		     unsigned int d_type)
+ {
+ 	struct fillvdir_arg *arg = container_of(ctx, struct fillvdir_arg, ctx);
+ 	char *name = (void *)__name;
+@@ -866,9 +853,9 @@ int au_vdir_fill_de(struct file *file, struct dir_context *ctx)
+ 		deblk_end.deblk += deblk_sz;
+ 		while (!is_deblk_end(&vdir_cache->vd_last.p, &deblk_end)) {
+ 			de = vdir_cache->vd_last.p.de;
+-			AuDbg("%.*s, off%lld, i%lu, dt%d\n",
++			AuDbg("%.*s, off%lld, i%llu, dt%d\n",
+ 			      de->de_str.len, de->de_str.name, ctx->pos,
+-			      (unsigned long)de->de_ino, de->de_type);
++			      (unsigned long long)de->de_ino, de->de_type);
+ 			if (unlikely(!dir_emit(ctx, de->de_str.name,
+ 					       de->de_str.len, de->de_ino,
+ 					       de->de_type))) {
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index 5fdd529601e7..0a09a540bcfa 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -21,9 +8,7 @@
+  */
+ 
+ #include <linux/filelock.h>
+-#include <linux/mnt_namespace.h>
+-#include <linux/nsproxy.h>
+-#include <linux/security.h>
++#include <linux/namei.h>
+ #include <linux/splice.h>
+ #include "aufs.h"
+ 
+@@ -33,7 +18,7 @@ int vfsub_test_mntns(struct vfsmount *mnt, struct super_block *h_sb)
+ 	if (!au_test_fuse(h_sb) || !au_userns)
+ 		return 0;
+ 
+-	return is_current_mnt_ns(mnt) ? 0 : -EACCES;
++	return our_mnt(mnt) ? 0 : -EACCES;
+ }
+ #endif
+ 
+@@ -263,65 +248,13 @@ void vfsub_call_lkup_one(void *args)
+ 
+ /* ---------------------------------------------------------------------- */
+ 
+-/*
+- * v7.1: lock_rename(), lock_rename_child(), unlock_rename() were unexported
+- * (upstream 4d94ce88c77e).  Open-code an equivalent here so aufs can keep
+- * the existing low-level rename-locking semantics without rewriting callers
+- * to the higher-level start_renaming() API.
+- */
+-static struct dentry *au_lock_two_directories(struct dentry *p1,
+-					      struct dentry *p2)
+-{
+-	struct dentry *p = p1, *q = p2, *r;
+-
+-	while ((r = p->d_parent) != p2 && r != p)
+-		p = r;
+-	if (r == p2) {
+-		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT);
+-		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT2);
+-		return p;
+-	}
+-	while ((r = q->d_parent) != p1 && r != p && r != q)
+-		q = r;
+-	if (r == p1) {
+-		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
+-		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT2);
+-		return q;
+-	} else if (likely(r == p)) {
+-		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
+-		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT2);
+-		return NULL;
+-	}
+-	mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
+-	return ERR_PTR(-EXDEV);
+-}
+-
+-static struct dentry *au_lock_rename(struct dentry *p1, struct dentry *p2)
+-{
+-	if (p1 == p2) {
+-		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
+-		return NULL;
+-	}
+-	mutex_lock(&p1->d_sb->s_vfs_rename_mutex);
+-	return au_lock_two_directories(p1, p2);
+-}
+-
+-static void au_unlock_rename(struct dentry *p1, struct dentry *p2)
+-{
+-	inode_unlock(p1->d_inode);
+-	if (p1 != p2) {
+-		inode_unlock(p2->d_inode);
+-		mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
+-	}
+-}
+-
+ struct dentry *vfsub_lock_rename(struct dentry *d1, struct au_hinode *hdir1,
+ 				 struct dentry *d2, struct au_hinode *hdir2)
+ {
+ 	struct dentry *d;
+ 
+ 	lockdep_off();
+-	d = au_lock_rename(d1, d2);
++	d = lock_rename(d1, d2);
+ 	lockdep_on();
+ 	if (IS_ERR(d))
+ 		goto out;
+@@ -340,13 +273,13 @@ void vfsub_unlock_rename(struct dentry *d1, struct au_hinode *hdir1,
+ 	if (hdir1 != hdir2)
+ 		au_hn_resume(hdir2);
+ 	lockdep_off();
+-	au_unlock_rename(d1, d2);
++	unlock_rename(d1, d2);
+ 	lockdep_on();
+ }
+ 
+ /* ---------------------------------------------------------------------- */
+ 
+-int vfsub_create(struct inode *dir, struct path *path, int mode, bool want_excl)
++int vfsub_create(struct inode *dir, struct path *path, int mode)
+ {
+ 	int err, e;
+ 	struct dentry *d;
+@@ -648,12 +581,11 @@ struct dentry *vfsub_mkdir(struct inode *dir, struct path *path, int mode)
+ 	tmp = *path;
+ 	if (ret)
+ 		tmp.dentry = ret;
+-	vfsub_update_h_iattr(&tmp, &did);
++	vfsub_update_h_iattr(&tmp, &did); /*ignore*/
+ 	if (did) {
+ 		tmp.dentry = tmp.dentry->d_parent;
+-		vfsub_update_h_iattr(&tmp, /*did*/NULL);
++		vfsub_update_h_iattr(&tmp, /*did*/NULL); /*ignore*/
+ 	}
+-	/*ignore*/
+ 
+ out:
+ 	return ret;
+diff --git a/fs/aufs/vfsub.h b/fs/aufs/vfsub.h
+index ff138577fe71..b5874fb2818f 100644
+--- a/fs/aufs/vfsub.h
++++ b/fs/aufs/vfsub.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -26,7 +13,6 @@
+ #ifdef __KERNEL__
+ 
+ #include <linux/fs.h>
+-#include <linux/mount.h>
+ #include <linux/posix_acl.h>
+ #include <linux/xattr.h>
+ #include "debug.h"
+@@ -209,8 +195,7 @@ struct dentry *vfsub_lock_rename(struct dentry *d1, struct au_hinode *hdir1,
+ void vfsub_unlock_rename(struct dentry *d1, struct au_hinode *hdir1,
+ 			 struct dentry *d2, struct au_hinode *hdir2);
+ 
+-int vfsub_create(struct inode *dir, struct path *path, int mode,
+-		 bool want_excl);
++int vfsub_create(struct inode *dir, struct path *path, int mode);
+ int vfsub_symlink(struct inode *dir, struct path *path,
+ 		  const char *symname);
+ int vfsub_mknod(struct inode *dir, struct path *path, int mode, dev_t dev);
+@@ -277,10 +262,9 @@ static inline void vfsub_touch_atime(struct vfsmount *h_mnt,
+ #endif
+ 
+ static inline int vfsub_update_time(struct inode *h_inode,
+-				    enum fs_update_time type,
+-				    unsigned int flags)
++				    enum fs_update_time type, int flags)
+ {
+-	return inode_update_time(h_inode, type, flags);
++	return !inode_update_time(h_inode, type, flags);
+ 	/* no vfsub_update_h_iattr() since we don't have struct path */
+ }
+ 
+diff --git a/fs/aufs/wbr_policy.c b/fs/aufs/wbr_policy.c
+index 172371673312..451f8c191da3 100644
+--- a/fs/aufs/wbr_policy.c
++++ b/fs/aufs/wbr_policy.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -419,7 +406,7 @@ static void au_mfs(struct dentry *dentry, struct dentry *parent)
+ 	/* reduce the stack usage */
+ 	struct kstatfs *st;
+ 
+-	st = kmalloc(sizeof(*st), GFP_NOFS);
++	st = kmalloc_obj(*st, GFP_NOFS);
+ 	if (unlikely(!st)) {
+ 		AuWarn1("failed updating mfs(%d), ignored\n", -ENOMEM);
+ 		return;
+diff --git a/fs/aufs/whout.c b/fs/aufs/whout.c
+index c9a36353367e..6d0d23237e57 100644
+--- a/fs/aufs/whout.c
++++ b/fs/aufs/whout.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -274,7 +261,6 @@ static void au_wh_clean(struct inode *h_dir, struct path *whpath,
+ 		err = vfsub_rmdir(h_dir, whpath);
+ 	else
+ 		err = vfsub_unlink(h_dir, whpath, /*force*/0);
+-
+ 	if (unlikely(err))
+ 		pr_warn("failed removing %pd (%d), ignored.\n",
+ 			whpath->dentry, err);
+@@ -414,7 +400,7 @@ static int au_wh_init_rw(struct dentry *h_root, struct au_wbr *wbr,
+ 	h_dir = d_inode(h_root);
+ 	if (d_is_negative(base[AuBrWh_BASE].dentry)) {
+ 		h_path->dentry = base[AuBrWh_BASE].dentry;
+-		err = vfsub_create(h_dir, h_path, WH_MASK, /*want_excl*/true);
++		err = vfsub_create(h_dir, h_path, WH_MASK);
+ 	} else if (d_is_reg(base[AuBrWh_BASE].dentry))
+ 		err = 0;
+ 	else
+@@ -630,7 +616,7 @@ static void kick_reinit_br_wh(struct super_block *sb, struct au_branch *br)
+ 		goto out;
+ 
+ 	/* ignore ENOMEM */
+-	arg = kmalloc(sizeof(*arg), GFP_NOFS);
++	arg = kmalloc_obj(*arg, GFP_NOFS);
+ 	if (arg) {
+ 		/*
+ 		 * dec(wh_running), kfree(arg) and dec(br_count)
+@@ -680,6 +666,7 @@ static int link_or_create_wh(struct super_block *sb, aufs_bindex_t bindex,
+ 	wbr_wh_read_lock(wbr);
+ 	if (wbr->wbr_whbase) {
+ 		err = vfsub_link(wbr->wbr_whbase, h_dir, &h_path);
++		AuTraceErr(err);
+ 		if (!err || err != -EMLINK)
+ 			goto out;
+ 
+@@ -688,7 +675,7 @@ static int link_or_create_wh(struct super_block *sb, aufs_bindex_t bindex,
+ 	}
+ 
+ 	/* return this error in this context */
+-	err = vfsub_create(h_dir, &h_path, WH_MASK, /*want_excl*/true);
++	err = vfsub_create(h_dir, &h_path, WH_MASK);
+ 	if (!err)
+ 		au_fhsm_wrote(sb, bindex, /*force*/0);
+ 
+@@ -906,7 +893,7 @@ struct au_whtmp_rmdir *au_whtmp_rmdir_alloc(struct super_block *sb, gfp_t gfp)
+ 
+ 	SiMustAnyLock(sb);
+ 
+-	whtmp = kzalloc(sizeof(*whtmp), gfp);
++	whtmp = kzalloc_obj(*whtmp, gfp);
+ 	if (unlikely(!whtmp)) {
+ 		whtmp = ERR_PTR(-ENOMEM);
+ 		goto out;
+diff --git a/fs/aufs/whout.h b/fs/aufs/whout.h
+index 591bb376e6cc..5e0af833a222 100644
+--- a/fs/aufs/whout.h
++++ b/fs/aufs/whout.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/wkq.c b/fs/aufs/wkq.c
+index 869f3ff577cd..85d9e0c6ca9c 100644
+--- a/fs/aufs/wkq.c
++++ b/fs/aufs/wkq.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -233,7 +220,7 @@ static void wkq_func(struct work_struct *wk)
+  */
+ static int au_wkq_comp_alloc(struct au_wkinfo *wkinfo, struct completion **comp)
+ {
+-	*comp = kmalloc(sizeof(**comp), GFP_NOFS);
++	*comp = kmalloc_obj(**comp, GFP_NOFS);
+ 	if (*comp) {
+ 		init_completion(*comp);
+ 		wkinfo->comp = *comp;
+@@ -321,7 +308,7 @@ int au_wkq_nowait(au_wkq_func_t func, void *args, struct super_block *sb,
+ 	 * it highly depends upon the implementation of workqueue.
+ 	 */
+ 	err = 0;
+-	wkinfo = kmalloc(sizeof(*wkinfo), GFP_NOFS);
++	wkinfo = kmalloc_obj(*wkinfo, GFP_NOFS);
+ 	if (wkinfo) {
+ 		wkinfo->kobj = &au_sbi(sb)->si_kobj;
+ 		wkinfo->flags = flags & ~AuWkq_WAIT;
+@@ -360,7 +347,7 @@ int __init au_wkq_init(void)
+ 	int err;
+ 
+ 	err = 0;
+-	au_wkq = alloc_workqueue(AUFS_WKQ_NAME, 0, WQ_DFL_ACTIVE);
++	au_wkq = alloc_workqueue(AUFS_WKQ_NAME, WQ_PERCPU, WQ_DFL_ACTIVE);
+ 	if (IS_ERR(au_wkq))
+ 		err = PTR_ERR(au_wkq);
+ 	else if (!au_wkq)
+diff --git a/fs/aufs/wkq.h b/fs/aufs/wkq.h
+index 9132cfeae18c..a605dd38568d 100644
+--- a/fs/aufs/wkq.h
++++ b/fs/aufs/wkq.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/xattr.c b/fs/aufs/xattr.c
+index 261510b24c49..27b5d43ae000 100644
+--- a/fs/aufs/xattr.c
++++ b/fs/aufs/xattr.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2014-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2014-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+diff --git a/fs/aufs/xino.c b/fs/aufs/xino.c
+index 6c8ae5583b79..65957bc6a9c2 100644
+--- a/fs/aufs/xino.c
++++ b/fs/aufs/xino.c
+@@ -1,19 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ /*
+@@ -35,7 +22,6 @@
+  *   + remount with xino/noxino options
+  */
+ 
+-#include <linux/seq_file.h>
+ #include <linux/statfs.h>
+ #include "aufs.h"
+ 
+@@ -463,7 +449,7 @@ int au_xino_trunc(struct super_block *sb, aufs_bindex_t bindex, int idx_begin)
+ 	struct au_xino *xi;
+ 
+ 	err = -ENOMEM;
+-	st = kmalloc(sizeof(*st), GFP_NOFS);
++	st = kmalloc_obj(*st, GFP_NOFS);
+ 	if (unlikely(!st))
+ 		goto out;
+ 
+@@ -575,7 +561,7 @@ static void xino_try_trunc(struct super_block *sb, struct au_branch *br)
+ 		goto out;
+ 
+ 	/* lock and kfree() will be called in trunc_xino() */
+-	args = kmalloc(sizeof(*args), GFP_NOFS);
++	args = kmalloc_obj(*args, GFP_NOFS);
+ 	if (unlikely(!args)) {
+ 		AuErr1("no memory\n");
+ 		goto out;
+@@ -730,7 +716,7 @@ static int au_xino_new_async(struct super_block *sb, struct au_branch *br,
+ 	struct au_xino_do_new_async_args *arg;
+ 
+ 	err = -ENOMEM;
+-	arg = kmalloc(sizeof(*arg), GFP_NOFS);
++	arg = kmalloc_obj(*arg, GFP_NOFS);
+ 	if (unlikely(!arg))
+ 		goto out;
+ 
+@@ -848,7 +834,7 @@ int au_xino_write(struct super_block *sb, aufs_bindex_t bindex, ino_t h_ino,
+ 	file = au_xino_file(xi, calc.idx);
+ 	if (!file) {
+ 		/* store the inum pair into the list */
+-		p = kmalloc(sizeof(*p), GFP_NOFS | __GFP_NOFAIL);
++		p = kmalloc_obj(*p, GFP_NOFS | __GFP_NOFAIL);
+ 		p->h_ino = h_ino;
+ 		p->ino = ino;
+ 		au_hbl_add(&p->node, &xi->xi_writing);
+@@ -1251,11 +1237,11 @@ struct au_xino *au_xino_alloc(unsigned int nfile)
+ {
+ 	struct au_xino *xi;
+ 
+-	xi = kzalloc(sizeof(*xi), GFP_NOFS);
++	xi = kzalloc_obj(*xi, GFP_NOFS);
+ 	if (unlikely(!xi))
+ 		goto out;
+ 	xi->xi_nfile = nfile;
+-	xi->xi_file = kcalloc(nfile, sizeof(*xi->xi_file), GFP_NOFS);
++	xi->xi_file = kzalloc_objs(*xi->xi_file, nfile, GFP_NOFS);
+ 	if (unlikely(!xi->xi_file))
+ 		goto out_free;
+ 
+@@ -1741,7 +1727,7 @@ ino_t au_xino_new_ino(struct super_block *sb)
+ 	pindex = sbinfo->si_xib_last_pindex;
+ 	mutex_unlock(&sbinfo->si_xib_mtx);
+ 	ino = xib_calc_ino(pindex, free_bit);
+-	AuDbg("i%lu\n", (unsigned long)ino);
++	AuDbg("i%llu\n", (unsigned long long)ino);
+ 	return ino;
+ out_err:
+ 	mutex_unlock(&sbinfo->si_xib_mtx);
+diff --git a/include/uapi/linux/aufs_type.h b/include/uapi/linux/aufs_type.h
+index 1b6fe4b8ca5f..d00e7fb0ae2a 100644
+--- a/include/uapi/linux/aufs_type.h
++++ b/include/uapi/linux/aufs_type.h
+@@ -1,19 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+- * Copyright (C) 2005-2025 Junjiro R. Okajima
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ * Copyright (C) 2005-2026 Junjiro R. Okajima
+  */
+ 
+ #ifndef __AUFS_TYPE_H__
+@@ -40,7 +27,7 @@
+ #include <limits.h>
+ #endif /* __KERNEL__ */
+ 
+-#define AUFS_VERSION	"6.x-rcN-20260112"
++#define AUFS_VERSION	"7.x-rcN-20260914"
+ 
+ /* todo? move this to linux-2.6.19/include/magic.h */
+ #define AUFS_SUPER_MAGIC	('a' << 24 | 'u' << 16 | 'f' << 8 | 's')
+@@ -254,13 +241,8 @@ enum {
+ 
+ /* borrowed from linux/include/linux/kernel.h */
+ #ifndef ALIGN
+-#ifdef _GNU_SOURCE
+-#define ALIGN(x, a)		__ALIGN_MASK(x, (typeof(x))(a)-1)
+-#else
+ #define ALIGN(x, a)		(((x) + (a) - 1) & ~((a) - 1))
+ #endif
+-#define __ALIGN_MASK(x, mask)	(((x)+(mask))&~(mask))
+-#endif
+ 
+ /* borrowed from linux/include/linux/compiler-gcc3.h */
+ #ifndef __aligned
