@@ -14,3 +14,4 @@ patch fs-aufs-drop-d_u-prefix-for-anonymized-dentry-alias-.patch
 patch fs-aufs-adapt-aufs_create-to-create-excl-removal-for.patch
 patch fs-aufs-drop-a_ops-swap_rw-for-v7.3.patch
 patch aufs-refresh-to-upstream-aufs7.x-rcN.patch
+patch fs-aufs-preserve-open-code-and-mnt-ns-across-refresh.patch

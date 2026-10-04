@@ -1,0 +1,108 @@
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Subject: [PATCH] fs/aufs: preserve open-coded lock_rename and is_current_mnt_ns across refresh
+
+The aufs7.x-rcN refresh moves fs/aufs to the native upstream snapshot,
+whose vfsub.c calls lock_rename()/unlock_rename() and our_mnt() directly.
+Upstream exposes those through its own base/standalone integration patches
+(un-static + EXPORT_SYMBOL). Our integration differs: we keep lock_rename()
+static and open-code the rename-locking in aufs, and we export a small
+is_current_mnt_ns() wrapper rather than our_mnt(). The refresh delta
+reverted both carried adaptations, breaking the build (implicit
+lock_rename(), unexported our_mnt()).
+
+Re-apply them on top of the refresh: open-code the rename-lock helpers
+(au_lock_rename/au_unlock_rename, mirroring the in-tree v7.3 code) and
+route the FUSE mnt-ns check back through is_current_mnt_ns().
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index 0a09a540bcfa..0093adf5c890 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -18,7 +18,7 @@ int vfsub_test_mntns(struct vfsmount *mnt, struct super_block *h_sb)
+ 	if (!au_test_fuse(h_sb) || !au_userns)
+ 		return 0;
+ 
+-	return our_mnt(mnt) ? 0 : -EACCES;
++	return is_current_mnt_ns(mnt) ? 0 : -EACCES;
+ }
+ #endif
+ 
+@@ -248,13 +248,66 @@ void vfsub_call_lkup_one(void *args)
+ 
+ /* ---------------------------------------------------------------------- */
+ 
++/*
++ * v7.1: lock_rename(), lock_rename_child(), unlock_rename() were unexported
++ * (upstream 4d94ce88c77e).  Open-code an equivalent here so aufs can keep
++ * the existing low-level rename-locking semantics without rewriting callers
++ * to the higher-level start_renaming() API.  Mirrors the in-tree
++ * implementations bit-for-bit; only the symbol names differ.
++ */
++static struct dentry *au_lock_two_directories(struct dentry *p1,
++					      struct dentry *p2)
++{
++	struct dentry *p = p1, *q = p2, *r;
++
++	while ((r = p->d_parent) != p2 && r != p)
++		p = r;
++	if (r == p2) {
++		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT);
++		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT2);
++		return p;
++	}
++	while ((r = q->d_parent) != p1 && r != p && r != q)
++		q = r;
++	if (r == p1) {
++		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
++		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT2);
++		return q;
++	} else if (likely(r == p)) {
++		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
++		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT2);
++		return NULL;
++	}
++	mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
++	return ERR_PTR(-EXDEV);
++}
++
++static struct dentry *au_lock_rename(struct dentry *p1, struct dentry *p2)
++{
++	if (p1 == p2) {
++		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
++		return NULL;
++	}
++	mutex_lock(&p1->d_sb->s_vfs_rename_mutex);
++	return au_lock_two_directories(p1, p2);
++}
++
++static void au_unlock_rename(struct dentry *p1, struct dentry *p2)
++{
++	inode_unlock(p1->d_inode);
++	if (p1 != p2) {
++		inode_unlock(p2->d_inode);
++		mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
++	}
++}
++
+ struct dentry *vfsub_lock_rename(struct dentry *d1, struct au_hinode *hdir1,
+ 				 struct dentry *d2, struct au_hinode *hdir2)
+ {
+ 	struct dentry *d;
+ 
+ 	lockdep_off();
+-	d = lock_rename(d1, d2);
++	d = au_lock_rename(d1, d2);
+ 	lockdep_on();
+ 	if (IS_ERR(d))
+ 		goto out;
+@@ -273,7 +326,7 @@ void vfsub_unlock_rename(struct dentry *d1, struct au_hinode *hdir1,
+ 	if (hdir1 != hdir2)
+ 		au_hn_resume(hdir2);
+ 	lockdep_off();
+-	unlock_rename(d1, d2);
++	au_unlock_rename(d1, d2);
+ 	lockdep_on();
+ }
+ 
