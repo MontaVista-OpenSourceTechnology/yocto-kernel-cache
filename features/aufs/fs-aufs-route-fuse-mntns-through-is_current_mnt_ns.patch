@@ -1,0 +1,30 @@
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Subject: [PATCH] fs/aufs: route the FUSE mnt-ns check back through is_current_mnt_ns
+
+The aufs6.18 refresh moves fs/aufs to the native upstream snapshot, whose
+vfsub.c calls our_mnt() directly. Upstream exports our_mnt() via its own
+standalone integration patch; our integration instead exports a small
+is_current_mnt_ns() wrapper. The refresh delta reverted that carried
+adaptation, leaving an unexported our_mnt() reference that fails to link
+whenever aufs is compiled.
+
+Restore it: route the CONFIG_AUFS_BR_FUSE mnt-ns check back through
+is_current_mnt_ns(). Unlike v7.x, 6.18 does not need the open-coded
+rename-lock helpers -- lock_rename()/unlock_rename() are still exported in
+the 6.18 kernel (the unexport landed upstream in v7.1).
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index f456fe7171891..96df3cc7bb6af 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -33,7 +33,7 @@ int vfsub_test_mntns(struct vfsmount *mnt, struct super_block *h_sb)
+ 	if (!au_test_fuse(h_sb) || !au_userns)
+ 		return 0;
+ 
+-	return our_mnt(mnt) ? 0 : -EACCES;
++	return is_current_mnt_ns(mnt) ? 0 : -EACCES;
+ }
+ #endif
+ 

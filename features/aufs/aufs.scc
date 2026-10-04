@@ -7,3 +7,4 @@ patch aufs6-mmap-patch.patch
 patch aufs6-standalone-patch.patch
 patch aufs6-import-sources-and-docs.patch
 patch aufs-refresh-to-upstream-aufs6.18.patch
+patch fs-aufs-route-fuse-mntns-through-is_current_mnt_ns.patch
