@@ -198,6 +198,7 @@
 	config = features/reproducibility/reproducibility.scc
 	config = features/ramconsole/ramconsole.scc
 	config = features/input/multitouch.scc
+	config = features/input/keyboard-arm64.scc
 	config = features/input/keyboard-gpio.scc
 	config = features/input/touchscreen.scc
 	config = features/input/input.scc
