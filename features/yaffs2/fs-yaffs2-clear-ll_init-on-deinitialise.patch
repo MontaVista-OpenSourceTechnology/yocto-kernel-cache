@@ -1,0 +1,33 @@
+From c85cd0749c6b5a1dbf561ced35a5bc5c480a6a7c Mon Sep 17 00:00:00 2001
+From: Charles Manning <cdhmanning@gmail.com>
+Date: Tue, 27 Oct 2026 12:08:55 -0400
+Subject: [PATCH 4/7] fs/yaffs2: clear ll_init on deinitialise
+
+yaffs_deinitialise() tears the device down and clears is_mounted, but
+leaves ll_init set, so a subsequent initialise can believe the low-level
+layer is still set up. Clear it alongside is_mounted.
+
+Backport of yaffs2 upstream commit 89c47bd92c6accf5955184ba65742b20523b05a9
+("Clear ll_init flag during de-initialisation").
+
+Signed-off-by: Charles Manning <cdhmanning@gmail.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_guts.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/yaffs2/yaffs_guts.c b/fs/yaffs2/yaffs_guts.c
+index c013b934a470d..71bfaeca7a4eb 100644
+--- a/fs/yaffs2/yaffs_guts.c
++++ b/fs/yaffs2/yaffs_guts.c
+@@ -5082,6 +5082,7 @@ void yaffs_deinitialise(struct yaffs_dev *dev)
+ 		kfree(dev->checkpt_block_list);
+ 		dev->checkpt_block_list = NULL;
+ 
++		dev->ll_init = 0;
+ 		dev->is_mounted = 0;
+ 
+ 		yaffs_deinit_nand(dev);
+-- 
+2.43.0
+

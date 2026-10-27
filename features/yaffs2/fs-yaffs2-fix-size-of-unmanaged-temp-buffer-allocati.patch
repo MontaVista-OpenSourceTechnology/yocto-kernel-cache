@@ -1,0 +1,37 @@
+From b7e3242dda1677b04ab1ef45767d78eb5f0df0d0 Mon Sep 17 00:00:00 2001
+From: Charles Manning <cdhmanning@gmail.com>
+Date: Tue, 27 Oct 2026 12:08:41 -0400
+Subject: [PATCH 2/7] fs/yaffs2: fix size of unmanaged temp buffer allocation
+
+When all managed temp buffers are in use, yaffs_get_temp_buffer() falls
+back to kmalloc()ing an unmanaged one sized data_bytes_per_chunk. Callers
+such as yaffs_tags_marshall_read() read total_bytes_per_chunk into a temp
+buffer, which is larger when inband tags are in use, so the fallback
+buffer could be overrun. Allocate total_bytes_per_chunk to match the
+managed buffers.
+
+Backport of yaffs2 upstream commit c5d2e7ac441855236e39fff1f0de899e20676dc9
+("yaffs_guts.c Fix size of allocated buffer for unmanaged buffers").
+
+Signed-off-by: Charles Manning <cdhmanning@gmail.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_guts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/yaffs2/yaffs_guts.c b/fs/yaffs2/yaffs_guts.c
+index 39b22bcd2a6b7..71c912784a317 100644
+--- a/fs/yaffs2/yaffs_guts.c
++++ b/fs/yaffs2/yaffs_guts.c
+@@ -160,7 +160,7 @@ u8 *yaffs_get_temp_buffer(struct yaffs_dev * dev)
+ 	 */
+ 
+ 	dev->unmanaged_buffer_allocs++;
+-	return kmalloc(dev->data_bytes_per_chunk, GFP_NOFS);
++	return kmalloc(dev->param.total_bytes_per_chunk, GFP_NOFS);
+ 
+ }
+ 
+-- 
+2.43.0
+

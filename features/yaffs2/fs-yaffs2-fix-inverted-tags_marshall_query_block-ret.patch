@@ -1,0 +1,40 @@
+From 7ddb557a313f9fe26d5064378cfa3b768b6c6630 Mon Sep 17 00:00:00 2001
+From: Charles Manning <cdhmanning@gmail.com>
+Date: Tue, 27 Oct 2026 12:08:56 -0400
+Subject: [PATCH 5/7] fs/yaffs2: fix inverted tags_marshall_query_block return
+ value
+
+drv_check_bad_fn() returns YAFFS_OK for a good block, but
+yaffs_tags_marshall_query_block() treated 0 (YAFFS_FAIL) as success, so
+it reported YAFFS_FAIL for good blocks and YAFFS_OK for bad ones. No
+caller currently uses the return value (block state is passed back via
+*state), so this is benign, but return the check result directly.
+
+Backport of yaffs2 upstream commit b19d3c9f0ada46534e44308f72d7e70ab1e301ee
+("Begign bug: Fix incorrect return value").
+
+Signed-off-by: Charles Manning <cdhmanning@gmail.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_tagsmarshall.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_tagsmarshall.c b/fs/yaffs2/yaffs_tagsmarshall.c
+index deb77fe61a225..b839f2e98d534 100644
+--- a/fs/yaffs2/yaffs_tagsmarshall.c
++++ b/fs/yaffs2/yaffs_tagsmarshall.c
+@@ -177,10 +177,7 @@ static int yaffs_tags_marshall_query_block(struct yaffs_dev *dev, int block_no,
+ 		"block query returns  seq %d state %d",
+ 		*seq_number, *state);
+ 
+-	if (retval == 0)
+-		return YAFFS_OK;
+-	else
+-		return YAFFS_FAIL;
++	return retval;
+ }
+ 
+ static int yaffs_tags_marshall_mark_bad(struct yaffs_dev *dev, int block_no)
+-- 
+2.43.0
+

@@ -1,0 +1,112 @@
+From 38b3c8822c8a9378a8d369ab0d94d4ccd4beb44f Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 27 Oct 2026 12:09:34 -0400
+Subject: [PATCH 6/7] fs/yaffs2: restore remount handling via fs_context
+ reconfigure
+
+The v7.0 conversion to the init_fs_context mount API removed
+.remount_fs from yaffs_super_ops but did not add a .reconfigure
+fs_context operation. As a result a remount (e.g. "mount -o remount,rw")
+never reached yaffs: dev->read_only kept its mount-time value, and
+yaffs_remount_fs() was left as an unused static function.
+
+Add yaffs_reconfigure() to yaffs_context_ops so a remount updates
+dev->read_only from fc->sb_flags, forcing SB_RDONLY when the MTD is not
+writeable (as the old remount_fs did), and drop the dead
+yaffs_remount_fs(). Use the already-attached MTD via yaffs_dev_to_mtd()
+instead of re-looking it up with get_mtd_device(), which leaked a
+reference on every remount.
+
+Fixes: 3fa3b91cc457 ("fs/yaffs2: convert to init_fs_context mount API for v7.0")
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 64 ++++++++++++++++---------------------------
+ 1 file changed, 24 insertions(+), 40 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 2fbfca023d784..ae88f142ece36 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -2771,46 +2771,6 @@ static int yaffs_sync_fs(struct super_block *sb)
+ 	return 0;
+ }
+ 
+-/* the function only is used to change dev->read_only when this file system
+- * is remounted.
+- */
+-static int yaffs_remount_fs(struct super_block *sb, int *flags, char *data)
+-{
+-	int read_only = 0;
+-	struct mtd_info *mtd;
+-	struct yaffs_dev *dev = 0;
+-
+-	/* Get the device */
+-	mtd = get_mtd_device(NULL, MINOR(sb->s_dev));
+-	if (!mtd) {
+-		yaffs_trace(YAFFS_TRACE_ALWAYS,
+-			"MTD device #%u doesn't appear to exist",
+-			MINOR(sb->s_dev));
+-		return 1;
+-	}
+-
+-	/* Check it's NAND */
+-	if (mtd->type != MTD_NANDFLASH) {
+-		yaffs_trace(YAFFS_TRACE_ALWAYS,
+-			"MTD device is not NAND it's type %d",
+-			mtd->type);
+-		return 1;
+-	}
+-
+-	read_only = ((*flags & MS_RDONLY) != 0);
+-	if (!read_only && !(mtd->flags & MTD_WRITEABLE)) {
+-		read_only = 1;
+-		printk(KERN_INFO
+-			"yaffs: mtd is read only, setting superblock read only");
+-		*flags |= MS_RDONLY;
+-	}
+-
+-	dev = sb->s_fs_info;
+-	dev->read_only = read_only;
+-
+-	return 0;
+-}
+-
+ static const struct super_operations yaffs_super_ops = {
+ 	.statfs = yaffs_statfs,
+ 
+@@ -3235,8 +3195,32 @@ static int yaffs_get_tree(struct fs_context *fc)
+ 	return get_tree_bdev(fc, yaffs_fill_super_callback);
+ }
+ 
++/*
++ * Remount: only dev->read_only needs updating. The superblock read-only
++ * flag itself is handled by the VFS from fc->sb_flags.
++ */
++static int yaffs_reconfigure(struct fs_context *fc)
++{
++	struct super_block *sb = fc->root->d_sb;
++	struct yaffs_dev *dev = sb->s_fs_info;
++	struct mtd_info *mtd = yaffs_dev_to_mtd(dev);
++	int read_only = (fc->sb_flags & SB_RDONLY) != 0;
++
++	if (!read_only && !(mtd->flags & MTD_WRITEABLE)) {
++		read_only = 1;
++		printk(KERN_INFO
++			"yaffs: mtd is read only, setting superblock read only\n");
++		fc->sb_flags |= SB_RDONLY;
++	}
++
++	dev->read_only = read_only;
++
++	return 0;
++}
++
+ static const struct fs_context_operations yaffs_context_ops = {
+ 	.get_tree	= yaffs_get_tree,
++	.reconfigure	= yaffs_reconfigure,
+ };
+ 
+ static int yaffs_init_fs_context(struct fs_context *fc)
+-- 
+2.43.0
+

@@ -1,0 +1,57 @@
+From 7d8a39554f3c7b33ba4802f4c0cac22d6bfaa1b1 Mon Sep 17 00:00:00 2001
+From: Charles Manning <cdhmanning@gmail.com>
+Date: Tue, 27 Oct 2026 12:08:42 -0400
+Subject: [PATCH 3/7] fs/yaffs2: release temp buffers on read failure paths
+
+yaffs_check_obj_details_loaded() and yaffs_tags_marshall_read() take a
+temp buffer but return early on a failed chunk read without releasing it,
+leaking a managed buffer slot (or an unmanaged allocation) on every I/O
+error. Release the buffer before returning.
+
+Backport of yaffs2 upstream commit 42909262aa6077a60cf18dac024fd21df3b4b18a
+("Fix unmatched temporary buffer allocations").
+
+Signed-off-by: Charles Manning <cdhmanning@gmail.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_guts.c         | 4 +++-
+ fs/yaffs2/yaffs_tagsmarshall.c | 6 +++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_guts.c b/fs/yaffs2/yaffs_guts.c
+index 71c912784a317..c013b934a470d 100644
+--- a/fs/yaffs2/yaffs_guts.c
++++ b/fs/yaffs2/yaffs_guts.c
+@@ -3245,8 +3245,10 @@ static void yaffs_check_obj_details_loaded(struct yaffs_obj *in)
+ 
+ 	result = yaffs_rd_chunk_tags_nand(dev, in->hdr_chunk, buf, &tags);
+ 
+-	if (result == YAFFS_FAIL)
++	if (result == YAFFS_FAIL) {
++		yaffs_release_temp_buffer(dev, buf);
+ 		return;
++	}
+ 
+ 	oh = (struct yaffs_obj_hdr *)buf;
+ 
+diff --git a/fs/yaffs2/yaffs_tagsmarshall.c b/fs/yaffs2/yaffs_tagsmarshall.c
+index c80b42130b784..deb77fe61a225 100644
+--- a/fs/yaffs2/yaffs_tagsmarshall.c
++++ b/fs/yaffs2/yaffs_tagsmarshall.c
+@@ -101,8 +101,12 @@ static int yaffs_tags_marshall_read(struct yaffs_dev *dev,
+ 		BUG();
+ 
+ 
+-	if (retval == YAFFS_FAIL)
++	if (retval == YAFFS_FAIL) {
++		if (local_data)
++			yaffs_release_temp_buffer(dev, data);
++
+ 		return YAFFS_FAIL;
++	}
+ 
+ 	if (dev->param.inband_tags) {
+ 		if (tags) {
+-- 
+2.43.0
+
