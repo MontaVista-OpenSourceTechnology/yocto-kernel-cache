@@ -1,0 +1,38 @@
+From c2910e76d7ed2c714bceb5417123c956e14c071f Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 27 Oct 2026 12:19:34 -0400
+Subject: [PATCH] mm/mmap: aufs: drop prfile reference on remap_file_pages
+ -EINTR path
+
+remap_file_pages() takes references on both vma->vm_file and the aufs
+vma->vm_prfile via vma_get_file(). Every exit path releases both, except
+the mmap_write_lock_killable() failure path, which only does fput(file)
+and leaks the vm_prfile reference whenever the mapping is backed by aufs.
+
+Release prfile there as well, matching the security_mmap_file() failure
+and normal exit paths (upstream aufs6.6.84 uses vma_fput(vma) on this
+path for the same reason).
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ mm/mmap.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 2ebbeddb1c68b..8823bac8cafc4 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3070,6 +3070,10 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+ 	/* OK security check passed, take write lock + let it rip. */
+ 	if (mmap_write_lock_killable(mm)) {
+ 		fput(file);
++#if 1 /* IS_ENABLED(CONFIG_AUFS_FS) */
++		if (prfile)
++			fput(prfile);
++#endif /* CONFIG_AUFS_FS */
+ 		return -EINTR;
+ 	}
+ 
+-- 
+2.43.0
+
