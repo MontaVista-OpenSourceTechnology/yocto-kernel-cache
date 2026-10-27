@@ -1,0 +1,57 @@
+From 05e9821cb2586e42d630f3efa7a4ea8e86c5e0fa Mon Sep 17 00:00:00 2001
+From: george pee <georgepee@gmail.com>
+Date: Tue, 27 Oct 2026 12:08:20 -0400
+Subject: [PATCH 1/7] fs/yaffs2: hold gross lock across rename link-count
+ update
+
+yaffs_rename() dropped the yaffs gross lock before calling
+inode_dec_link_count() on the replaced target. Another thread can delete
+that inode in the window and NULL new_dentry->d_inode, giving:
+
+  Unable to handle kernel NULL pointer dereference at virtual address 0000002c
+  drop_nlink+0x4/0x3c
+  yaffs_rename+0xd9/0x144
+  vfs_rename2+0x2d9/0x63c
+
+Keep the gross lock held until after the link count is updated, and drop
+it on both the success and -ENOTEMPTY paths.
+
+Backport of yaffs2 upstream commit 5b23c73940bab871c0b4c9d89be349a4e325ec92
+("Increase scope of yaffs gross lock to avoid race and kernel panic"),
+adapted to the single fs/yaffs2/yaffs_vfs.c in linux-yocto.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 5f10028017d37..2fbfca023d784 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1676,19 +1676,18 @@ static int yaffs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 					   yaffs_inode_to_obj(new_dir),
+ 					   new_dentry->d_name.name);
+ 	}
+-	yaffs_gross_unlock(dev);
+ 
+ 	if (ret_val == YAFFS_OK) {
+ 		if (target)
+ 			inode_dec_link_count(new_dentry->d_inode);
+-
++		yaffs_gross_unlock(dev);
+ 		update_dir_time(old_dir);
+ 		if (old_dir != new_dir)
+ 			update_dir_time(new_dir);
+ 		return 0;
+-	} else {
+-		return -ENOTEMPTY;
+ 	}
++	yaffs_gross_unlock(dev);
++	return -ENOTEMPTY;
+ }
+ 
+ 
+-- 
+2.43.0
+

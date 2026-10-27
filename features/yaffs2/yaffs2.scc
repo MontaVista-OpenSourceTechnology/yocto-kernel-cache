@@ -39,3 +39,10 @@ patch fs-yaffs2-Update-for-kernel-v6.18-rc1-API-changes.patch
 patch yaffs2-adapt-to-inode-i_state-API-change-in-6.19.patch
 patch yaffs2-convert-to-init_fs_context-mount-API-for-v7.0.patch
 patch fs-yaffs2-replace-strncpy-with-strscpy_pad-for-v7.2.patch
+patch fs-yaffs2-hold-gross-lock-across-rename-link-count-u.patch
+patch fs-yaffs2-fix-size-of-unmanaged-temp-buffer-allocati.patch
+patch fs-yaffs2-release-temp-buffers-on-read-failure-paths.patch
+patch fs-yaffs2-clear-ll_init-on-deinitialise.patch
+patch fs-yaffs2-fix-inverted-tags_marshall_query_block-ret.patch
+patch fs-yaffs2-restore-remount-handling-via-fs_context-re.patch
+patch fs-yaffs2-run-deferred-cleanup-when-remounting-read-.patch

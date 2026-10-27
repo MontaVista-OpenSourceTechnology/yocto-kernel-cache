@@ -1,0 +1,112 @@
+From 8413fe29e671d5cd6816897d2615a910f4cc9f36 Mon Sep 17 00:00:00 2001
+From: Charles Manning <cdhmanning@gmail.com>
+Date: Tue, 27 Oct 2026 12:10:08 -0400
+Subject: [PATCH 7/7] fs/yaffs2: run deferred cleanup when remounting
+ read-write
+
+When yaffs is mounted read-only, the post-scan cleanup in
+yaffs_guts_initialise() (strip deleted objects, fix hanging objects,
+empty lost+found) is skipped because those helpers bail on read_only.
+Nothing ran it later on a remount to read-write, so the deferred cleanup
+never happened, and the background GC thread was not started (or stopped
+on a rw->ro remount).
+
+Factor the cleanup into yaffs_guts_cleanup() and, in the remount path,
+run it under the gross lock and start the background thread on a ro->rw
+transition; stop the background thread on rw->ro.
+
+Backport of yaffs2 upstream commit 334eb5fc4472c791e4c4ce6d50e650d2b2732f02
+("Handle cleanup when remounting rw after mounting read-only"), adapted
+from the old super_operations.remount_fs hook to the fs_context
+.reconfigure operation used since v7.0.
+
+Signed-off-by: Charles Manning <cdhmanning@gmail.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_guts.c | 18 ++++++++++++++----
+ fs/yaffs2/yaffs_guts.h |  1 +
+ fs/yaffs2/yaffs_vfs.c  | 11 +++++++++++
+ 3 files changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_guts.c b/fs/yaffs2/yaffs_guts.c
+index 71bfaeca7a4eb..217a0d6c99ee9 100644
+--- a/fs/yaffs2/yaffs_guts.c
++++ b/fs/yaffs2/yaffs_guts.c
+@@ -4802,6 +4802,19 @@ int yaffs_guts_format_dev(struct yaffs_dev *dev)
+ }
+ 
+ 
++/*
++ * If the dev is mounted r/w then the cleanup will happen during
++ * yaffs_guts_initialise. However if the dev is mounted ro then
++ * the cleanup will be deferred until yaffs is remounted r/w.
++ */
++void yaffs_guts_cleanup(struct yaffs_dev *dev)
++{
++	yaffs_strip_deleted_objs(dev);
++	yaffs_fix_hanging_objs(dev);
++	if (dev->param.empty_lost_n_found)
++		yaffs_empty_l_n_f(dev);
++}
++
+ int yaffs_guts_initialise(struct yaffs_dev *dev)
+ {
+ 	int init_failed = 0;
+@@ -5014,10 +5027,7 @@ int yaffs_guts_initialise(struct yaffs_dev *dev)
+ 			init_failed = 1;
+ 		}
+ 
+-		yaffs_strip_deleted_objs(dev);
+-		yaffs_fix_hanging_objs(dev);
+-		if (dev->param.empty_lost_n_found)
+-			yaffs_empty_l_n_f(dev);
++		yaffs_guts_cleanup(dev);
+ 	}
+ 
+ 	if (init_failed) {
+diff --git a/fs/yaffs2/yaffs_guts.h b/fs/yaffs2/yaffs_guts.h
+index 5ebc3787b4d46..60923a1027bb2 100644
+--- a/fs/yaffs2/yaffs_guts.h
++++ b/fs/yaffs2/yaffs_guts.h
+@@ -884,6 +884,7 @@ struct yaffs_xattr_mod {
+ /*----------------------- YAFFS Functions -----------------------*/
+ 
+ int yaffs_guts_initialise(struct yaffs_dev *dev);
++void yaffs_guts_cleanup(struct yaffs_dev *dev);
+ void yaffs_deinitialise(struct yaffs_dev *dev);
+ 
+ int yaffs_get_n_free_chunks(struct yaffs_dev *dev);
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index ae88f142ece36..08342dcdd9c19 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -3205,6 +3205,7 @@ static int yaffs_reconfigure(struct fs_context *fc)
+ 	struct yaffs_dev *dev = sb->s_fs_info;
+ 	struct mtd_info *mtd = yaffs_dev_to_mtd(dev);
+ 	int read_only = (fc->sb_flags & SB_RDONLY) != 0;
++	int was_read_only;
+ 
+ 	if (!read_only && !(mtd->flags & MTD_WRITEABLE)) {
+ 		read_only = 1;
+@@ -3213,8 +3214,18 @@ static int yaffs_reconfigure(struct fs_context *fc)
+ 		fc->sb_flags |= SB_RDONLY;
+ 	}
+ 
++	was_read_only = dev->read_only;
+ 	dev->read_only = read_only;
+ 
++	if (was_read_only && !read_only) {
++		yaffs_gross_lock(dev);
++		yaffs_guts_cleanup(dev);
++		yaffs_gross_unlock(dev);
++		yaffs_bg_start(dev);
++	} else if (!was_read_only && read_only) {
++		yaffs_bg_stop(dev);
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.43.0
+
