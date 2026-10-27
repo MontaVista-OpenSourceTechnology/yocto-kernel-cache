@@ -1,0 +1,31 @@
+From 0615dc1f6a56bbd35510d527380a9e899adf8707 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 27 Oct 2026 12:19:48 -0400
+Subject: [PATCH] splice: aufs: drop stale do_splice_to() declaration
+
+The aufs6 base integration added an extern declaration for
+do_splice_to() to <linux/splice.h>. Upstream since folded do_splice_to()
+into vfs_splice_read(), so there is no longer any definition or user of
+it in the tree, leaving a dangling prototype. Upstream aufs6.6.84 dropped
+it from its base patch; drop it here too.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ include/linux/splice.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/include/linux/splice.h b/include/linux/splice.h
+index 7416cf375ad12..f08de37759877 100644
+--- a/include/linux/splice.h
++++ b/include/linux/splice.h
+@@ -102,7 +102,4 @@ extern const struct pipe_buf_operations default_pipe_buf_ops;
+ 
+ extern long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			   loff_t *ppos, size_t len, unsigned int flags);
+-extern long do_splice_to(struct file *in, loff_t *ppos,
+-			 struct pipe_inode_info *pipe, size_t len,
+-			 unsigned int flags);
+ #endif
+-- 
+2.43.0
+
