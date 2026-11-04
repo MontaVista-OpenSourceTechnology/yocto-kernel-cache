@@ -3,6 +3,7 @@ kconf hardware genericarm64.cfg
 kconf hardware genericarm64-arch.cfg
 kconf hardware genericarm64-clock.cfg
 kconf hardware genericarm64-i2c.cfg
+kconf hardware genericarm64-i3c.cfg
 kconf hardware genericarm64-gpio.cfg
 kconf hardware genericarm64-mmc.cfg
 kconf hardware genericarm64-pinctrl.cfg
