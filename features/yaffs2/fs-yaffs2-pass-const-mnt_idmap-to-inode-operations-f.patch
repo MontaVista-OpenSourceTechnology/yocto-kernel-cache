@@ -1,0 +1,88 @@
+From d66472218e43ccc880789a8ba4798b7077d7f76c Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 9 Nov 2026 16:30:29 -0500
+Subject: [PATCH] fs/yaffs2: pass const mnt_idmap to inode operations for v7.4
+
+v7.4 changed the inode operations to take a const struct mnt_idmap
+pointer (merged in 00b04f4495c3 "Merge tag 'vfs-7.4-rc1.idmap'", e.g.
+e2f0d6d4569d "fs: port ->setattr() to pass const mnt_idmap",
+eb50cbe14ff9 "fs: port ->create() to pass const mnt_idmap" and the
+->mkdir(), ->mknod(), ->symlink() and ->rename() ports), so yaffs2's
+handlers no longer match the operation tables:
+
+  error: initialization of 'int (*)(const struct mnt_idmap *, struct dentry *, struct iattr *)'
+  from incompatible pointer type 'int (*)(struct mnt_idmap *, struct dentry *, struct iattr *)'
+
+Make the idmap argument const in yaffs_setattr(), yaffs_mknod(),
+yaffs_mkdir(), yaffs_create(), yaffs_symlink() and yaffs_rename(). None
+of them modify it.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 92b6b2bf6917..842317a4bec6 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -945,7 +945,7 @@ static int yaffs_vfs_setattr(struct inode *inode, struct iattr *attr)
+ 
+ }
+ 
+-static int yaffs_setattr(struct mnt_idmap *ns, struct dentry *dentry, struct iattr *attr)
++static int yaffs_setattr(const struct mnt_idmap *ns, struct dentry *dentry, struct iattr *attr)
+ {
+ 	struct inode *inode = dentry->d_inode;
+ 	int error = 0;
+@@ -1379,7 +1379,7 @@ static struct inode *yaffs_get_inode(struct super_block *sb, int mode, int dev,
+ 
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
+-static int yaffs_mknod(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode,
++static int yaffs_mknod(const struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode,
+ 		       dev_t rdev)
+ #elif (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 0))
+ static int yaffs_mknod(struct inode *dir, struct dentry *dentry, int mode,
+@@ -1473,7 +1473,7 @@ static int yaffs_mknod(struct inode *dir, struct dentry *dentry, int mode,
+ }
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
+-struct dentry* yaffs_mkdir(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
++struct dentry* yaffs_mkdir(const struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
+ #else
+ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ #endif
+@@ -1489,9 +1489,9 @@ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ 
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 3, 0))
+-static int yaffs_create(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
++static int yaffs_create(const struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
+-static int yaffs_create(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode,
++static int yaffs_create(const struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode,
+ 			bool dummy)
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
+ static int yaffs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+@@ -1596,7 +1596,7 @@ static int yaffs_link(struct dentry *old_dentry, struct inode *dir,
+ 	return -EPERM;
+ }
+ 
+-static int yaffs_symlink(struct mnt_idmap *ns,
++static int yaffs_symlink(const struct mnt_idmap *ns,
+                          struct inode *dir, struct dentry *dentry,
+ 			 const char *symname)
+ {
+@@ -1643,7 +1643,7 @@ static int yaffs_symlink(struct mnt_idmap *ns,
+  * NB: POSIX says you can rename an object over an old object of the same name
+  */
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0))
+-static int yaffs_rename(struct mnt_idmap *ns, struct inode *old_dir, struct dentry *old_dentry,
++static int yaffs_rename(const struct mnt_idmap *ns, struct inode *old_dir, struct dentry *old_dentry,
+ 			struct inode *new_dir, struct dentry *new_dentry, unsigned int unused)
+ #else
+ static int yaffs_rename(struct inode *old_dir, struct dentry *old_dentry,
+-- 
+2.43.0
+
