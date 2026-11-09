@@ -1,4 +1,4 @@
-From 71f27033e99b59ecea4153f48683413a1141b53b Mon Sep 17 00:00:00 2001
+From ad5ba93b9ff9df16100a05cf60174b8af3ac2777 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Thu, 28 Aug 2025 09:33:17 +0300
 Subject: [PATCH] Revert "serial: 8250_omap: Drop pm_runtime_irq_safe()"
@@ -78,7 +78,7 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 8 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index c552c6b9a037..3c13824c0787 100644
+index ed0b8f125332..33d6b1c35d2b 100644
 --- a/drivers/tty/serial/8250/8250_omap.c
 +++ b/drivers/tty/serial/8250/8250_omap.c
 @@ -8,7 +8,6 @@
@@ -88,8 +88,8 @@ index c552c6b9a037..3c13824c0787 100644
 -#include <linux/atomic.h>
  #include <linux/clk.h>
  #include <linux/device.h>
- #include <linux/io.h>
-@@ -138,7 +137,6 @@ struct omap8250_priv {
+ #include <linux/err.h>
+@@ -139,7 +138,6 @@ struct omap8250_priv {
  
  	u8 tx_trigger;
  	u8 rx_trigger;
@@ -97,7 +97,7 @@ index c552c6b9a037..3c13824c0787 100644
  	bool is_suspending;
  	int wakeirq;
  	u32 latency;
-@@ -633,23 +631,14 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
+@@ -634,23 +632,14 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
  	unsigned int iir, lsr;
  	int ret;
  
@@ -122,7 +122,7 @@ index c552c6b9a037..3c13824c0787 100644
  	lsr = serial_port_in(port, UART_LSR);
  	iir = serial_port_in(port, UART_IIR);
  	ret = serial8250_handle_irq(port, iir);
-@@ -698,8 +687,7 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
+@@ -699,8 +688,7 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
  		schedule_delayed_work(&up->overrun_backoff, delay);
  	}
  
@@ -132,7 +132,7 @@ index c552c6b9a037..3c13824c0787 100644
  
  	return IRQ_RETVAL(ret);
  }
-@@ -1300,8 +1288,11 @@ static int omap_8250_dma_handle_irq(struct uart_port *port)
+@@ -1298,8 +1286,11 @@ static int omap_8250_dma_handle_irq(struct uart_port *port)
  	u16 status;
  	u8 iir;
  
@@ -144,7 +144,7 @@ index c552c6b9a037..3c13824c0787 100644
  		return IRQ_HANDLED;
  	}
  
-@@ -1334,6 +1325,7 @@ static int omap_8250_dma_handle_irq(struct uart_port *port)
+@@ -1332,6 +1323,7 @@ static int omap_8250_dma_handle_irq(struct uart_port *port)
  
  	uart_unlock_and_check_sysrq(port);
  
@@ -152,7 +152,7 @@ index c552c6b9a037..3c13824c0787 100644
  	return 1;
  }
  
-@@ -1539,6 +1531,8 @@ static int omap8250_probe(struct platform_device *pdev)
+@@ -1537,6 +1529,8 @@ static int omap8250_probe(struct platform_device *pdev)
  	if (!of_get_available_child_count(pdev->dev.of_node))
  		pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
  
@@ -161,7 +161,7 @@ index c552c6b9a037..3c13824c0787 100644
  	pm_runtime_get_sync(&pdev->dev);
  
  	omap_serial_fill_features_erratas(&up, priv);
-@@ -1795,7 +1789,6 @@ static int omap8250_runtime_suspend(struct device *dev)
+@@ -1799,7 +1793,6 @@ static int omap8250_runtime_suspend(struct device *dev)
  
  	priv->latency = PM_QOS_CPU_LATENCY_DEFAULT_VALUE;
  	schedule_work(&priv->qos_work);
@@ -169,18 +169,18 @@ index c552c6b9a037..3c13824c0787 100644
  
  	return 0;
  }
-@@ -1805,10 +1798,6 @@ static int omap8250_runtime_resume(struct device *dev)
+@@ -1809,10 +1802,6 @@ static int omap8250_runtime_resume(struct device *dev)
  	struct omap8250_priv *priv = dev_get_drvdata(dev);
- 	struct uart_8250_port *up = NULL;
+ 	struct uart_8250_port *up = priv->uport;
  
 -	/* Did the hardware wake to a device IO interrupt before a wakeirq? */
 -	if (atomic_read(&priv->active))
 -		return 0;
 -
- 	if (priv->line >= 0)
- 		up = serial8250_get_port(priv->line);
- 
-@@ -1822,10 +1811,8 @@ static int omap8250_runtime_resume(struct device *dev)
+ 	if (up && omap8250_lost_context(up)) {
+ 		guard(uart_port_lock_irq)(&up->port);
+ 		omap8250_restore_regs(up);
+@@ -1823,10 +1812,8 @@ static int omap8250_runtime_resume(struct device *dev)
  		omap_8250_rx_dma(up);
  	}
  
