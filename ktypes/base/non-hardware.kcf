@@ -67,6 +67,7 @@ drivers/pmdomain/marvell/Kconfig
 drivers/pmdomain/mediatek/Kconfig
 drivers/pmdomain/qcom/Kconfig
 drivers/pmdomain/renesas/Kconfig
+drivers/pmdomain/riscv/Kconfig
 drivers/pmdomain/rockchip/Kconfig
 drivers/pmdomain/samsung/Kconfig
 drivers/pmdomain/starfive/Kconfig
@@ -88,7 +89,6 @@ drivers/rpmsg/Kconfig
 drivers/staging/axis-fifo/Kconfig
 drivers/staging/fbtft/Kconfig
 drivers/staging/greybus/Kconfig
-drivers/staging/iio/accel/Kconfig
 drivers/staging/iio/adc/Kconfig
 drivers/staging/iio/addac/Kconfig
 drivers/staging/iio/frequency/Kconfig
@@ -102,7 +102,6 @@ drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig
 drivers/staging/media/ipu7/Kconfig
 drivers/staging/media/Kconfig
-drivers/staging/media/max96712/Kconfig
 drivers/staging/media/meson/vdec/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
@@ -114,7 +113,6 @@ drivers/staging/most/net/Kconfig
 drivers/staging/most/video/Kconfig
 drivers/staging/nvec/Kconfig
 drivers/staging/octeon/Kconfig
-drivers/staging/rtl8723bs/Kconfig
 drivers/staging/sm750fb/Kconfig
 drivers/staging/vc04_services/bcm2835-audio/Kconfig
 drivers/staging/vc04_services/Kconfig
@@ -169,7 +167,6 @@ fs/afs/Kconfig
 fs/aufs/Kconfig
 fs/autofs/Kconfig
 fs/befs/Kconfig
-fs/bfs/Kconfig
 fs/btrfs/Kconfig
 fs/cachefiles/Kconfig
 fs/ceph/Kconfig
@@ -224,6 +221,7 @@ fs/romfs/Kconfig
 fs/smb/client/Kconfig
 fs/smb/Kconfig
 fs/smb/server/Kconfig
+fs/smb/server/tests/Kconfig
 fs/smb/smbdirect/Kconfig
 fs/squashfs/Kconfig
 fs/sysfs/Kconfig

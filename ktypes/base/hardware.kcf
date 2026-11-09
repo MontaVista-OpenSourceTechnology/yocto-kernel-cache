@@ -208,6 +208,7 @@ drivers/acpi/apei/Kconfig
 drivers/acpi/arm64/Kconfig
 drivers/acpi/dptf/Kconfig
 drivers/acpi/Kconfig
+drivers/acpi/loongarch/Kconfig
 drivers/acpi/nfit/Kconfig
 drivers/acpi/numa/Kconfig
 drivers/acpi/pmic/Kconfig
@@ -233,7 +234,9 @@ drivers/block/zram/Kconfig
 drivers/bluetooth/Kconfig
 drivers/bus/fsl-mc/Kconfig
 drivers/bus/Kconfig
+drivers/bus/mhi/ep/clients/Kconfig
 drivers/bus/mhi/ep/Kconfig
+drivers/bus/mhi/host/clients/Kconfig
 drivers/bus/mhi/host/Kconfig
 drivers/bus/mhi/Kconfig
 drivers/cache/Kconfig
@@ -248,9 +251,11 @@ drivers/char/tpm/st33zp24/Kconfig
 drivers/char/xillybus/Kconfig
 drivers/clk/actions/Kconfig
 drivers/clk/analogbits/Kconfig
+drivers/clk/anlogic/Kconfig
 drivers/clk/aspeed/Kconfig
 drivers/clk/bcm/Kconfig
 drivers/clk/cix/Kconfig
+drivers/clk/davinci/Kconfig
 drivers/clk/eswin/Kconfig
 drivers/clk/hisilicon/Kconfig
 drivers/clk/imgtec/Kconfig
@@ -290,6 +295,7 @@ drivers/clk/versatile/Kconfig
 drivers/clk/visconti/Kconfig
 drivers/clk/x86/Kconfig
 drivers/clk/xilinx/Kconfig
+drivers/clk/zte/Kconfig
 drivers/clk/zynqmp/Kconfig
 drivers/clocksource/Kconfig
 drivers/comedi/Kconfig
@@ -357,13 +363,14 @@ drivers/eisa/Kconfig
 drivers/extcon/Kconfig
 drivers/firewire/Kconfig
 drivers/firmware/arm_ffa/Kconfig
+drivers/firmware/arm_rmm/Kconfig
 drivers/firmware/arm_scmi/Kconfig
 drivers/firmware/arm_scmi/transports/Kconfig
 drivers/firmware/arm_scmi/vendors/imx/Kconfig
 drivers/firmware/broadcom/Kconfig
 drivers/firmware/cirrus/Kconfig
+drivers/firmware/coreboot/Kconfig
 drivers/firmware/efi/Kconfig
-drivers/firmware/google/Kconfig
 drivers/firmware/imx/Kconfig
 drivers/firmware/Kconfig
 drivers/firmware/meson/Kconfig
@@ -605,6 +612,7 @@ drivers/interconnect/samsung/Kconfig
 drivers/iommu/amd/Kconfig
 drivers/iommu/arm/Kconfig
 drivers/iommu/generic_pt/Kconfig
+drivers/iommu/hyperv/Kconfig
 drivers/iommu/intel/Kconfig
 drivers/iommu/iommufd/Kconfig
 drivers/iommu/Kconfig
@@ -651,6 +659,7 @@ drivers/media/i2c/cvs/Kconfig
 drivers/media/i2c/cx25840/Kconfig
 drivers/media/i2c/et8ek8/Kconfig
 drivers/media/i2c/Kconfig
+drivers/media/i2c/maxim-serdes/Kconfig
 drivers/media/Kconfig
 drivers/media/mc/Kconfig
 drivers/media/mmc/Kconfig
@@ -889,6 +898,7 @@ drivers/net/dsa/hirschmann/Kconfig
 drivers/net/dsa/Kconfig
 drivers/net/dsa/lantiq/Kconfig
 drivers/net/dsa/microchip/Kconfig
+drivers/net/dsa/motorcomm/Kconfig
 drivers/net/dsa/mv88e6xxx/Kconfig
 drivers/net/dsa/mxl862xx/Kconfig
 drivers/net/dsa/netc/Kconfig
@@ -989,6 +999,7 @@ drivers/net/ethernet/mscc/Kconfig
 drivers/net/ethernet/mucse/Kconfig
 drivers/net/ethernet/myricom/Kconfig
 drivers/net/ethernet/natsemi/Kconfig
+drivers/net/ethernet/nebula-matrix/Kconfig
 drivers/net/ethernet/netronome/Kconfig
 drivers/net/ethernet/ni/Kconfig
 drivers/net/ethernet/nvidia/Kconfig
@@ -1179,6 +1190,7 @@ drivers/perf/Kconfig
 drivers/phy/allwinner/Kconfig
 drivers/phy/amlogic/Kconfig
 drivers/phy/apple/Kconfig
+drivers/phy/aspeed/Kconfig
 drivers/phy/axiado/Kconfig
 drivers/phy/broadcom/Kconfig
 drivers/phy/cadence/Kconfig
@@ -1302,6 +1314,7 @@ drivers/pmdomain/marvell/Kconfig
 drivers/pmdomain/mediatek/Kconfig
 drivers/pmdomain/qcom/Kconfig
 drivers/pmdomain/renesas/Kconfig
+drivers/pmdomain/riscv/Kconfig
 drivers/pmdomain/rockchip/Kconfig
 drivers/pmdomain/samsung/Kconfig
 drivers/pmdomain/starfive/Kconfig
@@ -1405,6 +1418,9 @@ drivers/soc/renesas/Kconfig
 drivers/soc/rockchip/Kconfig
 drivers/soc/samsung/Kconfig
 drivers/soc/sophgo/Kconfig
+drivers/soc/starfive/Kconfig
+drivers/soc/starfive/socinfo/Kconfig
+drivers/soc/st/Kconfig
 drivers/soc/sunxi/Kconfig
 drivers/soc/tegra/Kconfig
 drivers/soc/ti/Kconfig
@@ -1419,7 +1435,6 @@ drivers/ssb/Kconfig
 drivers/staging/axis-fifo/Kconfig
 drivers/staging/fbtft/Kconfig
 drivers/staging/greybus/Kconfig
-drivers/staging/iio/accel/Kconfig
 drivers/staging/iio/adc/Kconfig
 drivers/staging/iio/addac/Kconfig
 drivers/staging/iio/frequency/Kconfig
@@ -1433,7 +1448,6 @@ drivers/staging/media/imx/Kconfig
 drivers/staging/media/ipu3/Kconfig
 drivers/staging/media/ipu7/Kconfig
 drivers/staging/media/Kconfig
-drivers/staging/media/max96712/Kconfig
 drivers/staging/media/meson/vdec/Kconfig
 drivers/staging/media/sunxi/cedrus/Kconfig
 drivers/staging/media/sunxi/Kconfig
@@ -1445,7 +1459,6 @@ drivers/staging/most/net/Kconfig
 drivers/staging/most/video/Kconfig
 drivers/staging/nvec/Kconfig
 drivers/staging/octeon/Kconfig
-drivers/staging/rtl8723bs/Kconfig
 drivers/staging/sm750fb/Kconfig
 drivers/staging/vc04_services/bcm2835-audio/Kconfig
 drivers/staging/vc04_services/Kconfig
