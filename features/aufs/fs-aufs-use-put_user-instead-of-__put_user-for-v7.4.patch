@@ -1,0 +1,93 @@
+From 49329a35b08c8776b4931e734385e8b816ba66cd Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 9 Nov 2026 16:30:30 -0500
+Subject: [PATCH 1/2] fs/aufs: use put_user() instead of __put_user() for v7.4
+
+v7.4 removed __get_user() and __put_user() on x86 (f748af39e335
+"x86/uaccess: Remove __get_user() and __put_user()"), so aufs fails to
+build:
+
+  fs/aufs/branch.c: error: implicit declaration of function '__put_user'
+
+The unchecked accessor saved nothing here: none of the callers do an
+access_ok() first, and put_user() does its own range check. Switch the
+six callers to put_user().
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/branch.c | 2 +-
+ fs/aufs/fhsm.c   | 2 +-
+ fs/aufs/rdu.c    | 4 ++--
+ fs/aufs/sysfs.c  | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/aufs/branch.c b/fs/aufs/branch.c
+index 374287dfac44..446c75e42721 100644
+--- a/fs/aufs/branch.c
++++ b/fs/aufs/branch.c
+@@ -1148,7 +1148,7 @@ static int au_ibusy(struct super_block *sb, struct aufs_ibusy __user *arg)
+ out_unlock:
+ 	si_read_unlock(sb);
+ 	if (!err) {
+-		err = __put_user(ibusy.h_ino, &arg->h_ino);
++		err = put_user(ibusy.h_ino, &arg->h_ino);
+ 		if (unlikely(err)) {
+ 			err = -EFAULT;
+ 			AuTraceErr(err);
+diff --git a/fs/aufs/fhsm.c b/fs/aufs/fhsm.c
+index 690ae40fbe59..bc3898723384 100644
+--- a/fs/aufs/fhsm.c
++++ b/fs/aufs/fhsm.c
+@@ -181,7 +181,7 @@ static int au_fhsm_do_read_one(struct aufs_stbr __user *stbr,
+ 
+ 	err = copy_to_user(&stbr->stfs, stfs, sizeof(*stfs));
+ 	if (!err)
+-		err = __put_user(brid, &stbr->brid);
++		err = put_user(brid, &stbr->brid);
+ 	if (unlikely(err))
+ 		err = -EFAULT;
+ 
+diff --git a/fs/aufs/rdu.c b/fs/aufs/rdu.c
+index f216403a43b7..ed65404b8426 100644
+--- a/fs/aufs/rdu.c
++++ b/fs/aufs/rdu.c
+@@ -59,7 +59,7 @@ static bool au_rdu_fill(struct dir_context *ctx, const char *name, int nlen,
+ 		if (copy_to_user(arg->ent.e->name, name, nlen))
+ 			goto out;
+ 		/* the terminating NULL */
+-		if (__put_user(0, arg->ent.e->name + nlen))
++		if (put_user(0, arg->ent.e->name + nlen))
+ 			goto out;
+ 		err = 0;
+ 		/* AuDbg("%p, %.*s\n", arg->ent.p, nlen, name); */
+@@ -247,7 +247,7 @@ static int au_rdu_ino(struct file *file, struct aufs_rdu *rdu)
+ 			break;
+ 		}
+ 
+-		err = __put_user(ino, &u->e->ino);
++		err = put_user(ino, &u->e->ino);
+ 		if (unlikely(err)) {
+ 			err = -EFAULT;
+ 			AuTraceErr(err);
+diff --git a/fs/aufs/sysfs.c b/fs/aufs/sysfs.c
+index cbc7d1150bc8..9a251a2709a6 100644
+--- a/fs/aufs/sysfs.c
++++ b/fs/aufs/sysfs.c
+@@ -242,12 +242,12 @@ static int au_brinfo(struct super_block *sb, union aufs_brinfo __user *arg)
+ 		br = au_sbr(sb, bindex);
+ 		brid = br->br_id;
+ 		BUILD_BUG_ON(sizeof(brid) != sizeof(arg->id));
+-		err = __put_user(brid, &arg->id);
++		err = put_user(brid, &arg->id);
+ 		if (unlikely(err))
+ 			break;
+ 
+ 		BUILD_BUG_ON(sizeof(br->br_perm) != sizeof(arg->perm));
+-		err = __put_user(br->br_perm, &arg->perm);
++		err = put_user(br->br_perm, &arg->perm);
+ 		if (unlikely(err))
+ 			break;
+ 
+-- 
+2.43.0
+

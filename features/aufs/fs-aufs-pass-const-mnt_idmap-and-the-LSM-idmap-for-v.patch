@@ -1,0 +1,682 @@
+From 9ebd6c4b3ec467e793c6e4342c2014a81eb45117 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 9 Nov 2026 16:30:30 -0500
+Subject: [PATCH 2/2] fs/aufs: pass const mnt_idmap and the LSM idmap for v7.4
+
+v7.4 made struct mnt_idmap const through the vfs (merged in
+00b04f4495c3 "Merge tag 'vfs-7.4-rc1.idmap'": the inode operations,
+the vfs_*() helpers in e2f7f94b5a25, and mnt_idmap() itself in
+025756ee7b47 "fs: port mnt_idmap() and file_mnt_idmap() to const
+mnt_idmap"). aufs' inode operations no longer match the operation
+tables, and the idmaps it gets from mnt_idmap() are now const.
+
+v7.4 also added the mount idmap to the inode LSM hooks (16959c469f23
+"lsm: expose mount idmaps to inode hooks"), so
+security_inode_permission() takes it as its first argument:
+
+  fs/aufs/i_op.c: error: too few arguments to function 'security_inode_permission'
+
+Make every struct mnt_idmap pointer in aufs const, and pass the branch's
+idmap (h_idmap, already used for the permission check above it) to
+security_inode_permission(). None of the other inode hooks changed by
+16959c469f23 are called by aufs.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/aufs/branch.h    |  4 ++--
+ fs/aufs/cpup.c      |  8 ++++----
+ fs/aufs/dentry.c    |  6 +++---
+ fs/aufs/dentry.h    |  2 +-
+ fs/aufs/dir.c       |  2 +-
+ fs/aufs/i_op.c      | 14 +++++++-------
+ fs/aufs/i_op_add.c  | 12 ++++++------
+ fs/aufs/i_op_del.c  |  2 +-
+ fs/aufs/i_op_ren.c  |  2 +-
+ fs/aufs/inode.c     |  4 ++--
+ fs/aufs/inode.h     | 20 ++++++++++----------
+ fs/aufs/posix_acl.c |  4 ++--
+ fs/aufs/vfsub.c     | 22 +++++++++++-----------
+ fs/aufs/vfsub.h     | 16 ++++++++--------
+ fs/aufs/whout.c     | 10 +++++-----
+ fs/aufs/whout.h     |  4 ++--
+ fs/aufs/xattr.c     |  4 ++--
+ 17 files changed, 68 insertions(+), 68 deletions(-)
+
+diff --git a/fs/aufs/branch.h b/fs/aufs/branch.h
+index 035e2c100ec6..c7f3a03b4e26 100644
+--- a/fs/aufs/branch.h
++++ b/fs/aufs/branch.h
+@@ -133,7 +133,7 @@ static inline struct dentry *au_br_dentry(struct au_branch *br)
+ 	return br->br_path.dentry;
+ }
+ 
+-static inline struct mnt_idmap *au_br_idmap(struct au_branch *br)
++static inline const struct mnt_idmap *au_br_idmap(struct au_branch *br)
+ {
+ 	return mnt_idmap(br->br_path.mnt);
+ }
+@@ -297,7 +297,7 @@ struct vfsmount *au_sbr_mnt(struct super_block *sb, aufs_bindex_t bindex)
+ }
+ 
+ static inline
+-struct mnt_idmap *au_sbr_idmap(struct super_block *sb, aufs_bindex_t bindex)
++const struct mnt_idmap *au_sbr_idmap(struct super_block *sb, aufs_bindex_t bindex)
+ {
+ 	return au_br_idmap(au_sbr(sb, bindex));
+ }
+diff --git a/fs/aufs/cpup.c b/fs/aufs/cpup.c
+index ffdea423a210..3f30ddcd3ff8 100644
+--- a/fs/aufs/cpup.c
++++ b/fs/aufs/cpup.c
+@@ -569,7 +569,7 @@ static int au_reset_acl(struct path *h_path, umode_t mode)
+ {
+ 	int err;
+ 	struct dentry *h_dentry;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	h_idmap = mnt_idmap(h_path->mnt);
+ 	h_dentry = h_path->dentry;
+@@ -590,7 +590,7 @@ static int au_do_cpup_dir(struct au_cp_generic *cpg, struct dentry *dst_parent,
+ {
+ 	int err;
+ 	struct inode *dir, *inode;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	h_idmap = mnt_idmap(h_path->mnt);
+ 	err = vfsub_remove_acl(h_idmap, h_path->dentry,
+@@ -1076,7 +1076,7 @@ static int au_do_sio_cpup_simple(struct au_cp_generic *cpg)
+ 	struct dentry *dentry, *parent;
+ 	struct file *h_file;
+ 	struct inode *h_dir;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	dentry = cpg->dentry;
+ 	h_file = NULL;
+@@ -1264,7 +1264,7 @@ int au_sio_cpup_wh(struct au_cp_generic *cpg, struct file *file)
+ 	struct inode *dir, *h_dir, *h_tmpdir;
+ 	struct au_wbr *wbr;
+ 	struct au_pin wh_pin, *pin_orig;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	dentry = cpg->dentry;
+ 	bdst = cpg->bdst;
+diff --git a/fs/aufs/dentry.c b/fs/aufs/dentry.c
+index 44f88cf1f9b2..0a31b26131e5 100644
+--- a/fs/aufs/dentry.c
++++ b/fs/aufs/dentry.c
+@@ -21,7 +21,7 @@ au_do_lookup(struct dentry *h_parent, struct dentry *dentry,
+ 	struct dentry *h_dentry;
+ 	struct inode *h_inode;
+ 	struct au_branch *br;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 	struct path h_path;
+ 	int wh_found, opq;
+ 	unsigned char wh_able;
+@@ -235,7 +235,7 @@ int au_lkup_dentry(struct dentry *dentry, aufs_bindex_t btop,
+ 	return err;
+ }
+ 
+-struct dentry *au_sio_lkup_one(struct mnt_idmap *idmap, const struct qstr *name,
++struct dentry *au_sio_lkup_one(const struct mnt_idmap *idmap, const struct qstr *name,
+ 			       struct path *ppath)
+ {
+ 	struct dentry *dentry;
+@@ -266,7 +266,7 @@ int au_lkup_neg(struct dentry *dentry, aufs_bindex_t bindex, int wh)
+ 	int err;
+ 	struct dentry *parent, *h_dentry;
+ 	struct au_branch *br;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 	struct path h_ppath;
+ 
+ 	parent = dget_parent(dentry);
+diff --git a/fs/aufs/dentry.h b/fs/aufs/dentry.h
+index f5bb68fa0aba..8cc51eff7804 100644
+--- a/fs/aufs/dentry.h
++++ b/fs/aufs/dentry.h
+@@ -62,7 +62,7 @@ struct au_do_lookup_args {
+ /* dentry.c */
+ extern const struct dentry_operations aufs_dop, aufs_dop_noreval;
+ struct au_branch;
+-struct dentry *au_sio_lkup_one(struct mnt_idmap *idmap, const struct qstr *name,
++struct dentry *au_sio_lkup_one(const struct mnt_idmap *idmap, const struct qstr *name,
+ 			       struct path *ppath);
+ int au_h_verify(struct dentry *h_dentry, unsigned int udba, struct inode *h_dir,
+ 		struct dentry *h_parent, struct au_branch *br);
+diff --git a/fs/aufs/dir.c b/fs/aufs/dir.c
+index 31bbe07758b1..cece1bc647b5 100644
+--- a/fs/aufs/dir.c
++++ b/fs/aufs/dir.c
+@@ -624,7 +624,7 @@ static int sio_test_empty(struct dentry *dentry, struct test_empty_arg *arg)
+ 	int err, wkq_err;
+ 	struct dentry *h_dentry;
+ 	struct inode *h_inode;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	h_idmap = au_sbr_idmap(dentry->d_sb, arg->bindex);
+ 	h_dentry = au_h_dptr(dentry, arg->bindex);
+diff --git a/fs/aufs/i_op.c b/fs/aufs/i_op.c
+index eb64cc49452c..e676c5b8f7d7 100644
+--- a/fs/aufs/i_op.c
++++ b/fs/aufs/i_op.c
+@@ -18,7 +18,7 @@ static int h_permission(struct inode *h_inode, int mask,
+ {
+ 	int err;
+ 	const unsigned char write_mask = !!(mask & (MAY_WRITE | MAY_APPEND));
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	err = -EPERM;
+ 	if (write_mask && IS_IMMUTABLE(h_inode))
+@@ -59,13 +59,13 @@ static int h_permission(struct inode *h_inode, int mask,
+ 	if (!err)
+ 		err = devcgroup_inode_permission(h_inode, mask);
+ 	if (!err)
+-		err = security_inode_permission(h_inode, mask);
++		err = security_inode_permission(h_idmap, h_inode, mask);
+ 
+ out:
+ 	return err;
+ }
+ 
+-static int aufs_permission(struct mnt_idmap *idmap, struct inode *inode,
++static int aufs_permission(const struct mnt_idmap *idmap, struct inode *inode,
+ 			   int mask)
+ {
+ 	int err;
+@@ -920,7 +920,7 @@ int au_pin_and_icpup(struct dentry *dentry, struct iattr *ia,
+ 	return err;
+ }
+ 
+-static int aufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
++static int aufs_setattr(const struct mnt_idmap *idmap, struct dentry *dentry,
+ 			struct iattr *ia)
+ {
+ 	int err;
+@@ -928,7 +928,7 @@ static int aufs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	struct super_block *sb;
+ 	struct file *file;
+ 	struct au_icpup_args *a;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	inode = d_inode(dentry);
+ 	IMustLock(inode);
+@@ -1087,7 +1087,7 @@ ssize_t au_sxattr(struct dentry *dentry, struct inode *inode,
+ 	struct super_block *sb;
+ 	struct au_icpup_args *a;
+ 	struct inode *h_inode;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	IMustLock(inode);
+ 
+@@ -1254,7 +1254,7 @@ int au_h_path_getattr(struct dentry *dentry, struct inode *inode, int force,
+ 	return err;
+ }
+ 
+-static int aufs_getattr(struct mnt_idmap *idmap, const struct path *path,
++static int aufs_getattr(const struct mnt_idmap *idmap, const struct path *path,
+ 			struct kstat *st, u32 request, unsigned int query)
+ {
+ 	int err;
+diff --git a/fs/aufs/i_op_add.c b/fs/aufs/i_op_add.c
+index d8494940ec73..2eb32bd571f4 100644
+--- a/fs/aufs/i_op_add.c
++++ b/fs/aufs/i_op_add.c
+@@ -349,7 +349,7 @@ static int add_simple(struct inode *dir, struct dentry *dentry,
+ 	return err;
+ }
+ 
+-int aufs_mknod(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_mknod(const struct mnt_idmap *idmap, struct inode *dir,
+ 	       struct dentry *dentry, umode_t mode, dev_t dev)
+ {
+ 	struct simple_arg arg = {
+@@ -362,7 +362,7 @@ int aufs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+ 	return add_simple(dir, dentry, &arg);
+ }
+ 
+-int aufs_symlink(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_symlink(const struct mnt_idmap *idmap, struct inode *dir,
+ 		 struct dentry *dentry, const char *symname)
+ {
+ 	struct simple_arg arg = {
+@@ -372,7 +372,7 @@ int aufs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+ 	return add_simple(dir, dentry, &arg);
+ }
+ 
+-int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_create(const struct mnt_idmap *idmap, struct inode *dir,
+ 		struct dentry *dentry, umode_t mode)
+ {
+ 	struct simple_arg arg = {
+@@ -398,7 +398,7 @@ int au_aopen_or_create(struct inode *dir, struct dentry *dentry,
+ 	return add_simple(dir, dentry, &arg);
+ }
+ 
+-int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_tmpfile(const struct mnt_idmap *idmap, struct inode *dir,
+ 		 struct file *file, umode_t mode)
+ {
+ 	int err;
+@@ -409,7 +409,7 @@ int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 	struct dentry *dentry, *parent, *h_parent, *h_dentry;
+ 	struct inode *h_dir, *inode;
+ 	struct vfsmount *h_mnt;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 	struct file *h_file;
+ 	struct au_wr_dir_args wr_dir_args = {
+ 		.force_btgt	= -1,
+@@ -821,7 +821,7 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
+ 	return err;
+ }
+ 
+-struct dentry *aufs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
++struct dentry *aufs_mkdir(const struct mnt_idmap *idmap, struct inode *dir,
+ 			  struct dentry *dentry, umode_t mode)
+ {
+ 	int err, rerr;
+diff --git a/fs/aufs/i_op_del.c b/fs/aufs/i_op_del.c
+index ecdccbedbec3..8ed82bcef70e 100644
+--- a/fs/aufs/i_op_del.c
++++ b/fs/aufs/i_op_del.c
+@@ -84,7 +84,7 @@ int au_may_del(struct dentry *dentry, aufs_bindex_t bindex,
+ 	struct path h_ppath;
+ 	struct super_block *sb;
+ 	struct au_branch *br;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	h_dentry = au_h_dptr(dentry, bindex);
+ 	if (d_really_is_positive(dentry)) {
+diff --git a/fs/aufs/i_op_ren.c b/fs/aufs/i_op_ren.c
+index 2a7398346196..9f95fcc520f2 100644
+--- a/fs/aufs/i_op_ren.c
++++ b/fs/aufs/i_op_ren.c
+@@ -931,7 +931,7 @@ static void au_ren_rev_dt(int err, struct au_ren_args *a)
+ 
+ /* ---------------------------------------------------------------------- */
+ 
+-int aufs_rename(struct mnt_idmap *idmap,
++int aufs_rename(const struct mnt_idmap *idmap,
+ 		struct inode *_src_dir, struct dentry *_src_dentry,
+ 		struct inode *_dst_dir, struct dentry *_dst_dentry,
+ 		unsigned int _flags)
+diff --git a/fs/aufs/inode.c b/fs/aufs/inode.c
+index 57d78d793406..f1fddf1308db 100644
+--- a/fs/aufs/inode.c
++++ b/fs/aufs/inode.c
+@@ -501,7 +501,7 @@ int au_test_ro(struct super_block *sb, aufs_bindex_t bindex,
+ 	return err;
+ }
+ 
+-int au_test_h_perm(struct mnt_idmap *h_idmap, struct inode *h_inode,
++int au_test_h_perm(const struct mnt_idmap *h_idmap, struct inode *h_inode,
+ 		   int mask)
+ {
+ 	if (uid_eq(current_fsuid(), GLOBAL_ROOT_UID))
+@@ -509,7 +509,7 @@ int au_test_h_perm(struct mnt_idmap *h_idmap, struct inode *h_inode,
+ 	return inode_permission(h_idmap, h_inode, mask);
+ }
+ 
+-int au_test_h_perm_sio(struct mnt_idmap *h_idmap, struct inode *h_inode,
++int au_test_h_perm_sio(const struct mnt_idmap *h_idmap, struct inode *h_inode,
+ 		       int mask)
+ {
+ 	if (au_test_nfs(h_inode->i_sb)
+diff --git a/fs/aufs/inode.h b/fs/aufs/inode.h
+index ef106ab5b775..5a96d8a5ee59 100644
+--- a/fs/aufs/inode.h
++++ b/fs/aufs/inode.h
+@@ -146,9 +146,9 @@ int au_ino(struct super_block *sb, aufs_bindex_t bindex, ino_t h_ino,
+ struct inode *au_new_inode(struct dentry *dentry, int must_new);
+ int au_test_ro(struct super_block *sb, aufs_bindex_t bindex,
+ 	       struct inode *inode);
+-int au_test_h_perm(struct mnt_idmap *h_idmap, struct inode *h_inode,
++int au_test_h_perm(const struct mnt_idmap *h_idmap, struct inode *h_inode,
+ 		   int mask);
+-int au_test_h_perm_sio(struct mnt_idmap *h_idmap, struct inode *h_inode,
++int au_test_h_perm_sio(const struct mnt_idmap *h_idmap, struct inode *h_inode,
+ 		       int mask);
+ 
+ static inline int au_wh_ino(struct super_block *sb, aufs_bindex_t bindex,
+@@ -224,20 +224,20 @@ int au_h_path_getattr(struct dentry *dentry, struct inode *inode, int force,
+ /* i_op_add.c */
+ int au_may_add(struct dentry *dentry, aufs_bindex_t bindex,
+ 	       struct dentry *h_parent, int isdir);
+-int aufs_mknod(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_mknod(const struct mnt_idmap *idmap, struct inode *dir,
+ 	       struct dentry *dentry, umode_t mode, dev_t dev);
+-int aufs_symlink(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_symlink(const struct mnt_idmap *idmap, struct inode *dir,
+ 		 struct dentry *dentry, const char *symname);
+-int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_create(const struct mnt_idmap *idmap, struct inode *dir,
+ 		struct dentry *dentry, umode_t mode);
+ struct vfsub_aopen_args;
+ int au_aopen_or_create(struct inode *dir, struct dentry *dentry,
+ 		       struct vfsub_aopen_args *args);
+-int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
++int aufs_tmpfile(const struct mnt_idmap *idmap, struct inode *dir,
+ 		 struct file *file, umode_t mode);
+ int aufs_link(struct dentry *src_dentry, struct inode *dir,
+ 	      struct dentry *dentry);
+-struct dentry *aufs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
++struct dentry *aufs_mkdir(const struct mnt_idmap *idmap, struct inode *dir,
+ 			  struct dentry *dentry, umode_t mode);
+ 
+ /* i_op_del.c */
+@@ -249,7 +249,7 @@ int aufs_rmdir(struct inode *dir, struct dentry *dentry);
+ 
+ /* i_op_ren.c */
+ int au_wbr(struct dentry *dentry, aufs_bindex_t btgt);
+-int aufs_rename(struct mnt_idmap *idmap,
++int aufs_rename(const struct mnt_idmap *idmap,
+ 		struct inode *_src_dir, struct dentry *_src_dentry,
+ 		struct inode *_dst_dir, struct dentry *_dst_dentry,
+ 		unsigned int _flags);
+@@ -334,9 +334,9 @@ AuStubVoid(au_xattr_init, struct super_block *sb);
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+ struct posix_acl *aufs_get_inode_acl(struct inode *inode, int type, bool rcu);
+-struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap, struct dentry *dentry,
++struct posix_acl *aufs_get_acl(const struct mnt_idmap *idmap, struct dentry *dentry,
+ 			       int type);
+-int aufs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
++int aufs_set_acl(const struct mnt_idmap *idmap, struct dentry *dentry,
+ 		 struct posix_acl *acl, int type);
+ #endif
+ 
+diff --git a/fs/aufs/posix_acl.c b/fs/aufs/posix_acl.c
+index 911bd2d08851..8ee12a3eac70 100644
+--- a/fs/aufs/posix_acl.c
++++ b/fs/aufs/posix_acl.c
+@@ -55,7 +55,7 @@ struct posix_acl *aufs_get_inode_acl(struct inode *inode, int type, bool rcu)
+ 	return acl;
+ }
+ 
+-struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap, struct dentry *dentry,
++struct posix_acl *aufs_get_acl(const struct mnt_idmap *idmap, struct dentry *dentry,
+ 			       int type)
+ {
+ 	struct posix_acl *acl;
+@@ -67,7 +67,7 @@ struct posix_acl *aufs_get_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return acl;
+ }
+ 
+-int aufs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
++int aufs_set_acl(const struct mnt_idmap *idmap, struct dentry *dentry,
+ 		 struct posix_acl *acl, int type)
+ {
+ 	int err;
+diff --git a/fs/aufs/vfsub.c b/fs/aufs/vfsub.c
+index 0093adf5c890..5cf388b25947 100644
+--- a/fs/aufs/vfsub.c
++++ b/fs/aufs/vfsub.c
+@@ -337,7 +337,7 @@ int vfsub_create(struct inode *dir, struct path *path, int mode)
+ 	int err, e;
+ 	struct dentry *d;
+ 	struct inode *inode;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 
+ 	IMustLock(dir);
+@@ -383,7 +383,7 @@ int vfsub_symlink(struct inode *dir, struct path *path, const char *symname)
+ {
+ 	int err, e;
+ 	struct dentry *d;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 
+ 	IMustLock(dir);
+@@ -428,7 +428,7 @@ int vfsub_mknod(struct inode *dir, struct path *path, int mode, dev_t dev)
+ 	int err, e;
+ 	struct dentry *d;
+ 	struct inode *inode;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 
+ 	IMustLock(dir);
+@@ -484,7 +484,7 @@ int vfsub_link(struct dentry *src_dentry, struct inode *dir, struct path *path)
+ {
+ 	int err, e;
+ 	struct dentry *d;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 
+ 	IMustLock(dir);
+@@ -595,7 +595,7 @@ struct dentry *vfsub_mkdir(struct inode *dir, struct path *path, int mode)
+ 	int err, e, did;
+ 	struct dentry *d, *ret;
+ 	struct inode *inode;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct path tmp;
+ 	struct delegated_inode deleg = {};
+ 
+@@ -648,7 +648,7 @@ int vfsub_rmdir(struct inode *dir, struct path *path)
+ {
+ 	int err, e;
+ 	struct dentry *d;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 
+ 	IMustLock(dir);
+@@ -828,7 +828,7 @@ int vfsub_trunc(const struct path *h_path, loff_t length, unsigned int attr,
+ 	int err;
+ 	struct inode *h_inode;
+ 	struct super_block *h_sb;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	if (!h_file) {
+ 		err = vfsub_truncate(h_path, length);
+@@ -872,7 +872,7 @@ static void au_call_vfsub_mkdir(void *args)
+ struct dentry *vfsub_sio_mkdir(struct inode *dir, struct path *path, int mode)
+ {
+ 	int err, do_sio;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct dentry *ret;
+ 
+ 	idmap = mnt_idmap(path->mnt);
+@@ -909,7 +909,7 @@ static void au_call_vfsub_rmdir(void *args)
+ int vfsub_sio_rmdir(struct inode *dir, struct path *path)
+ {
+ 	int err, do_sio, wkq_err;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 
+ 	idmap = mnt_idmap(path->mnt);
+ 	do_sio = au_test_h_perm_sio(idmap, dir, MAY_EXEC | MAY_WRITE);
+@@ -943,7 +943,7 @@ static void call_notify_change(void *args)
+ {
+ 	struct notify_change_args *a = args;
+ 	struct inode *h_inode;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 
+ 	h_inode = d_inode(a->path->dentry);
+@@ -1017,7 +1017,7 @@ static void call_unlink(void *args)
+ 	struct unlink_args *a = args;
+ 	struct dentry *d = a->path->dentry;
+ 	struct inode *h_inode;
+-	struct mnt_idmap *idmap;
++	const struct mnt_idmap *idmap;
+ 	struct delegated_inode deleg = {};
+ 	const int stop_sillyrename = (au_test_nfs(d->d_sb)
+ 				      && au_dcount(d) == 1);
+diff --git a/fs/aufs/vfsub.h b/fs/aufs/vfsub.h
+index b5874fb2818f..716729137b6e 100644
+--- a/fs/aufs/vfsub.h
++++ b/fs/aufs/vfsub.h
+@@ -269,7 +269,7 @@ static inline int vfsub_update_time(struct inode *h_inode,
+ }
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+-static inline int vfsub_acl_chmod(struct mnt_idmap *h_idmap,
++static inline int vfsub_acl_chmod(const struct mnt_idmap *h_idmap,
+ 				  struct dentry *h_dentry, umode_t h_mode)
+ {
+ 	int err;
+@@ -280,7 +280,7 @@ static inline int vfsub_acl_chmod(struct mnt_idmap *h_idmap,
+ 	return err;
+ }
+ #else
+-AuStubInt0(vfsub_acl_chmod, struct mnt_idmap *h_idmap,
++AuStubInt0(vfsub_acl_chmod, const struct mnt_idmap *h_idmap,
+ 	   struct dentry *h_dentry, umode_t h_mode);
+ #endif
+ 
+@@ -361,7 +361,7 @@ static inline int vfsub_getattr(const struct path *path, struct kstat *st)
+ 
+ /* ---------------------------------------------------------------------- */
+ 
+-static inline int vfsub_setxattr(struct mnt_idmap *idmap,
++static inline int vfsub_setxattr(const struct mnt_idmap *idmap,
+ 				 struct dentry *dentry, const char *name,
+ 				 const void *value, size_t size, int flags)
+ {
+@@ -374,7 +374,7 @@ static inline int vfsub_setxattr(struct mnt_idmap *idmap,
+ 	return err;
+ }
+ 
+-static inline int vfsub_removexattr(struct mnt_idmap *idmap,
++static inline int vfsub_removexattr(const struct mnt_idmap *idmap,
+ 				    struct dentry *dentry, const char *name)
+ {
+ 	int err;
+@@ -387,7 +387,7 @@ static inline int vfsub_removexattr(struct mnt_idmap *idmap,
+ }
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+-static inline int vfsub_set_acl(struct mnt_idmap *idmap,
++static inline int vfsub_set_acl(const struct mnt_idmap *idmap,
+ 				struct dentry *dentry, const char *name,
+ 				struct posix_acl *acl)
+ {
+@@ -400,7 +400,7 @@ static inline int vfsub_set_acl(struct mnt_idmap *idmap,
+ 	return err;
+ }
+ 
+-static inline int vfsub_remove_acl(struct mnt_idmap *idmap,
++static inline int vfsub_remove_acl(const struct mnt_idmap *idmap,
+ 				   struct dentry *dentry, const char *name)
+ {
+ 	int err;
+@@ -412,9 +412,9 @@ static inline int vfsub_remove_acl(struct mnt_idmap *idmap,
+ 	return err;
+ }
+ #else
+-AuStubInt0(vfsub_set_acl, struct mnt_idmap *idmap, struct dentry *dentry,
++AuStubInt0(vfsub_set_acl, const struct mnt_idmap *idmap, struct dentry *dentry,
+ 	   const char *name, struct posix_acl *acl);
+-AuStubInt0(vfsub_remove_acl, struct mnt_idmap *idmap,
++AuStubInt0(vfsub_remove_acl, const struct mnt_idmap *idmap,
+ 	   struct dentry *dentry, const char *name);
+ #endif
+ 
+diff --git a/fs/aufs/whout.c b/fs/aufs/whout.c
+index 6d0d23237e57..4280bc83dc8b 100644
+--- a/fs/aufs/whout.c
++++ b/fs/aufs/whout.c
+@@ -51,7 +51,7 @@ int au_wh_name_alloc(struct qstr *wh, const struct qstr *name)
+  * test if the @wh_name exists under @h_ppath.
+  * @try_sio specifies the necessary of super-io.
+  */
+-int au_wh_test(struct mnt_idmap *h_idmap, struct path *h_ppath,
++int au_wh_test(const struct mnt_idmap *h_idmap, struct path *h_ppath,
+ 	       const struct qstr *wh_name, int try_sio)
+ {
+ 	int err;
+@@ -89,7 +89,7 @@ int au_wh_test(struct mnt_idmap *h_idmap, struct path *h_ppath,
+ /*
+  * test if the @h_path->dentry sets opaque or not.
+  */
+-int au_diropq_test(struct mnt_idmap *h_idmap, struct path *h_path)
++int au_diropq_test(const struct mnt_idmap *h_idmap, struct path *h_path)
+ {
+ 	int err;
+ 	struct inode *h_dir;
+@@ -114,7 +114,7 @@ struct dentry *au_whtmp_lkup(struct dentry *h_parent, struct au_branch *br,
+ 	static unsigned short cnt;
+ 	struct qstr qs;
+ 	struct path h_ppath;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	BUILD_BUG_ON(sizeof(cnt) * 2 > AUFS_WH_TMP_LEN);
+ 
+@@ -742,7 +742,7 @@ struct dentry *au_diropq_sio(struct dentry *dentry, aufs_bindex_t bindex,
+ 			     unsigned int flags)
+ {
+ 	struct dentry *diropq, *h_dentry;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	h_idmap = au_sbr_idmap(dentry->d_sb, bindex);
+ 	h_dentry = au_h_dptr(dentry, bindex);
+@@ -935,7 +935,7 @@ int au_whtmp_rmdir(struct inode *dir, aufs_bindex_t bindex,
+ 	struct path wh_path;
+ 	struct inode *wh_inode, *h_dir;
+ 	struct au_branch *br;
+-	struct mnt_idmap *h_idmap;
++	const struct mnt_idmap *h_idmap;
+ 
+ 	h_dir = d_inode(wh_dentry->d_parent); /* dir inode is locked */
+ 	IMustLock(h_dir);
+diff --git a/fs/aufs/whout.h b/fs/aufs/whout.h
+index 5e0af833a222..092cd7676c33 100644
+--- a/fs/aufs/whout.h
++++ b/fs/aufs/whout.h
+@@ -16,9 +16,9 @@
+ 
+ /* whout.c */
+ int au_wh_name_alloc(struct qstr *wh, const struct qstr *name);
+-int au_wh_test(struct mnt_idmap *h_idmap, struct path *h_ppath,
++int au_wh_test(const struct mnt_idmap *h_idmap, struct path *h_ppath,
+ 	       const struct qstr *wh_name, int try_sio);
+-int au_diropq_test(struct mnt_idmap *h_idmap, struct path *h_path);
++int au_diropq_test(const struct mnt_idmap *h_idmap, struct path *h_path);
+ struct au_branch;
+ struct dentry *au_whtmp_lkup(struct dentry *h_parent, struct au_branch *br,
+ 			     const struct qstr *prefix);
+diff --git a/fs/aufs/xattr.c b/fs/aufs/xattr.c
+index 27b5d43ae000..7249d32645c0 100644
+--- a/fs/aufs/xattr.c
++++ b/fs/aufs/xattr.c
+@@ -58,7 +58,7 @@ static int au_do_cpup_xattr(struct path *h_dst, struct path *h_src,
+ 	ssize_t ssz;
+ 	struct inode *h_idst;
+ 	struct dentry *h_dst_dentry, *h_src_dentry;
+-	struct mnt_idmap *h_dst_idmap, *h_src_idmap;
++	const struct mnt_idmap *h_dst_idmap, *h_src_idmap;
+ 	struct posix_acl *acl;
+ 
+ 	is_acl = !!is_posix_acl_xattr(name);
+@@ -321,7 +321,7 @@ static int au_xattr_get(const struct xattr_handler *handler,
+ }
+ 
+ static int au_xattr_set(const struct xattr_handler *handler,
+-			struct mnt_idmap *idmap,
++			const struct mnt_idmap *idmap,
+ 			struct dentry *dentry, struct inode *inode,
+ 			const char *name, const void *value, size_t size,
+ 			int flags)
+-- 
+2.43.0
+
