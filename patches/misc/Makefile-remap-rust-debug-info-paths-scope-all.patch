@@ -1,4 +1,4 @@
-From eaf351389aa8a14680ad327afecb5abb78347081 Mon Sep 17 00:00:00 2001
+From 3f5cde7a543c6e47d2e279e9700ad32db8b933c1 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 1 Sep 2026 22:49:31 -0400
 Subject: [PATCH] Makefile: remap rust debug info paths (scope=all)
@@ -19,13 +19,13 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 94e4225d9f628..677ede70b251a 100644
+index 7d8c4667e79f..e7a98f6dbc3a 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1189,8 +1189,8 @@ export CFLAGS_GCOV
- # change __FILE__ to the relative path to the source directory
- ifdef building_out_of_srctree
- KBUILD_CPPFLAGS += -fmacro-prefix-map=$(srcroot)/=
+@@ -1190,8 +1190,8 @@ CFLAGS_PREFIX_MAP := -fmacro-prefix-map=$(srcroot)/=
+ KBUILD_CPPFLAGS += $(CFLAGS_PREFIX_MAP)
+ KBUILD_USERCFLAGS += $(CFLAGS_PREFIX_MAP)
+ KBUILD_HOSTCFLAGS += $(CFLAGS_PREFIX_MAP)
 -ifeq ($(call rustc-option-yn, --remap-path-scope=macro),y)
 -KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/= --remap-path-scope=macro
 +ifeq ($(call rustc-option-yn, --remap-path-scope=all),y)
