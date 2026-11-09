@@ -86,5 +86,4 @@ include features/spi/spi.scc
 include features/sram/sram.scc
 include features/pmem/pmem.scc
 include features/tsn/tsn.scc
-patch Revert-serial-8250-unexport-serial8250_rpm_-function.patch
 patch Revert-serial-8250_omap-Drop-pm_runtime_irq_safe.patch
