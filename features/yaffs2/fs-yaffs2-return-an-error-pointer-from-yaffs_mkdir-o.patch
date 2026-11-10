@@ -1,0 +1,54 @@
+From 1ed55fd6f3c72fe600abc10f8883ee8bb3674c4a Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 10 Nov 2026 09:04:44 -0500
+Subject: [PATCH] fs/yaffs2: return an error pointer from yaffs_mkdir on
+ failure
+
+Since inode_operations.mkdir returns a struct dentry * (88d5baf69082
+"Change inode_operations.mkdir to return struct dentry *"), a NULL
+return means success and a non-NULL, non-error return is a replacement
+dentry for the VFS to use instead of the one it passed in.
+
+yaffs_mkdir returns the dentry it was given when yaffs_mknod() fails.
+vfs_mkdir() treats that as a replacement: it calls dput() on its own
+dentry and then carries on using the same pointer, so the reference is
+dropped twice, and mkdir(2) reports success for a directory that was
+never created.
+
+Return ERR_PTR() of the yaffs_mknod() error instead. Make yaffs_mkdir
+static while here: it is only used through yaffs_dir_inode_operations,
+and the missing static gives a -Wmissing-prototypes warning.
+
+Fixes: ab9007e831da ("yaffs: adjust for v6.15")
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ fs/yaffs2/yaffs_vfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/yaffs2/yaffs_vfs.c b/fs/yaffs2/yaffs_vfs.c
+index 478f1d4772e4..765458197ee9 100644
+--- a/fs/yaffs2/yaffs_vfs.c
++++ b/fs/yaffs2/yaffs_vfs.c
+@@ -1473,7 +1473,7 @@ static int yaffs_mknod(struct inode *dir, struct dentry *dentry, int mode,
+ }
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
+-struct dentry* yaffs_mkdir(const struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
++static struct dentry *yaffs_mkdir(const struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
+ #else
+ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ #endif
+@@ -1481,8 +1481,8 @@ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
+ 	int ret_val;
+ 	yaffs_trace(YAFFS_TRACE_OS, "yaffs_mkdir");
+ 	ret_val = yaffs_mknod(ns, dir, dentry, mode | S_IFDIR, 0);
+-	if ( ret_val )
+-		return dentry;
++	if (ret_val)
++		return ERR_PTR(ret_val);
+ 
+ 	return NULL;
+ }
+-- 
+2.43.0
+

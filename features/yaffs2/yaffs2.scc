@@ -48,3 +48,4 @@ patch fs-yaffs2-clear-ll_init-on-deinitialise.patch
 patch fs-yaffs2-fix-inverted-tags_marshall_query_block-ret.patch
 patch fs-yaffs2-restore-remount-handling-via-fs_context-re.patch
 patch fs-yaffs2-run-deferred-cleanup-when-remounting-read-.patch
+patch fs-yaffs2-return-an-error-pointer-from-yaffs_mkdir-o.patch
