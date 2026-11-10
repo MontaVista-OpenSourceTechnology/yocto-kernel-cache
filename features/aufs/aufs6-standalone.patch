@@ -1,4 +1,4 @@
-From 563323ab4013bc585932c0ff918a74ae44b63a6b Mon Sep 17 00:00:00 2001
+From 1eaa8c2bb607d16f909f2ab720312483074a7cf3 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Sun, 25 Jan 2026 16:29:48 -0500
 Subject: [PATCH] aufs6: standalone
@@ -22,10 +22,10 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  14 files changed, 25 insertions(+)
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 4902da33762c..4decb7eea728 100644
+index 4263f3c633d5..5db588ee5a9f 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1539,6 +1539,7 @@ void d_walk(struct dentry *parent, void *data,
+@@ -1569,6 +1569,7 @@ void d_walk(struct dentry *parent, void *data,
  	seq = 1;
  	goto again;
  }
@@ -34,10 +34,10 @@ index 4902da33762c..4decb7eea728 100644
  struct check_mount {
  	struct vfsmount *mnt;
 diff --git a/fs/exec.c b/fs/exec.c
-index d5993cedc829..a9fa38594812 100644
+index 8d2b14e1d455..931817956d3e 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -121,6 +121,7 @@ bool path_noexec(const struct path *path)
+@@ -122,6 +122,7 @@ bool path_noexec(const struct path *path)
  	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
  	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
  }
@@ -46,7 +46,7 @@ index d5993cedc829..a9fa38594812 100644
  #ifdef CONFIG_MMU
  /*
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 30aadd42ed8e..78db19b2a4f5 100644
+index 75c5416d0e0b..58a77399057a 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
 @@ -89,6 +89,7 @@ int setfl(int fd, struct file * filp, unsigned int arg)
@@ -58,7 +58,7 @@ index 30aadd42ed8e..78db19b2a4f5 100644
  /*
   * Allocate an file->f_owner struct if it doesn't exist, handling racing
 diff --git a/fs/file_table.c b/fs/file_table.c
-index c68b8c0a4097..5367fd8ad12d 100644
+index 666104f6ef4c..9429e185dec8 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -281,6 +281,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
@@ -70,10 +70,10 @@ index c68b8c0a4097..5367fd8ad12d 100644
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 9f7a9b6a8788..bd2fd70d5c0d 100644
+index c164f67499cc..a4ecfeeba3cb 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -954,6 +954,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
+@@ -1005,6 +1005,7 @@ int is_current_mnt_ns(struct vfsmount *mnt)
  {
  	return check_mnt(real_mount(mnt));
  }
@@ -81,7 +81,7 @@ index 9f7a9b6a8788..bd2fd70d5c0d 100644
  
  static inline bool check_anonymous_mnt(struct mount *mnt)
  {
-@@ -2289,6 +2290,7 @@ const struct path *collect_paths(const struct path *path,
+@@ -2350,6 +2351,7 @@ const struct path *collect_paths(const struct path *path,
  		path_get(p);
  	return res;
  }
@@ -89,7 +89,7 @@ index 9f7a9b6a8788..bd2fd70d5c0d 100644
  
  void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  {
-@@ -2297,6 +2299,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
+@@ -2358,6 +2360,7 @@ void drop_collected_paths(const struct path *paths, const struct path *prealloc)
  	if (paths != prealloc)
  		kfree(paths);
  }
@@ -98,7 +98,7 @@ index 9f7a9b6a8788..bd2fd70d5c0d 100644
  static struct mnt_namespace *alloc_mnt_ns(struct user_namespace *, bool);
  
 diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index 7e2f330fd283..147a6cf28fd0 100644
+index 8657bb94dfa8..c44eff4371b1 100644
 --- a/fs/notify/fsnotify.c
 +++ b/fs/notify/fsnotify.c
 @@ -172,6 +172,7 @@ int fsnotify_pre_content(const struct path *path, const loff_t *ppos,
@@ -122,10 +122,10 @@ index b56d1c1d9644..9e2d893a3371 100644
  /*
   * Drop a reference to a group.  Free it if it's through.
 diff --git a/fs/open.c b/fs/open.c
-index 408925d7bd0b..00da1ac2bae0 100644
+index bb484b07390a..979565554ef5 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -69,6 +69,7 @@ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -69,6 +69,7 @@ int do_truncate(const struct mnt_idmap *idmap, struct dentry *dentry,
  	inode_unlock(dentry->d_inode);
  	return ret;
  }
@@ -134,7 +134,7 @@ index 408925d7bd0b..00da1ac2bae0 100644
  int vfs_truncate(const struct path *path, loff_t length)
  {
 diff --git a/fs/read_write.c b/fs/read_write.c
-index e8c14e2760b2..31e7ab73aecc 100644
+index 676728310899..e93d22a680f1 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -581,6 +581,7 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
@@ -154,7 +154,7 @@ index e8c14e2760b2..31e7ab73aecc 100644
  /* file_ppos returns &file->f_pos or NULL if file is stream */
  static inline loff_t *file_ppos(struct file *file)
 diff --git a/fs/splice.c b/fs/splice.c
-index d2b70cb432d1..81deb01e8ec0 100644
+index 8a4e271d226a..551886c538b8 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -935,6 +935,7 @@ ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
@@ -166,10 +166,10 @@ index d2b70cb432d1..81deb01e8ec0 100644
  /*
   * Indicate to the caller that there was a premature EOF when reading from the
 diff --git a/fs/xattr.c b/fs/xattr.c
-index d58979115200..66a1a1346120 100644
+index 0705801a62cc..a783bcc9887f 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
-@@ -428,6 +428,7 @@ vfs_getxattr_alloc(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -428,6 +428,7 @@ vfs_getxattr_alloc(const struct mnt_idmap *idmap, struct dentry *dentry,
  	*xattr_value = value;
  	return error;
  }
@@ -178,7 +178,7 @@ index d58979115200..66a1a1346120 100644
  ssize_t
  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index b720d966c7b9..02c8ce18d6e0 100644
+index a7e35ee9f3b0..d3a8e0a2f083 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -245,6 +245,7 @@ inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
@@ -199,10 +199,10 @@ index 0f7519f8e7c9..96c8ae627018 100644
  }
 +EXPORT_SYMBOL_GPL(task_work_run);
 diff --git a/security/security.c b/security/security.c
-index 71aea8fdf014..19bc738a4593 100644
+index 4727b8347fc4..c613c2a65abf 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -1431,6 +1431,7 @@ void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
+@@ -1446,6 +1446,7 @@ void security_path_post_mknod(const struct mnt_idmap *idmap, struct dentry *dent
  		return;
  	call_void_hook(path_post_mknod, idmap, dentry);
  }
@@ -210,7 +210,7 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_path_mkdir() - Check if creating a new directory is allowed
-@@ -1466,6 +1467,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
+@@ -1481,6 +1482,7 @@ int security_path_rmdir(const struct path *dir, struct dentry *dentry)
  		return 0;
  	return call_int_hook(path_rmdir, dir, dentry);
  }
@@ -218,7 +218,7 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_path_unlink() - Check if removing a hard link is allowed
-@@ -1501,6 +1503,7 @@ int security_path_symlink(const struct path *dir, struct dentry *dentry,
+@@ -1516,6 +1518,7 @@ int security_path_symlink(const struct path *dir, struct dentry *dentry,
  		return 0;
  	return call_int_hook(path_symlink, dir, dentry, old_name);
  }
@@ -226,7 +226,7 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_path_link - Check if creating a hard link is allowed
-@@ -1519,6 +1522,7 @@ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
+@@ -1534,6 +1537,7 @@ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
  		return 0;
  	return call_int_hook(path_link, old_dentry, new_dir, new_dentry);
  }
@@ -234,7 +234,7 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_path_rename() - Check if renaming a file is allowed
-@@ -1580,6 +1584,7 @@ int security_path_chmod(const struct path *path, umode_t mode)
+@@ -1595,6 +1599,7 @@ int security_path_chmod(const struct path *path, umode_t mode)
  		return 0;
  	return call_int_hook(path_chmod, path, mode);
  }
@@ -242,7 +242,7 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_path_chown() - Check if changing the file's owner/group is allowed
-@@ -1597,6 +1602,7 @@ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
+@@ -1612,6 +1617,7 @@ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
  		return 0;
  	return call_int_hook(path_chown, path, uid, gid);
  }
@@ -250,15 +250,15 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_path_chroot() - Check if changing the root directory is allowed
-@@ -1841,6 +1847,7 @@ int security_inode_permission(struct inode *inode, int mask)
+@@ -1841,6 +1847,7 @@ int security_inode_follow_link(struct dentry *dentry, struct inode *inode,
  		return 0;
- 	return call_int_hook(inode_permission, inode, mask);
+ 	return call_int_hook(inode_follow_link, dentry, inode, rcu);
  }
 +EXPORT_SYMBOL_GPL(security_inode_permission);
  
  /**
-  * security_inode_setattr() - Check if setting file attributes is allowed
-@@ -2391,6 +2398,7 @@ int security_file_permission(struct file *file, int mask)
+  * security_inode_permission() - Check if accessing an inode is allowed
+@@ -2414,6 +2421,7 @@ int security_file_permission(struct file *file, int mask)
  {
  	return call_int_hook(file_permission, file, mask);
  }
@@ -266,7 +266,7 @@ index 71aea8fdf014..19bc738a4593 100644
  
  /**
   * security_file_alloc() - Allocate and init a file's LSM blob
-@@ -2770,6 +2778,7 @@ int security_file_truncate(struct file *file)
+@@ -2792,6 +2800,7 @@ int security_file_truncate(struct file *file)
  {
  	return call_int_hook(file_truncate, file);
  }
