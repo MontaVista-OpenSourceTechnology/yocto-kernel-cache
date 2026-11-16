@@ -4,7 +4,6 @@
 	config = cfg/sound_x86.scc
 	config = cfg/vmware-guest.scc
 	config = cfg/fs/btrfs.scc
-	config = cfg/fs/ext3.scc
 	config = cfg/fs/exfat.scc
 	config = cfg/fs/flash_fs.scc
 	config = cfg/fs/vfat.scc
