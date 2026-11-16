@@ -11,7 +11,6 @@
 	config = cfg/fs/ext4.scc
 	config = cfg/fs/squashfs.scc
 	config = cfg/fs/ext2.scc
-	config = cfg/fs/ext3.scc
 	config = cfg/fs/debugfs.scc
 	config = cfg/fs/vfat.scc
 	config = cfg/vswitch.scc
